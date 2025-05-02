@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Trading Platform</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">v7</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#hero">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About Us</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#cta">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="d-flex align-items-center text-center" style="min-height: 100vh; background: url('./images/realestate.jpg') no-repeat center center; background-size: cover; color: white;">
+        <div class="container" style="background-color: rgba(0, 0, 0, 0.6); padding: 40px; border-radius: 15px;">
+            <h1 class="display-3">Welcome to v7</h1>
+            <p class="lead">The premier platform for trading services online. Connect, collaborate, and grow.</p>
+            <a href="#cta" class="btn btn-primary btn-lg mt-3">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Services Categories Section -->
+    <section id="services" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Explore Our Service Categories</h2>
+            <!-- Filter Buttons -->
+            <!-- <div class="text-center mb-4">
+                <button type="button" class="btn btn-outline-primary me-2 active">All</button>
+                <button type="button" class="btn btn-outline-primary me-2">RealEstate</button>
+                <button type="button" class="btn btn-outline-primary me-2">Cars trading</button>
+                <button type="button" class="btn btn-outline-primary">Deals</button>
+            </div> -->
+            <!-- Service Items Grid (Placeholder) -->
+            <div class="row">
+                <!-- Example Service Item -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="./images/house.jpg" class="card-img-top" alt="RealEstate Service">
+                        <div class="card-body">
+                            <h5 class="card-title">RealEstate</h5>
+                            <p class="card-text">Browse and list properties for sale or rent. Connect with verified agents and property owners for seamless real estate transactions.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="./images/cars.jpg" class="card-img-top" alt="Cars Trading Service">
+                        <div class="card-body">
+                            <h5 class="card-title">Cars Trading</h5>
+                            <p class="card-text">Trade new and used vehicles with confidence. Get detailed vehicle history, connect with trusted dealers, and find the best deals in automotive.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="./images/deal.jpeg" class="card-img-top" alt="Deals Service">
+                        <div class="card-body">
+                            <h5 class="card-title">Deals</h5>
+                            <p class="card-text">Discover exclusive offers and discounts on premium services. Compare prices, read reviews, and secure the best value for your money.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more service items as needed -->
+            </div>
+        </div>
+    </section>
+    <!-- Features Section -->
+    <section id="features" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Why Choose Us?</h2>
+            <div class="row text-center">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <!-- Placeholder for feature icon/image -->
+                        <img src="./images/trust.png" class="card-img-top" alt="Feature 1">
+                        <div class="card-body">
+                            <h5 class="card-title">Trust</h5>
+                            <p class="card-text">Build lasting relationships through our secure platform. Every transaction is protected and verified, giving you peace of mind while trading.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <!-- Placeholder for feature icon/image -->
+                        <img src="./images/warranty.png" class="card-img-top" alt="Feature 2">
+                        <div class="card-body">
+                            <h5 class="card-title">Warranty</h5>
+                            <p class="card-text">Every service comes with our satisfaction guarantee. We ensure quality delivery and stand behind every transaction with our comprehensive warranty protection.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <!-- Placeholder for feature icon/image -->
+                        <img src="./images/professional.png" class="card-img-top" alt="Feature 3">
+                        <div class="card-body">
+                            <h5 class="card-title">Professional</h5>
+                            <p class="card-text">Connect with verified professionals who meet our high standards. Our platform ensures you work with experienced and reliable service providers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <img src="./images/about.jpg" class="img-fluid rounded" alt="About Us Image">
+                </div>
+                <div class="col-md-6">
+                    <h2 class="mb-4">About v7</h2>
+                    <p>The V7 Business Office offers distinguished real estate services (buying, selling, renting, and exchanging) and all commercial transactions, including the sale and purchase of cars, factories, various machines, landscaping, gardens, and storefronts. We are honored to serve you with confidence, assurance, and professionalism.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Services Section (Detailed) -->
+    <section id="our-services" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Our Services</h2>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4>Real Estate Services</h4>
+                    <p>Comprehensive services including buying, selling, renting, and exchanging properties.</p>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4>Commercial Transactions</h4>
+                    <p>Facilitating the sale and purchase of cars, factories, machinery, and more.</p>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4>Landscaping & Gardens</h4>
+                    <p>Services related to landscaping, gardens, and storefront enhancements.</p>
+                </div>
+                 <div class="col-lg-4 col-md-6 mb-4">
+                    <h4>Professionalism Guaranteed</h4>
+                    <p>We operate with confidence, assurance, and professionalism in all dealings.</p>
+                </div>
+                 <div class="col-lg-4 col-md-6 mb-4">
+                    <h4>Diverse Offerings</h4>
+                    <p>Covering a wide range of commercial needs beyond real estate and vehicles.</p>
+                </div>
+                 <div class="col-lg-4 col-md-6 mb-4">
+                    <h4>Client Focused</h4>
+                    <p>Honored to serve you and meet your business transaction requirements.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Get In Touch</h2>
+            <div class="row">
+                <div class="col-md-8 mx-auto">
+                    <form>
+                        <div class="mb-3">
+                            <label for="contactName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="contactName" placeholder="Your Name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="contactEmail" placeholder="name@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactSubject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="contactSubject" placeholder="Subject">
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactMessage" class="form-label">Message</label>
+                            <textarea class="form-control" id="contactMessage" rows="4" placeholder="Your Message"></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section id="cta" class="bg-primary text-white text-center py-5">
+        <div class="container">
+            <h2>Ready to Start Trading Services?</h2>
+            <p class="lead">Join our growing community today!</p>
+            <a href="#" class="btn btn-light btn-lg mt-3">Sign Up Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4 bg-dark text-white text-center">
+        <div class="container">
+            <p class="mb-0">&copy; 2023 v7. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+</html>
