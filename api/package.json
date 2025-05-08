@@ -1,0 +1,6 @@
+{
+	"dependencies": {
+		"hono": "^4.7.7",
+		"nodemailer": "^6.10.1"
+	}
+}
