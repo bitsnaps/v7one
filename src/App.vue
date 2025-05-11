@@ -1,10 +1,11 @@
-<script setup lang="ts">
+<script setup>
 import Navbar from './components/Navbar.vue';
 import { useRoute } from 'vue-router';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 
 const route = useRoute();
-const showNavbar = computed(() => !['/signup', '/signin'].includes(route.path));
+// const showNavbar = computed(() => !['/signup', '/signin'].includes(route.path));
+const showNavbar = computed(() => true);
 
 const isLoading = ref(true);
 const showBackToTop = ref(false);
