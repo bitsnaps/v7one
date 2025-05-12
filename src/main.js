@@ -1,7 +1,8 @@
 import { createApp } from 'vue'
 import { createBootstrap } from 'bootstrap-vue-next'
 // Add the necessary CSS
-import 'bootstrap/dist/css/bootstrap.css'
+// import 'bootstrap/dist/css/bootstrap.css' // Default Bootstrap
+import './assets/css/bootstrap.min.css' // Customized Boostswatch (Minty)
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 import './style.css'
 import App from './App.vue'
