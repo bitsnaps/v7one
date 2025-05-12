@@ -25,7 +25,6 @@ const submitForm = () => {
         email: '',
         message: ''
     };
-
 }
 
 </script>

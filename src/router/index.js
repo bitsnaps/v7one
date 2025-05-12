@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import About from '../views/About.vue';
 import Contact from '../views/Contact.vue';
+import PostDeal from '../views/PostDeal.vue';
 import SignIn from '../views/SignIn.vue';
 
 const routes = [
@@ -19,6 +20,11 @@ const routes = [
     path: '/contact',
     name: 'contact',
     component: Contact,
+  },
+  {
+    path: '/post-deal',
+    name: 'post-deal',
+    component: PostDeal,
   },
   {
     path: '/signin',
