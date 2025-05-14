@@ -35,7 +35,6 @@ const searchDeals = () => {
 </script>
 
 <template>
-  <div>
     <!-- Header Start -->
     <div class="container-fluid header bg-white p-0">
       <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
@@ -162,8 +161,6 @@ const searchDeals = () => {
         </div>
     </div>
     <!-- Call To Action End -->
-
-  </div>
 </template>
 
 <style scoped>
@@ -183,6 +180,4 @@ const searchDeals = () => {
 .about-img img {
     object-fit: cover;
 }
-
-/* Add any other component-specific styles if needed */
 </style>

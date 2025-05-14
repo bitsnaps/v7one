@@ -5,8 +5,8 @@ import { useRoute } from 'vue-router';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 
 const route = useRoute();
-// const showNavbar = computed(() => !['/signup', '/signin'].includes(route.path));
-const showNavbar = computed(() => true);
+const showNavbar = computed(() => !['/signup', '/signin'].includes(route.path));
+// const showNavbar = computed(() => true);
 
 const isLoading = ref(true);
 const showBackToTop = ref(false);
@@ -33,7 +33,6 @@ onUnmounted(() => {
 </script>
 
 <template>
-
   <div class="container-xxl bg-white p-0">
     <Navbar v-if="showNavbar" />
     <router-view />
@@ -46,20 +45,6 @@ onUnmounted(() => {
 </template>
 
 <style>
-/* Assuming these files are in public/css and public/lib respectively */
-/* These should ideally be linked in app/index.html or imported in main.ts */
-/* @import '/css/bootstrap.min.css'; 
-@import '/css/style.css'; */
-
-/* Ensure Font Awesome and Bootstrap Icons are linked in app/index.html for icons to work */
-
-/* Global styles from template's style.css that might be needed if not fully covered by style.css import */
-:root {
-    --primary: #00B98E;
-    --light: #EFFDF5;
-    --dark: #0E2E50;
-}
-
 .fw-medium {
     font-weight: 600 !important;
 }
@@ -75,11 +60,4 @@ onUnmounted(() => {
     bottom: 45px;
     z-index: 99;
 }
-
-/* Add other global styles or utility classes from the template if needed */
-
-/* Styles for Navbar.vue are in Navbar.vue itself */
-
-/* Styles for specific sections from template (e.g., Header, Search, Category) would go into their respective components */
-
 </style>
