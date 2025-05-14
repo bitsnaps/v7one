@@ -1,25 +1,10 @@
 <script setup>
 import { ref } from 'vue';
 import { BCarousel, BCarouselSlide } from 'bootstrap-vue-next';
-
+import Deals from './Deals.vue';
 const searchKeyword = ref('');
 const selectedDealType = ref(''); // Changed from selectedPropertyType for broader V7 deals
 const selectedLocation = ref('');
-
-const dealCategories = [
-  { name: 'Apartment', icon: '/img/icon-apartment.png', count: 123, link: '/category/apartments' },
-  { name: 'Villa', icon: '/img/icon-villa.png', count: 123, link: '/category/villas' },
-  { name: 'Home', icon: '/img/icon-house.png', count: 123, link: '/category/homes' },
-  { name: 'Office', icon: '/img/icon-housing.png', count: 45, link: '/category/offices' }, // Adjusted count
-  { name: 'Building', icon: '/img/icon-building.png', count: 30, link: '/category/buildings' }, // Adjusted count
-  { name: 'Townhouse', icon: '/img/icon-neighborhood.png', count: 67, link: '/category/townhouses' }, // Adjusted count
-  { name: 'Shop', icon: '/img/icon-condominium.png', count: 88, link: '/category/shops' }, // Adjusted count
-  { name: 'Garage', icon: '/img/icon-luxury.png', count: 20, link: '/category/garages' }, // Adjusted count
-  { name: 'Cars', icon: '/img/icon-car.png', count: 250, link: '/category/cars' }, // Added for V7 Deals
-  { name: 'Electronics', icon: '/img/icon-electronics.png', count: 150, link: '/category/electronics' }, // Added for V7 Deals
-  { name: 'Services', icon: '/img/icon-services.png', count: 90, link: '/category/services' }, // Added for V7 Deals
-  { name: 'Other Deals', icon: '/img/icon-deal.png', count: 110, link: '/category/other-deals' } // Added for V7 Deals
-];
 
 const carouselItems = [
   { img: '/img/carousel-real-estate.jpg', alt: 'Real Estate' },
@@ -93,27 +78,7 @@ const searchDeals = () => {
     <!-- Search End -->
 
     <!-- Category Start -->
-    <div class="container-xxl py-5">
-      <div class="container">
-        <div class="text-center mx-auto mb-5" style="max-width: 600px;">
-          <h1 class="mb-3">Deal Categories</h1>
-          <p>Explore various categories of deals available on our platform. Find what you're looking for quickly and easily.</p>
-        </div>
-        <div class="row g-4">
-          <div v-for="(category, index) in dealCategories" :key="index" class="col-lg-3 col-sm-6">
-            <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="category.link">
-              <div class="rounded p-4">
-                <div class="icon mb-3">
-                  <img class="img-fluid" :src="category.icon" :alt="category.name + ' Icon'">
-                </div>
-                <h6>{{ category.name }}</h6>
-                <span>{{ category.count }} Deals</span>
-              </div>
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Deals />
     <!-- Category End -->
 
     <!-- About Start (Simplified for Home Page) -->
