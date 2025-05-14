@@ -32,5 +32,8 @@
 
 .gold-gradient {
   color: var(--gold) !important;
-  /* color: linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%); */
+  background: linear-gradient(to top, var(--gold-light) 0%, var(--gold-deep) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

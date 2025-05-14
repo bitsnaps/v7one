@@ -12,7 +12,7 @@ const isNavCollapsed = ref(true); // Initialize as collapsed, Bootstrap's toggle
         <div class="icon p-2 me-2">
           <img class="img-fluid" src="/logo.png" alt="Icon" style="width: 48px; height: 48px;">
         </div>
-        <h1 class="m-0 text-primary"><span class="gold-gradient">v7</span>One</h1>
+        <h1 class="m-0 text-primary"><span class="gold-gradient">One</span></h1>
       </router-link>
       <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
