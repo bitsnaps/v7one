@@ -39,11 +39,11 @@ const searchDeals = () => {
     <div class="container-fluid header bg-white p-0">
       <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
         <div class="col-md-6 p-5 mt-lg-5">
-          <h1 class="display-5 animated fadeIn mb-4">Find The <span class="text-primary">Perfect Deal</span> For You</h1>
-          <p class="animated fadeIn mb-4 pb-2">Explore a wide range of real estate, cars, electronics, services, and other exciting deals. V7 is your one-stop marketplace.</p>
-          <router-link to="/deals" class="btn btn-primary py-3 px-5 me-3 animated fadeIn">Get Started</router-link>
+          <h1 class="display-5 mb-4">Find The <span class="text-primary">Perfect Deal</span> For You</h1>
+          <p class="mb-4 pb-2">Explore a wide range of real estate, cars, electronics, services, and other exciting deals. V7 is your one-stop marketplace.</p>
+          <router-link to="/deals" class="btn btn-primary py-3 px-5 me-3">Get Started</router-link>
         </div>
-        <div class="col-md-6 animated fadeIn">
+        <div class="col-md-6">
           <BCarousel controls indicators ride="carousel" :interval="5000">
             <BCarouselSlide v-for="(item, index) in carouselItems" :key="index" :img-src="item.img" :alt="item.alt" />
           </BCarousel>
@@ -53,7 +53,7 @@ const searchDeals = () => {
     <!-- Header End -->
 
     <!-- Search Start -->
-    <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
+    <div class="container-fluid bg-primary mb-5 " style="padding: 35px;">
       <div class="container">
         <form @submit.prevent="searchDeals">
           <div class="row g-2">
@@ -95,12 +95,12 @@ const searchDeals = () => {
     <!-- Category Start -->
     <div class="container-xxl py-5">
       <div class="container">
-        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+        <div class="text-center mx-auto mb-5" style="max-width: 600px;">
           <h1 class="mb-3">Deal Categories</h1>
           <p>Explore various categories of deals available on our platform. Find what you're looking for quickly and easily.</p>
         </div>
         <div class="row g-4">
-          <div v-for="(category, index) in dealCategories" :key="index" class="col-lg-3 col-sm-6 wow fadeInUp" :data-wow-delay="(0.1 * (index % 4 + 1)) + 's'">
+          <div v-for="(category, index) in dealCategories" :key="index" class="col-lg-3 col-sm-6">
             <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="category.link">
               <div class="rounded p-4">
                 <div class="icon mb-3">
@@ -120,18 +120,18 @@ const searchDeals = () => {
     <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-5 align-items-center">
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                <div class="col-lg-6 ">
                     <div class="about-img position-relative overflow-hidden p-5 pe-0">
                         <img class="img-fluid w-100" src="/img/about.svg" alt="About V7 Deals">
                     </div>
                 </div>
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                <div class="col-lg-6 ">
                     <h1 class="mb-4">#1 Marketplace for Your Deals</h1>
                     <p class="mb-4">V7 Deals is your trusted platform for finding and making deals on real estate, cars, and much more. We connect buyers and sellers in a seamless and secure environment, focusing on quality and trust.</p>
                     <p><i class="fa fa-check text-primary me-3"></i>Wide Range of Categories</p>
                     <p><i class="fa fa-check text-primary me-3"></i>Verified Listings & Sellers</p>
                     <p><i class="fa fa-check text-primary me-3"></i>Secure Transaction Options</p>
-                    <router-link to="/about" class="btn btn-primary py-3 px-5 mt-3 animated fadeIn">Read More</router-link>
+                    <router-link to="/about" class="btn btn-primary py-3 px-5 mt-3">Read More</router-link>
                 </div>
             </div>
         </div>
@@ -144,16 +144,16 @@ const searchDeals = () => {
             <div class="bg-light rounded p-3">
                 <div class="bg-white rounded p-4" style="border: 1px dashed rgba(0, 185, 142, .3)">
                     <div class="row g-5 align-items-center">
-                        <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="col-lg-6 ">
                             <img class="img-fluid rounded w-100" src="/img/call-to-action.svg" alt="Post your deal on V7">
                         </div>
-                        <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                        <div class="col-lg-6">
                             <div class="mb-4">
                                 <h1 class="mb-3">Have an Item or Service to Offer?</h1>
                                 <p>Reach thousands of potential customers by listing your deal on V7. It's quick, easy, and effective for real estate, cars, and all kinds of deals.</p>
                             </div>
-                            <router-link to="/post-deal" class="btn btn-primary py-3 px-5 me-2 animated fadeIn"><i class="fa fa-plus-circle me-2"></i>Post Your Deal</router-link>
-                            <router-link to="/contact" class="btn btn-dark py-3 px-5 animated fadeIn"><i class="fa fa-phone-alt me-2"></i>Contact Us</router-link>
+                            <router-link to="/post-deal" class="btn btn-primary py-3 px-5 me-2"><i class="fa fa-plus-circle me-2"></i>Post Your Deal</router-link>
+                            <router-link to="/contact" class="btn btn-dark py-3 px-5"><i class="fa fa-phone-alt me-2"></i>Contact Us</router-link>
                         </div>
                     </div>
                 </div>
