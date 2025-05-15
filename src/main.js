@@ -1,8 +1,10 @@
 import { createApp } from 'vue'
 import { createBootstrap } from 'bootstrap-vue-next'
 // Add the necessary CSS
+// import 'font-awesome/css/font-awesome.min.css' // Font-awesome (npm)
 // import 'bootstrap/dist/css/bootstrap.css' // Default Bootstrap
 import './assets/css/bootstrap.min.css' // Customized Boostswatch (Minty)
+// import 'bootstrap-icons/font/bootstrap-icons.min.css' // Default Bootstrap
 // import './assets/css/bootstrap-icons.min.css' // Bootstrap-icons
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 import './style.css'

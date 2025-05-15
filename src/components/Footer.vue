@@ -4,8 +4,8 @@
         <div class="row g-5">
           <div class="col-lg-4 col-md-6">
             <h5 class="text-white mb-4">Get In Touch</h5>
-            <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Ain Benian, Algiers</p>
-            <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+213 1234567890</p>
+            <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>25 Bvd. Gaci Amar Staoueli, Algiers, Algeria</p>
+            <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+213 (0) 656 242 575</p>
             <p class="mb-2"><i class="fa fa-envelope me-3"></i>contact@v7one.com</p>
             <div class="d-flex pt-2">
               <a class="btn btn-outline-light btn-social ms-2" href=""><i class="fab fa-twitter"></i></a>

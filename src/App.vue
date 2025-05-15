@@ -33,31 +33,16 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="container-xxl bg-white p-0">
-    <Navbar v-if="showNavbar" />
-    <router-view />
+        <!-- Navbar Start -->
+        <Navbar v-if="showNavbar" />
+        <!-- Navbar End -->
 
-    <Footer />
+        <router-view />
 
-    <!-- Back to Top -->
-    <a v-if="showBackToTop" @click.prevent="scrollToTop" href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-  </div>
+        <!-- Footer Start -->
+        <Footer />
+        <!-- Footer End -->
+
+        <!-- Back to Top -->
+        <a v-if="showBackToTop" @click.prevent="scrollToTop" href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-arrow-up"></i></a>
 </template>
-
-<style>
-.fw-medium {
-    font-weight: 600 !important;
-}
-
-.fw-semi-bold {
-    font-weight: 700 !important;
-}
-
-.back-to-top {
-    position: fixed;
-    display: none; /* Initially hidden, Vue controls visibility */
-    right: 45px;
-    bottom: 45px;
-    z-index: 99;
-}
-</style>
