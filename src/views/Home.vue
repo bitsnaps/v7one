@@ -28,7 +28,7 @@ const searchDeals = () => {
         <div class="container-fluid header bg-white p-0">
             <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
                 <div class="col-md-6 p-5 mt-lg-5">
-                    <h1 class="display-5 mb-4">Find The <span class="text-primary">Perfect Deal</span> For You</h1>
+                    <h1 class="display-5 mb-4">{{ $t('hero-find-the', 'Find The ')}}<span class="text-primary">{{ $t('hero-perfect-deal', 'Perfect Deal ')}}</span> {{ $t('hero-for-you', ' For You')}}</h1>
                     <p class="mb-4 pb-2">Explore a wide range of real estate, cars, electronics, services, and other interesting deals. v7 is your one-stop marketplace.</p>
                     <router-link to="/deals" class="btn btn-primary py-3 px-5 me-3">Get Started</router-link>
                 </div>
