@@ -3,26 +3,34 @@ import { ref } from 'vue';
 
 // Group categories by type
 const realEstateCategories = [
-  { name: 'Apartment', icon: '/img/icon-apartment.png', count: 123, link: '/category/apartments' },
-  { name: 'Villa', icon: '/img/icon-villa.png', count: 123, link: '/category/villas' },
-  { name: 'Home', icon: '/img/icon-house.png', count: 123, link: '/category/homes' },
-  { name: 'Office', icon: '/img/icon-housing.png', count: 45, link: '/category/offices' },
-  { name: 'Building', icon: '/img/icon-building.png', count: 30, link: '/category/buildings' },
-  { name: 'Townhouse', icon: '/img/icon-neighborhood.png', count: 67, link: '/category/townhouses' },
-  { name: 'Shop', icon: '/img/icon-condominium.png', count: 88, link: '/category/shops' },
-  { name: 'Garage', icon: '/img/icon-luxury.png', count: 20, link: '/category/garages' }
+  // { name: 'Apartment', icon: '/img/icon-apartment.png', count: 123, link: '/category/apartments' },
+  { name: 'Apartment', icon: '/img/icon-apartment.svg', count: 123, link: '/category/apartments' },
+  // { name: 'Villa', icon: '/img/icon-villa.png', count: 123, link: '/category/villas' },
+  { name: 'Villa', icon: '/img/icon-villa.svg', count: 123, link: '/category/villas' },
+  // { name: 'Home', icon: '/img/icon-house.png', count: 123, link: '/category/homes' },
+  { name: 'Home', icon: '/img/icon-house.svg', count: 123, link: '/category/homes' },
+  // { name: 'Office', icon: '/img/icon-housing.png', count: 45, link: '/category/offices' },
+  { name: 'Office', icon: '/img/icon-office.svg', count: 45, link: '/category/offices' },
+  // { name: 'Building', icon: '/img/icon-building.png', count: 30, link: '/category/buildings' },
+  { name: 'Building', icon: '/img/icon-building.svg', count: 30, link: '/category/buildings' },
+  // { name: 'Townhouse', icon: '/img/icon-neighborhood.png', count: 67, link: '/category/townhouses' },
+  { name: 'Townhouse', icon: '/img/icon-townhouse.svg', count: 67, link: '/category/townhouses' },
+  // { name: 'Shop', icon: '/img/icon-condominium.png', count: 88, link: '/category/shops' },
+  { name: 'Shop', icon: '/img/icon-shop.svg', count: 88, link: '/category/shops' },
+  // { name: 'Garage', icon: '/img/icon-luxury.png', count: 20, link: '/category/garages' }
+  { name: 'Garage', icon: '/img/icon-garage.svg', count: 20, link: '/category/garages' }
 ];
 
 const carCategories = [
-  { name: 'Sedan', icon: '/img/icon-car.png', count: 120, link: '/category/cars/sedan' },
-  { name: 'SUV', icon: '/img/icon-car.png', count: 85, link: '/category/cars/suv' },
-  { name: 'Truck', icon: '/img/icon-car.png', count: 45, link: '/category/cars/truck' }
+  { name: 'Sedan', icon: '/img/icon-car-sedan.svg', count: 120, link: '/category/cars/sedan' },
+  { name: 'SUV', icon: '/img/icon-car-suv.svg', count: 85, link: '/category/cars/suv' },
+  { name: 'Truck', icon: '/img/icon-car-truck.svg', count: 45, link: '/category/cars/truck' }
 ];
 
 const otherCategories = [
-  { name: 'Electronics', icon: '/img/icon-electronics.png', count: 150, link: '/category/electronics' },
-  { name: 'Services', icon: '/img/icon-services.png', count: 90, link: '/category/services' },
-  { name: 'Other Deals', icon: '/img/icon-deal.png', count: 110, link: '/category/other-deals' }
+  { name: 'Electronics', icon: '/img/icon-electronics.svg', count: 150, link: '/category/electronics' },
+  { name: 'Services', icon: '/img/icon-services.svg', count: 90, link: '/category/services' },
+  { name: 'Other Deals', icon: '/img/icon-deal.svg', count: 110, link: '/category/other-deals' }
 ];
 
 // For backward compatibility
