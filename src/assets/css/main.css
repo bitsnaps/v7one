@@ -1,0 +1,95 @@
+/* Import Google Font - Noto Sans Arabic */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap');
+
+body {
+  font-family: 'Noto Sans Arabic', sans-serif; /* Default to Arabic font, ensure fallback for other languages */
+}
+
+/* Basic RTL adjustments */
+[dir="rtl"] body {
+  text-align: right;
+}
+
+[dir="rtl"] .ms-auto {
+  margin-right: auto !important;
+  margin-left: 0 !important;
+}
+
+[dir="rtl"] .me-auto {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+[dir="rtl"] .text-start {
+  text-align: right !important;
+}
+
+[dir="rtl"] .text-end {
+  text-align: left !important;
+}
+
+[dir="rtl"] .float-start {
+  float: right !important;
+}
+
+[dir="rtl"] .float-end {
+  float: left !important;
+}
+
+/* Specific component adjustments for RTL */
+
+/* Navbar */
+[dir="rtl"] .navbar-nav {
+  padding-right: 0; /* Reset padding if any was set for LTR */
+}
+
+[dir="rtl"] .navbar-light .navbar-nav .nav-link {
+  margin-right: 0;
+  margin-left: 30px; /* Original was margin-right: 30px */
+}
+
+[dir="rtl"] .navbar .dropdown-toggle::after {
+  margin-left: 0;
+  margin-right: 5px; /* Original was margin-left: 5px */
+}
+
+[dir="rtl"] .navbar-brand .icon {
+  margin-left: 0.5rem; /* Original was me-2 which is margin-right */
+  margin-right: 0 !important; 
+}
+
+/* Back to Top button */
+[dir="rtl"] .back-to-top {
+  /* Assuming LTR style is 'right: 30px;' or similar */
+  right: auto;
+  left: 30px; /* Adjust this value if the LTR 'right' value is different */
+}
+
+/* Ensure dropdown menus open correctly in RTL */
+[dir="rtl"] .dropdown-menu {
+  text-align: right; /* Align text to the right */
+  left: auto !important; /* Reset left positioning */
+  right: 0; /* Position to the right edge of the parent */
+}
+
+[dir="rtl"] .dropdown-menu-end {
+    right: auto !important;
+    left: 0 !important;
+}
+
+[dir="rtl"] .language-dropdown .dropdown-menu {
+    left: auto !important; /* Override Bootstrap's default if necessary */
+    right: 0; /* Align to the right */
+}
+
+/* If using Bootstrap's offset for dropdowns, it might need adjustment */
+[dir="rtl"] .dropdown-menu[data-bs-popper] {
+    left: auto;
+    right: 0;
+}
+
+/* Fix for signin box text alignment */
+[dir="rtl"] .signin-box h2,
+[dir="rtl"] .signin-box p {
+  text-align: right;
+}

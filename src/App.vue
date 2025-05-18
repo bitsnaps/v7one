@@ -1,12 +1,22 @@
 <script setup>
 import Navbar from './components/Navbar.vue';
+import './assets/css/main.css'; // Import global styles
 import Footer from './components/Footer.vue';
 import { useRoute } from 'vue-router';
-import { computed, ref, onMounted, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { computed, ref, onMounted, onUnmounted, watchEffect } from 'vue';
 
 const route = useRoute();
 const showNavbar = computed(() => !['/signup', '/signin'].includes(route.path));
 // const showNavbar = computed(() => true);
+
+const { locale } = useI18n();
+
+// Watch for locale changes and update HTML dir attribute
+watchEffect(() => {
+  document.documentElement.lang = locale.value;
+  document.documentElement.dir = locale.value === 'ar' ? 'rtl' : 'ltr';
+});
 
 const isLoading = ref(true);
 const showBackToTop = ref(false);
