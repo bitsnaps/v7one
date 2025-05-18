@@ -32,25 +32,25 @@ const submitForm = () => {
 <template>
     <div class="container">
 
-        <h1>Contact Us</h1>
+        <h1>{{ $t('contact.title', 'Contact Us') }}</h1>
         <form @submit.prevent="submitForm">
             <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
+                <label for="name" class="form-label">{{ $t('contact.nameLabel', 'Name') }}</label>
                 <input type="text" class="form-control" id="name" v-model="formData.name" required>
             </div>
             <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
+                <label for="email" class="form-label">{{ $t('contact.emailLabel', 'Email') }}</label>
                 <input type="email" class="form-control" id="email" v-model="formData.email" required>
             </div>
             <div class="mb-3">
-                <label for="message" class="form-label">Message</label> 
+                <label for="message" class="form-label">{{ $t('contact.messageLabel', 'Message') }}</label> 
                 <textarea class="form-control" id="message" v-model="formData.message" rows="5" required></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">{{ $t('contact.submitButton', 'Submit') }}</button>
         </form>
         <!-- Display success message if form is submitted -->
         <div v-if="formSubmitted" class="alert alert-success mt-3" role="alert">
-            Form submitted successfully!
+            {{ $t('contact.successMessage', 'Form submitted successfully!') }}
         </div>
     </div>
 </template>

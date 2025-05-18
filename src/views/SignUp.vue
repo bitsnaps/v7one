@@ -23,35 +23,35 @@ const handleSignUp = async () => {
 <template>
     <div class="signup-container">
         <div class="signup-box">
-            <h2>Sign Up</h2>
+            <h2>{{ $t('signUp.title', 'Sign Up') }}</h2>
             <form @submit.prevent="handleSignUp">
                 <div class="mb-3">
-                    <label for="firstName" class="form-label">First Name</label>
+                    <label for="firstName" class="form-label">{{ $t('signUp.firstNameLabel', 'First Name') }}</label>
                     <input type="text" class="form-control" id="firstName" v-model="firstName" required>
                 </div>
                 <div class="mb-3">
-                    <label for="lastName" class="form-label">Last Name</label>
+                    <label for="lastName" class="form-label">{{ $t('signUp.lastNameLabel', 'Last Name') }}</label>
                     <input type="text" class="form-control" id="lastName" v-model="lastName" required>
                 </div>
                 <div class="mb-3">
-                    <label for="usernameOrEmail" class="form-label">Username or Email</label>
+                    <label for="usernameOrEmail" class="form-label">{{ $t('signUp.usernameOrEmailLabel', 'Username or Email') }}</label>
                     <input type="text" class="form-control" id="usernameOrEmail" v-model="usernameOrEmail" required>
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label">{{ $t('signUp.passwordLabel', 'Password') }}</label>
                     <input type="password" class="form-control" id="password" v-model="password" required>
                 </div>
                 <div class="mb-3">
-                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <label for="confirmPassword" class="form-label">{{ $t('signUp.confirmPasswordLabel', 'Confirm Password') }}</label>
                     <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
                 </div>
                 <div v-if="errorMessage" class="alert alert-danger" role="alert">
                     {{ errorMessage }}
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                <button type="submit" class="btn btn-primary w-100">{{ $t('signUp.signUpButton', 'Sign Up') }}</button>
             </form>
             <p class="mt-3 text-center">
-                Already have an account? <router-link to="/signin">Sign In</router-link>
+                {{ $t('signUp.alreadyHaveAccount', 'Already have an account?') }} <router-link to="/signin">{{ $t('signUp.signInLink', 'Sign In') }}</router-link>
             </p>
         </div>
     </div>

@@ -40,6 +40,14 @@
     "postDeal": "انشر صفقتك",
     "contactUs": "اتصل بنا"
   },
+  "postDeal": {
+    "title": "انشر صفقتك",
+    "nameLabel": "الاسم",
+    "telLabel": "الهاتف",
+    "dealDetailsLabel": "تفاصيل الصفقة",
+    "submitButton": "إرسال",
+    "successMessage": "تم إرسال النموذج بنجاح!"
+  },
   "language": {
     "english": "الإنجليزية",
     "french": "الفرنسية",
@@ -117,6 +125,42 @@
         "designation": "مدير علاقات العملاء"
       }
     }
+  },
+  "about": {
+    "title": "حول V7 Deals",
+    "welcome": "مرحبًا بك في V7 Deals ، منصتك الموثوقة للعثور على صفقات العقارات والسيارات والمزيد وإبرامها. نحن نربط المشترين والبائعين في بيئة سلسة وآمنة ، مع التركيز على الجودة والثقة.",
+    "mission": "مهمتنا هي تبسيط عملية شراء العقارات والسيارات ، مما يسهل عليك أكثر من أي وقت مضى العثور على منزل أو سيارة أحلامك.",
+    "values": "في V7 Deals ، نؤمن بالشفافية والصدق. يتم تنسيق قوائمنا بعناية لضمان حصولك على أفضل الصفقات والمعلومات.",
+    "join": "انضم إلينا اليوم وابدأ في استكشاف عالم الصفقات مع V7 Deals!"
+  },
+  "contact": {
+    "title": "اتصل بنا",
+    "nameLabel": "الاسم",
+    "emailLabel": "البريد الإلكتروني",
+    "messageLabel": "الرسالة",
+    "submitButton": "إرسال",
+    "successMessage": "تم إرسال النموذج بنجاح!"
+  },
+  "signIn": {
+    "title": "تسجيل الدخول",
+    "usernameOrEmailLabel": "اسم المستخدم أو البريد الإلكتروني",
+    "usernameOrEmailPlaceholder": "أدخل اسم المستخدم أو البريد الإلكتروني الخاص بك",
+    "passwordLabel": "كلمة المرور",
+    "passwordPlaceholder": "ادخل كلمة المرور",
+    "signInButton": "تسجيل الدخول",
+    "noAccount": "ليس لديك حساب؟",
+    "signUpLink": "اشتراك"
+  },
+  "signUp": {
+    "title": "اشتراك",
+    "firstNameLabel": "الاسم الأول",
+    "lastNameLabel": "اسم العائلة",
+    "usernameOrEmailLabel": "اسم المستخدم أو البريد الإلكتروني",
+    "passwordLabel": "كلمة المرور",
+    "confirmPasswordLabel": "تأكيد كلمة المرور",
+    "signUpButton": "اشتراك",
+    "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
+    "signInLink": "تسجيل الدخول"
   },
   "testimonial": {
     "title": "ماذا يقول مستخدمونا!",

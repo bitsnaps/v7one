@@ -31,6 +31,14 @@
     "postDeal": "Post Your Deal",
     "contactUs": "Contact Us"
   },
+  "postDeal": {
+    "title": "Post your Deal",
+    "nameLabel": "Name",
+    "telLabel": "Tel",
+    "dealDetailsLabel": "Deal Details",
+    "submitButton": "Submit",
+    "successMessage": "Form submitted successfully!"
+  },
   "dealsCategories": {
     "title": "Deal Categories",
     "description": "Explore various categories of deals available on our platform. Find what you're looking for quickly and easily.",
@@ -102,6 +110,42 @@
         "designation": "Client Relations Manager"
       }
     }
+  },
+  "about": {
+    "title": "About V7 Deals",
+    "welcome": "Welcome to V7 Deals, your trusted platform for finding and making deals on real estate, cars, and more. We connect buyers and sellers in a seamless and secure environment, focusing on quality and trust.",
+    "mission": "Our mission is to simplify the real estate and car buying process, making it easier than ever for you to find your dream home or car.",
+    "values": "At V7 Deals, we believe in transparency and honesty. Our listings are carefully curated to ensure you get the best deals and information.",
+    "join": "Join us today and start exploring the world of deals with V7 Deals!"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "messageLabel": "Message",
+    "submitButton": "Submit",
+    "successMessage": "Form submitted successfully!"
+  },
+  "signIn": {
+    "title": "Sign In",
+    "usernameOrEmailLabel": "Username or Email",
+    "usernameOrEmailPlaceholder": "Enter your username or email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "signInButton": "Sign In",
+    "noAccount": "Don't have an account?",
+    "signUpLink": "Sign Up"
+  },
+  "signUp": {
+    "title": "Sign Up",
+    "firstNameLabel": "First Name",
+    "lastNameLabel": "Last Name",
+    "usernameOrEmailLabel": "Username or Email",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm Password",
+    "signUpButton": "Sign Up",
+    "alreadyHaveAccount": "Already have an account?",
+    "signInLink": "Sign In"
   },
   "testimonial": {
     "title": "What Our Users Say!",

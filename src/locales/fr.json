@@ -40,6 +40,14 @@
     "postDeal": "Publier Votre Offre",
     "contactUs": "Nous Contacter"
   },
+  "postDeal": {
+    "title": "Publiez votre Offre",
+    "nameLabel": "Nom",
+    "telLabel": "Tél",
+    "dealDetailsLabel": "Détails de l'offre",
+    "submitButton": "Soumettre",
+    "successMessage": "Formulaire soumis avec succès !"
+  },
   "dealsCategories": {
     "title": "Catégories d'offres",
     "description": "Explorez les différentes catégories d'offres disponibles sur notre plateforme. Trouvez ce que vous cherchez rapidement et facilement.",
@@ -112,6 +120,42 @@
         "designation": "Responsable des relations clients"
       }
     }
+  },
+  "about": {
+    "title": "À Propos de V7 Deals",
+    "welcome": "Bienvenue sur V7 Deals, votre plateforme de confiance pour trouver et conclure des affaires immobilières, automobiles, et plus encore. Nous mettons en relation acheteurs et vendeurs dans un environnement transparent et sécurisé, en privilégiant la qualité et la confiance.",
+    "mission": "Notre mission est de simplifier le processus d'achat immobilier et automobile, afin qu'il soit plus facile que jamais pour vous de trouver la maison ou la voiture de vos rêves.",
+    "values": "Chez V7 Deals, nous croyons en la transparence et l'honnêteté. Nos annonces sont soigneusement sélectionnées pour vous garantir les meilleures offres et informations.",
+    "join": "Rejoignez-nous aujourd'hui et commencez à explorer le monde des bonnes affaires avec V7 Deals !"
+  },
+  "contact": {
+    "title": "Nous Contacter",
+    "nameLabel": "Nom",
+    "emailLabel": "Email",
+    "messageLabel": "Message",
+    "submitButton": "Soumettre",
+    "successMessage": "Formulaire soumis avec succès !"
+  },
+  "signIn": {
+    "title": "Se Connecter",
+    "usernameOrEmailLabel": "Nom d'utilisateur ou Email",
+    "usernameOrEmailPlaceholder": "Entrez votre nom d'utilisateur ou email",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "signInButton": "Se Connecter",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "signUpLink": "S'inscrire"
+  },
+  "signUp": {
+    "title": "S'inscrire",
+    "firstNameLabel": "Prénom",
+    "lastNameLabel": "Nom",
+    "usernameOrEmailLabel": "Nom d'utilisateur ou Email",
+    "passwordLabel": "Mot de passe",
+    "confirmPasswordLabel": "Confirmer le mot de passe",
+    "signUpButton": "S'inscrire",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "signInLink": "Se Connecter"
   },
   "testimonial": {
     "title": "Ce que disent nos utilisateurs !",

@@ -51,39 +51,39 @@ const handleSignIn = async () => {
 <template>
   <div class="signin-container">
     <div class="signin-box">
-      <h2 class="text-center mb-4">Sign In</h2>
+      <h2 class="text-center mb-4">{{ $t('signIn.title', 'Sign In') }}</h2>
       <form @submit.prevent="handleSignIn">
         <div class="mb-3">
-          <label for="usernameOrEmail" class="form-label">Username or Email</label>
+          <label for="usernameOrEmail" class="form-label">{{ $t('signIn.usernameOrEmailLabel', 'Username or Email') }}</label>
           <input
             type="text"
             class="form-control"
             id="usernameOrEmail"
             v-model="usernameOrEmail"
             required
-            placeholder="Enter your username or email"
+            :placeholder="$t('signIn.usernameOrEmailPlaceholder', 'Enter your username or email')"
           />
         </div>
         <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
+          <label for="password" class="form-label">{{ $t('signIn.passwordLabel', 'Password') }}</label>
           <input
             type="password"
             class="form-control"
             id="password"
             v-model="password"
             required
-            placeholder="Enter your password"
+            :placeholder="$t('signIn.passwordPlaceholder', 'Enter your password')"
           />
         </div>
         <div v-if="errorMessage" class="alert alert-danger" role="alert">
           {{ errorMessage }}
         </div>
         <div class="d-grid">
-          <button type="submit" class="btn btn-primary w-100">Sign In</button>
+          <button type="submit" class="btn btn-primary w-100">{{ $t('signIn.signInButton', 'Sign In') }}</button>
         </div>
       </form>
       <p class="mt-3 text-center">
-        Don't have an account? <router-link to="/signup">Sign Up</router-link>
+        {{ $t('signIn.noAccount', "Don't have an account?") }} <router-link to="/signup">{{ $t('signIn.signUpLink', 'Sign Up') }}</router-link>
       </p>
     </div>
   </div>
