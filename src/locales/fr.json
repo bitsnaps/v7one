@@ -1,7 +1,14 @@
 {
-    "language": "fr",
-    "locale": "fr-FR",
     "app": {
+        "home": "Accueil",
+        "about": "A propos",
+        "real-estate": "Immobilier",
+        "deals": "Offres",
+        "cars": "Vehicles",
+        "other-deals": "Autres Offres",
+        "contact": "Contact",
+        "sign-in": "Se connecter",
+        "post-deal": "Publier une offre",
         "hero-find-the": "Trouvez la",
         "hero-perfect-deal": "bonne offre",
         "hero-for-you": "pour vous"
