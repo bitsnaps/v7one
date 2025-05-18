@@ -1,7 +1,147 @@
 {
-    "app": {
-        "hero-find-the": "Find the",
-        "hero-perfect-deal": "perfect deal",
-        "hero-for-you": "for you"
+  "app": {
+    "hero-find-the": "Find The ",
+    "hero-perfect-deal": "Perfect Deal ",
+    "hero-for-you": "For You"
+  },
+  "home": {
+    "heroDescription": "Explore a wide range of real estate, cars, electronics, services, and other interesting deals. v7 is your one-stop marketplace.",
+    "getStarted": "Get Started",
+    "searchKeywordPlaceholder": "Search Keyword (e.g., '3-bedroom house', 'pickup car')",
+    "allDealTypes": "All Deal Types",
+    "realEstate": "Real Estate",
+    "cars": "Cars",
+    "electronics": "Electronics",
+    "services": "Services",
+    "otherDeals": "Other Deals",
+    "locationAny": "Location (Any)",
+    "algiers": "Algiers",
+    "oran": "Oran",
+    "annaba": "Annaba",
+    "onlineRemote": "Online/Remote",
+    "searchButton": "Search",
+    "aboutTitle": "#1 Marketplace for Your Deals",
+    "aboutDescription": "V7 Deals is your trusted platform for finding and making deals on real estate, cars, and much more. We connect buyers and sellers in a seamless and secure environment, focusing on quality and trust.",
+    "aboutFeature1": "Wide Range of Categories",
+    "aboutFeature2": "Verified Listings & Sellers",
+    "aboutFeature3": "Secure Transaction Options",
+    "readMore": "Read More",
+    "ctaTitle": "Have an Item or Service to Offer?",
+    "ctaDescription": "Reach thousands of potential customers by listing your deal on V7. It's quick, easy, and effective for real estate, cars, and all kinds of deals.",
+    "postDeal": "Post Your Deal",
+    "contactUs": "Contact Us"
+  },
+  "dealsCategories": {
+    "title": "Deal Categories",
+    "description": "Explore various categories of deals available on our platform. Find what you're looking for quickly and easily.",
+    "tabs": {
+      "realEstate": "Real Estate",
+      "cars": "Cars",
+      "otherDeals": "Other Deals"
+    },
+    "categories": {
+      "apartment": "Apartment",
+      "villa": "Villa",
+      "home": "Home",
+      "office": "Office",
+      "building": "Building",
+      "townhouse": "Townhouse",
+      "shop": "Shop",
+      "garage": "Garage",
+      "sedan": "Sedan",
+      "suv": "SUV",
+      "truck": "Truck",
+      "electronics": "Electronics",
+      "services": "Services",
+      "other-deals": "Other Deals"
+    },
+    "dealsSuffix": "Deals"
+  },
+  "dealsListing": {
+    "title": "Deals Listing",
+    "description": "Explore our diverse range of deals. Whether you're looking for a house, villa, apartment, or a commercial space, we've got you covered.",
+    "tabs": {
+      "featured": "Featured",
+      "forSell": "For Sell",
+      "forRent": "For Rent"
+    },
+    "status": {
+      "forsell": "For Sell",
+      "forrent": "For Rent"
+    },
+    "types": {
+      "villa": "Villa",
+      "apartment": "Apartment",
+      "house": "House",
+      "studio": "Studio",
+      "office": "Office",
+      "home": "Home",
+      "automobile": "Automobile",
+      "luxuryitem": "Luxury Item",
+      "electronics": "Electronics"
     }
+  },
+  "teams": {
+    "title": "Meet Our Deal Specialists",
+    "description": "Our dedicated team at V7 works tirelessly to find and secure the best deals across various sectors for you. Discover the experts making it happen.",
+    "members": {
+      "1": {
+        "name": "Alice Wonderland",
+        "designation": "Chief Deal Strategist"
+      },
+      "2": {
+        "name": "Bob The Builder",
+        "designation": "Lead Negotiation Expert"
+      },
+      "3": {
+        "name": "Charlie Brown",
+        "designation": "Market Research Analyst"
+      },
+      "4": {
+        "name": "Diana Prince",
+        "designation": "Client Relations Manager"
+      }
+    }
+  },
+  "testimonial": {
+    "title": "What Our Users Say!",
+    "description": "Discover how V7 is making a difference in finding properties, vehicles, and services. Real stories from our satisfied users.",
+    "loading": "Loading testimonials...",
+    "testimonials": {
+      "1": {
+        "text": "V7 helped me find the perfect apartment in downtown. The process was smooth and their agents were very professional!",
+        "clientName": "Sarah L.",
+        "profession": "Software Engineer"
+      },
+      "2": {
+        "text": "I sold my car through V7 within a week! They handled everything, and I got a great price. Highly recommended!",
+        "clientName": "John B.",
+        "profession": "Marketing Manager"
+      },
+      "3": {
+        "text": "Finding a reliable contractor for my home renovation was a challenge until I used V7. Their platform connected me with top-notch professionals.",
+        "clientName": "Maria G.",
+        "profession": "Architect"
+      }
+    }
+  },
+  "footer": {
+    "getInTouch": "Get In Touch",
+    "address": "25 Bvd. Gaci Amar Staoueli, Algiers, Algeria",
+    "quickLinks": "Quick Links",
+    "aboutUs": "About Us",
+    "contactUs": "Contact Us",
+    "ourServices": "Our Services",
+    "privacyPolicy": "Privacy Policy",
+    "termsAndCondition": "Terms & Condition",
+    "newsletterTitle": "Newsletter",
+    "newsletterText": "Stay updated with the latest deals and news from V7.",
+    "newsletterPlaceholder": "Your email",
+    "newsletterButton": "SignUp",
+    "copyrightText": "All Right Reserved.",
+    "home": "Home",
+    "cookies": "Cookies",
+    "help": "Help",
+    "faqs": "FAQs"
+  }
 }

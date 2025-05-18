@@ -1,8 +1,11 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const deals = ref([]);
 const activeTab = ref('tab-1'); // 'tab-1', 'tab-2', 'tab-3'
+
+const { t } = useI18n();
 
 const fetchDeals = async () => {
   // Simulate API call
@@ -157,22 +160,20 @@ const displayedDeals = computed(() => {
             <div class="row g-0 gx-5 align-items-end">
                 <div class="col-lg-6">
                     <div class="text-start mx-auto mb-5">
-                        <h1 class="mb-3">Deals Listing</h1>
-                        <p>
-                            Explore our diverse range of deals. Whether you're looking for a house, villa, apartment, or a commercial space, we've got you covered.
-                        </p>
+                        <h1 class="mb-3">{{ $t('dealsListing.title', 'Deals Listing') }}</h1>
+                        <p>{{ $t('dealsListing.description', "Explore our diverse range of deals. Whether you're looking for a house, villa, apartment, or a commercial space, we've got you covered.") }}</p>
                     </div>
                 </div>
                 <div class="col-lg-6 text-start text-lg-end">
                     <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'tab-1' }" @click.prevent="setActiveTab('tab-1')" href="#">Featured</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'tab-1' }" @click.prevent="setActiveTab('tab-1')" href="#">{{ $t('dealsListing.tabs.featured', 'Featured') }}</a>
                         </li>
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'tab-2' }" @click.prevent="setActiveTab('tab-2')" href="#">For Sell</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'tab-2' }" @click.prevent="setActiveTab('tab-2')" href="#">{{ $t('dealsListing.tabs.forSell', 'For Sell') }}</a>
                         </li>
                         <li class="nav-item me-0">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'tab-3' }" @click.prevent="setActiveTab('tab-3')" href="#">For Rent</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'tab-3' }" @click.prevent="setActiveTab('tab-3')" href="#">{{ $t('dealsListing.tabs.forRent', 'For Rent') }}</a>
                         </li>
                     </ul>
                 </div>
@@ -183,8 +184,8 @@ const displayedDeals = computed(() => {
                         <div class="property-item rounded overflow-hidden">
                             <div class="position-relative overflow-hidden">
                                 <a href="#"><img class="img-fluid" :src="deal.image" :alt="deal.title"></a>
-                                <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{ deal.status }}</div>
-                                <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ deal.type }}</div>
+                                <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{ $t('dealsListing.status.' + deal.status.toLowerCase().replace(/\s+/g, ''), deal.status) }}</div>
+                                <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $t('dealsListing.types.' + deal.type.toLowerCase().replace(/\s+/g, ''), deal.type) }}</div>
                             </div>
                             <div class="p-4 pb-0">
                                 <h5 class="text-primary mb-3">{{ deal.price }}</h5>
@@ -203,7 +204,7 @@ const displayedDeals = computed(() => {
                     </div>
                 </div>
                 <div class="col-12 text-center mt-4 wow fadeInUp" data-wow-delay="0.1s" v-if="displayedDeals.length > 0">
-                    <a class="btn btn-primary py-3 px-5" href="#">Browse More Deals</a>
+                    <a class="btn btn-primary py-3 px-5" href="#">{{ $t('dealsListing.browseMoreDeals', 'Browse More Deals') }}</a>
                 </div>
             </div>
         </div>

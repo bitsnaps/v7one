@@ -1,7 +1,10 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const teamMembers = ref([]);
+
+const { t } = useI18n();
 
 const fetchTeamMembers = async () => {
   // Simulate API call
@@ -62,8 +65,8 @@ onMounted(() => {
         <div class="container-xxl py-5">
             <div class="container">
                 <div class="text-center mx-auto mb-5" style="max-width: 600px;">
-                    <h1 class="mb-3">Meet Our Deal Specialists</h1>
-                    <p>Our dedicated team at V7 works tirelessly to find and secure the best deals across various sectors for you. Discover the experts making it happen.</p>
+                    <h1 class="mb-3">{{ $t('teams.title', 'Meet Our Deal Specialists') }}</h1>
+                    <p>{{ $t('teams.description', 'Our dedicated team at V7 works tirelessly to find and secure the best deals across various sectors for you. Discover the experts making it happen.') }}</p>
                 </div>
                 <div class="row g-4">
                     <div v-for="member in teamMembers" :key="member.id" class="col-lg-3 col-md-6">
@@ -75,8 +78,8 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div class="text-center p-4 mt-3">
-                                <h5 class="fw-bold mb-0">{{ member.name }}</h5>
-                                <small>{{ member.designation }}</small>
+                                <h5 class="fw-bold mb-0">{{ $t('teams.members.' + member.id + '.name', member.name) }}</h5>
+                                <small>{{ $t('teams.members.' + member.id + '.designation', member.designation) }}</small>
                             </div>
                         </div>
                     </div>

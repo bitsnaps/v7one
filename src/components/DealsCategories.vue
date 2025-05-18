@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 // Group categories by type
 const realEstateCategories = [
@@ -30,7 +33,7 @@ const carCategories = [
 const otherCategories = [
   { name: 'Electronics', icon: '/img/icon-electronics.svg', count: 150, link: '/category/electronics' },
   { name: 'Services', icon: '/img/icon-services.svg', count: 90, link: '/category/services' },
-  { name: 'Other Deals', icon: '/img/icon-deal.svg', count: 110, link: '/category/other-deals' }
+  { name: t('dealsCategories.tabs.otherDeals', 'Other Deals'), icon: '/img/icon-deal.svg', count: 110, link: '/category/other-deals' }
 ];
 
 // For backward compatibility
@@ -48,25 +51,25 @@ const setActiveTab = (tab) => {
   <div class="container-xxl py-5">
     <div class="container">
       <div class="text-center mx-auto mb-5" style="max-width: 600px;">
-        <h1 class="mb-3">Deal Categories</h1>
-        <p>Explore various categories of deals available on our platform. Find what you're looking for quickly and easily.</p>
+        <h1 class="mb-3">{{ $t('dealsCategories.title', 'Deal Categories') }}</h1>
+        <p>{{ $t('dealsCategories.description', "Explore various categories of deals available on our platform. Find what you're looking for quickly and easily.") }}</p>
       </div>
       
       <!-- Tabs Navigation -->
       <ul class="nav nav-tabs mb-4 justify-content-center">
         <li class="nav-item">
           <button class="nav-link" :class="{ active: activeTab === 'real-estate' }" @click="setActiveTab('real-estate')">
-            Real Estate
+            {{ $t('dealsCategories.tabs.realEstate', 'Real Estate') }}
           </button>
         </li>
         <li class="nav-item">
           <button class="nav-link" :class="{ active: activeTab === 'cars' }" @click="setActiveTab('cars')">
-            Cars
+            {{ $t('dealsCategories.tabs.cars', 'Cars') }}
           </button>
         </li>
         <li class="nav-item">
           <button class="nav-link" :class="{ active: activeTab === 'other' }" @click="setActiveTab('other')">
-            Other Deals
+            {{ $t('dealsCategories.tabs.otherDeals', 'Other Deals') }}
           </button>
         </li>
       </ul>
@@ -80,8 +83,8 @@ const setActiveTab = (tab) => {
                 <div class="icon mb-3">
                   <img class="img-fluid" :src="category.icon" :alt="category.name + ' Icon'">
                 </div>
-                <h6>{{ category.name }}</h6>
-                <span>{{ category.count }} Deals</span>
+                <h6>{{ $t('dealsCategories.categories.' + category.name.toLowerCase().replace(/\s+/g, '-'), category.name) }}</h6>
+                <span>{{ category.count }} {{ $t('dealsCategories.dealsSuffix', 'Deals') }}</span>
               </div>
             </router-link>
           </div>
@@ -96,8 +99,8 @@ const setActiveTab = (tab) => {
                 <div class="icon mb-3">
                   <img class="img-fluid" :src="category.icon" :alt="category.name + ' Icon'">
                 </div>
-                <h6>{{ category.name }}</h6>
-                <span>{{ category.count }} Deals</span>
+                <h6>{{ $t('dealsCategories.categories.' + category.name.toLowerCase().replace(/\s+/g, '-'), category.name) }}</h6>
+                <span>{{ category.count }} {{ $t('dealsCategories.dealsSuffix', 'Deals') }}</span>
               </div>
             </router-link>
           </div>
@@ -112,8 +115,8 @@ const setActiveTab = (tab) => {
                 <div class="icon mb-3">
                   <img class="img-fluid" :src="category.icon" :alt="category.name + ' Icon'">
                 </div>
-                <h6>{{ category.name }}</h6>
-                <span>{{ category.count }} Deals</span>
+                <h6>{{ $t('dealsCategories.categories.' + category.name.toLowerCase().replace(/\s+/g, '-'), category.name) }}</h6>
+                <span>{{ category.count }} {{ $t('dealsCategories.dealsSuffix', 'Deals') }}</span>
               </div>
             </router-link>
           </div>
