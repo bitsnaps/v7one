@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'; // Added computed for dynamic flag path
 import { useI18n } from 'vue-i18n';
 
-const isNavCollapsed = ref(true);
+const isNavCollapsed = ref(false);
 
 const { locale, availableLocales, t } = useI18n();
 
