@@ -25,3 +25,12 @@ dist-ssr
 
 # docs
 docs/
+
+# ignore all *.pyc files recursively
+**/*.pyc
+# other python files that should be ignored
+**/*.pyo
+**/*.pyd
+**/*.pyw
+**/__pycache__/
+
