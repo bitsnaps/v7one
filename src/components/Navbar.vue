@@ -9,6 +9,10 @@ const { locale, availableLocales, t } = useI18n();
 const switchLanguage = (newLocale) => {
   locale.value = newLocale;
   localStorage.setItem('user-preferred-language', newLocale);
+  // Close navbar on mobile after language selection
+  if (window.innerWidth < 992) { // Assuming 992px is your lg breakpoint
+    isNavCollapsed.value = true;
+  }  
 };
 
 const languageOptions = {
@@ -48,31 +52,31 @@ const currentFlag = computed(() => {
         <div class="navbar-nav ms-auto">
           <router-link to="/" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.home', 'Home') }}</router-link>
           <router-link to="/about" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.about', 'About') }}</router-link>
-          <div class="nav-item dropdown">
-              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ $t('app.deals', 'Deals') }}</a>
-              <ul class="dropdown-menu rounded-0 m-0">
-                  <li><router-link to="/category/real-estate" class="dropdown-item" @click="isNavCollapsed = true">{{ $t('app.real-estate', 'Real Estate') }}</router-link></li>
-                  <li><router-link to="/category/cars" class="dropdown-item" @click="isNavCollapsed = true">{{ $t('app.cars', 'Cars') }}</router-link></li>
-                  <li><router-link to="/category/other-deals" class="dropdown-item" @click="isNavCollapsed = true">{{ $t('app.other-deals', 'Other Deals') }}</router-link></li>
-              </ul>
-          </div>
+
+          <BNavItemDropdown :text="$t('app.deals', 'Deals')" menu-class="rounded-0 m-0" toggle-class="nav-link-style">
+            <BDropdownItem to="/category/real-estate" link-class="custom-dropdown-item" @click="isNavCollapsed = true">{{ $t('app.real-estate', 'Real Estate') }}</BDropdownItem>
+            <BDropdownItem to="/category/cars" link-class="custom-dropdown-item" @click="isNavCollapsed = true">{{ $t('app.cars', 'Cars') }}</BDropdownItem>
+            <BDropdownItem to="/category/other-deals" link-class="custom-dropdown-item" @click="isNavCollapsed = true">{{ $t('app.other-deals', 'Other Deals') }}</BDropdownItem>
+          </BNavItemDropdown>
+
           <router-link to="/contact" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.contact', 'Contact') }}</router-link>
           <router-link to="/signin" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.sign-in', 'Sign In') }}</router-link>
 
-          <div class="nav-item dropdown language-dropdown">
-            <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
-              <img :src="currentFlag" alt="Selected language" width="24" height="12" class="me-2" />
-              {{ languageOptions[locale]?.name || locale.toUpperCase() }}
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end rounded-0 m-0">
-              <li v-for="availableLocale in availableLocales" :key="`locale-${availableLocale}`">
-                <a href="#" class="dropdown-item d-flex align-items-center" @click.prevent="switchLanguage(availableLocale); isNavCollapsed = true;">
-                  <img :src="languageOptions[availableLocale]?.flag || `/img/flags/${availableLocale}.svg`" :alt="languageOptions[availableLocale]?.name" width="24" height="12" class="me-2" />
-                  {{ languageOptions[availableLocale]?.name || availableLocale.toUpperCase() }}
-                </a>
-              </li>
-            </ul>
-          </div>
+          <BNavItemDropdown class="language-dropdown" menu-class="rounded-0 m-0 dropdown-menu-end" toggle-class="nav-link-style">
+            <template #button-content>
+              <img :src="currentFlag" alt="Selected language" width="20" height="10" class="me-1 lang-flag-sm" /> <!-- Adjusted size and class -->
+              <span class="lang-name-sm">{{ languageOptions[locale]?.name || locale.toUpperCase() }}</span>
+            </template>
+            <BDropdownItem
+              v-for="availableLocale in availableLocales"
+              :key="`locale-${availableLocale}`"
+              @click="switchLanguage(availableLocale)"
+              link-class="custom-dropdown-item">
+              <img :src="languageOptions[availableLocale]?.flag || `/img/flags/${availableLocale}.svg`" :alt="languageOptions[availableLocale]?.name" width="20" height="10" class="me-2 lang-flag-sm" /> <!-- Adjusted size and class -->
+              {{ languageOptions[availableLocale]?.name || availableLocale.toUpperCase() }}
+            </BDropdownItem>
+          </BNavItemDropdown>
+
         </div>
         <router-link to="/post-deal" class="btn btn-primary px-3 d-none d-lg-flex" @click="isNavCollapsed = true">{{ $t('app.post-deal', 'Post a Deal') }}</router-link>
       </BCollapse>
@@ -97,6 +101,17 @@ const currentFlag = computed(() => {
 
 .language-dropdown .dropdown-item span:first-child {
     line-height: 1; /* Ensure flag SVGs align well */
+}
+
+.language-dropdown .lang-flag-sm {
+    width: 20px; /* Slightly smaller flag for better fit */
+    height: auto; /* Maintain aspect ratio, or set fixed height e.g. 10px */
+    object-fit: contain;
+}
+
+/* Adjust font size for language name in toggle if needed on smaller screens or generally */
+.language-dropdown .lang-name-sm {
+    font-size: 0.9em; /* Example: slightly smaller font */
 }
 
 .nav-bar {
@@ -134,10 +149,37 @@ const currentFlag = computed(() => {
 .navbar-light .navbar-nav .nav-link {
     margin-right: 30px;
     padding: 25px 0;
-    color: #FFFFFF;
+    color: var(--dark);
+    font-weight: 500;
     font-size: 15px;
     text-transform: uppercase;
     outline: none;
+}
+
+
+/* Styles for BNavItemDropdown toggle to match other nav-links */
+:deep(.navbar-nav .nav-item .nav-link-style.dropdown-toggle) {
+    color: var(--dark) !important; /* Override BNavItemDropdown default color */
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 15px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    padding-right: 25px;
+    display: flex;
+    align-items: center;
+}
+
+/* Ensure the caret color matches */
+:deep(.navbar-nav .nav-item .nav-link-style.dropdown-toggle::after) {
+    border: none;
+    content: "\f107";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    vertical-align: middle;
+    margin-left: 5px;
+    transition: .5s;
+    color: inherit; /* Inherit color from the toggle button */
 }
 
 .navbar-light .navbar-nav .nav-link:hover,
@@ -156,6 +198,13 @@ const currentFlag = computed(() => {
         padding: 10px 0;
     }
 
+    .navbar-light .navbar-nav {
+        border-top: 1px solid #EEEEEE;
+    }
+    :deep(.navbar-nav .nav-item .nav-link-style.dropdown-toggle) {
+        padding: 10px 0; /* Match mobile padding of other nav-links */
+        margin-right: 0;
+    }
     .navbar-light .navbar-nav {
         border-top: 1px solid #EEEEEE;
     }
