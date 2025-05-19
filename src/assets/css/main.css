@@ -1,9 +1,51 @@
-/* Import Google Font - Noto Sans Arabic */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
 
 body {
-  font-family: 'Noto Sans Arabic', sans-serif; /* Default to Arabic font, ensure fallback for other languages */
+  font-family: "Tajawal", sans-serif;
 }
+
+[dir="rtl"] .tajawal-extralight {
+  font-family: "Tajawal", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+[dir="rtl"] .tajawal-light {
+  font-family: "Tajawal", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+[dir="rtl"] .tajawal-regular {
+  font-family: "Tajawal", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+[dir="rtl"] .tajawal-medium {
+  font-family: "Tajawal", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+[dir="rtl"] .tajawal-bold {
+  font-family: "Tajawal", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+[dir="rtl"] .tajawal-extrabold {
+  font-family: "Tajawal", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
+[dir="rtl"] .tajawal-black {
+  font-family: "Tajawal", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
 
 /* Basic RTL adjustments */
 [dir="rtl"] body {

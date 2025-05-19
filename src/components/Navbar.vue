@@ -53,7 +53,10 @@ const currentFlag = computed(() => {
           <router-link to="/" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.home', 'Home') }}</router-link>
           <router-link to="/about" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.about', 'About') }}</router-link>
 
-          <BNavItemDropdown :text="$t('app.deals', 'Deals')" menu-class="rounded-0 m-0" toggle-class="nav-link-style">
+          <BNavItemDropdown class="deals-dropdown" menu-class="rounded-0 m-0" toggle-class="nav-link-style">
+            <template #button-content>
+              <span class="lang-name-sm">{{ $t('app.deals', 'Deals') }}</span>
+            </template>
             <BDropdownItem to="/category/real-estate" link-class="custom-dropdown-item" @click="isNavCollapsed = true">{{ $t('app.real-estate', 'Real Estate') }}</BDropdownItem>
             <BDropdownItem to="/category/cars" link-class="custom-dropdown-item" @click="isNavCollapsed = true">{{ $t('app.cars', 'Cars') }}</BDropdownItem>
             <BDropdownItem to="/category/other-deals" link-class="custom-dropdown-item" @click="isNavCollapsed = true">{{ $t('app.other-deals', 'Other Deals') }}</BDropdownItem>
@@ -243,5 +246,19 @@ const currentFlag = computed(() => {
         transition: .5s;
         opacity: 1;
     }
+}
+
+
+/* Apply Tajawal font for Arabic language */
+html[dir="rtl"] .navbar-nav .nav-link,
+html[dir="rtl"] :deep(.navbar-nav .nav-item .nav-link-style.dropdown-toggle),
+html[dir="rtl"] .navbar-brand h1,
+html[dir="rtl"] .language-dropdown .lang-name-sm,
+html[dir="rtl"] .language-dropdown .dropdown-item,
+html[dir="rtl"] .btn-primary,
+html[dir="rtl"] .deals-dropdown .lang-name-sm,
+html[dir="rtl"] .deals-dropdown .dropdown-item
+{ /* Ensure buttons also use the font if they contain text */
+  font-family: "Tajawal", sans-serif !important;
 }
 </style>
