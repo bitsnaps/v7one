@@ -135,10 +135,17 @@
   },
   "contact": {
     "title": "اتصل بنا",
-    "nameLabel": "الاسم",
-    "emailLabel": "البريد الإلكتروني",
+    "subtitle": "يمكنك الاتصال بنا عبر هذا النموذج للحصول على أي استفسارات.",
+    "downloadNow": "تحميل الآن",
+    "nameLabel": "اسمك",
+    "namePlaceholder": "اسمك",
+    "emailLabel": "بريدك الإلكتروني",
+    "emailPlaceholder": "بريدك الإلكتروني",
+    "subjectLabel": "الموضوع",
+    "subjectPlaceholder": "الموضوع",
     "messageLabel": "الرسالة",
-    "submitButton": "إرسال",
+    "messagePlaceholder": "اترك رسالة هنا",
+    "submitButton": "إرسال الرسالة",
     "successMessage": "تم إرسال النموذج بنجاح!"
   },
   "signIn": {

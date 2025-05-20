@@ -130,11 +130,18 @@
   },
   "contact": {
     "title": "Nous Contacter",
-    "nameLabel": "Nom",
-    "emailLabel": "Email",
-    "messageLabel": "Message",
-    "submitButton": "Soumettre",
-    "successMessage": "Formulaire soumis avec succès !"
+    "subtitle": "Contactez-nous pour toute question ou demande d'information.",
+    "downloadNow": "Télécharger Maintenant (FR)",
+    "nameLabel": "Votre Nom (FR)",
+    "namePlaceholder": "Votre Nom (FR)",
+    "emailLabel": "Votre Email (FR)",
+    "emailPlaceholder": "Votre Email (FR)",
+    "subjectLabel": "Sujet (FR)",
+    "subjectPlaceholder": "Sujet (FR)",
+    "messageLabel": "Message (FR)",
+    "messagePlaceholder": "Laissez un message ici (FR)",
+    "submitButton": "Envoyer le Message (FR)",
+    "successMessage": "Formulaire soumis avec succès ! (FR)"
   },
   "signIn": {
     "title": "Se Connecter",

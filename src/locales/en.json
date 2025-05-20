@@ -120,10 +120,17 @@
   },
   "contact": {
     "title": "Contact Us",
-    "nameLabel": "Name",
-    "emailLabel": "Email",
+    "subtitle": "You can contact us via this form for any inqueries.",
+    "downloadNow": "Download Now",
+    "nameLabel": "Your Name",
+    "namePlaceholder": "Your Name",
+    "emailLabel": "Your Email",
+    "emailPlaceholder": "Your Email",
+    "subjectLabel": "Subject",
+    "subjectPlaceholder": "Subject",
     "messageLabel": "Message",
-    "submitButton": "Submit",
+    "messagePlaceholder": "Leave a message here",
+    "submitButton": "Send Message",
     "successMessage": "Form submitted successfully!"
   },
   "signIn": {

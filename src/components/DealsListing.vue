@@ -8,7 +8,19 @@ const activeTab = ref('tab-1'); // 'tab-1', 'tab-2', 'tab-3'
 const { t } = useI18n();
 
 const fetchDeals = async () => {
-  // Simulate API call
+  // Fetch deals from API (replace with actual API endpoint in production)
+  // check if running of dev mode
+  const data = await fetch(`${import.meta.env.DEV?'http://localhost:8080':''}/api/deals`);
+  // check for data
+  if (!data.ok) {
+    console.error('Failed to fetch deals');
+    deals.value = [];
+    return;
+  }
+
+  deals.value = await data.json();
+
+  /*/ Simulate API call
   await new Promise(resolve => setTimeout(resolve, 500));
   deals.value = [
     {
@@ -128,7 +140,7 @@ const fetchDeals = async () => {
       baths: 'N/A',
       category: ['tab-1', 'tab-3']
     }
-  ];
+  ];*/
 };
 
 onMounted(() => {

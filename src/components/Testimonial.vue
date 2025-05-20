@@ -17,21 +17,21 @@ const fetchTestimonials = async () => {
       text: 'V7 helped me find the perfect apartment in downtown. The process was smooth and their agents were very professional!',
       clientName: 'Sarah L.',
       profession: 'Software Engineer',
-      image: '/img/client1.svg', // Placeholder image path
+      image: '/img/user.svg', // Placeholder image path
     },
     {
       id: 2,
       text: 'I sold my car through V7 within a week! They handled everything, and I got a great price. Highly recommended!',
       clientName: 'John B.',
       profession: 'Marketing Manager',
-      image: '/img/client2.svg', // Placeholder image path
+      image: '/img/user.svg', // Placeholder image path
     },
     {
       id: 3,
       text: 'Finding a reliable contractor for my home renovation was a challenge until I used V7. Their platform connected me with top-notch professionals.',
       clientName: 'Maria G.',
       profession: 'Architect',
-      image: '/img/client3.svg', // Placeholder image path
+      image: '/img/user.svg', // Placeholder image path
     },
   ];
 };
