@@ -1,6 +1,17 @@
 {
-	"dependencies": {
-		"hono": "^4.7.7",
-		"nodemailer": "^6.10.1"
-	}
+  "name": "api",
+  "version": "1.0.0",
+  "description": "The API backend for v7one",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.1",
+    "hono": "^4.7.7",
+    "nodemailer": "^6.10.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
 }

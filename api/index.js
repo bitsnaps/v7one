@@ -1,6 +1,7 @@
 const { serve } = require('@hono/node-server');
 const { Hono } = require('hono');
 const { serveStatic } = require('@hono/node-server/serve-static');
+const { cors } = require('hono/cors');
 const { rateLimiter } = require('./honoRateLimiter');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
@@ -44,6 +45,15 @@ const transporter = nodemailer.createTransport({
 */
 
 const app = new Hono();
+
+// Add CORS middleware (for Dev)
+app.use('/*', cors({
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
+  // This means the browser will expose these headers when it makes requests to your API
+  credentials: true
+}));
 
 // Anything comes from static folder will be served from "/"
 app.use('/*', serveStatic({ root: './static' }));
@@ -273,6 +283,189 @@ app.post('/contact', async (c) => {
     } catch (error) {
         console.error('Error processing contact form:', error);
         return c.json({ success: false, message: genericErrorMessage }, 500);
+    }
+});
+
+// API endpoint for deals
+app.get('/api/deals', async (c) => {
+    try {
+        const deals = [
+            {
+                "id": 1,
+                "title": "Luxury Villa with Ocean View",
+                "image": "/img/deals/property-1.jpg",
+                "price": "$2,500,000",
+                "status": "For Sell",
+                "type": "Villa",
+                "location": "123 Ocean Drive, Miami, FL",
+                "sqft": "5000 Sqft",
+                "beds": "5 Bed",
+                "baths": "6 Bath",
+                "category": ["featured", "tab-2"]
+              },
+              {
+                "id": 2,
+                "title": "Modern Downtown Apartment",
+                "image": "/img/deals/property-2.jpg",
+                "price": "$3,500/month",
+                "status": "For Rent",
+                "type": "Apartment",
+                "location": "456 Main Street, New York, NY",
+                "sqft": "1200 Sqft",
+                "beds": "2 Bed",
+                "baths": "2 Bath",
+                "category": ["featured", "tab-3"]
+              },
+              {
+                "id": 3,
+                "title": "Spacious Family House",
+                "image": "/img/deals/property-3.jpg",
+                "price": "$750,000",
+                "status": "For Sell",
+                "type": "House",
+                "location": "789 Suburb Lane, Chicago, IL",
+                "sqft": "2500 Sqft",
+                "beds": "4 Bed",
+                "baths": "3 Bath",
+                "category": ["tab-2"]
+              },
+              {
+                "id": 4,
+                "title": "Cozy Studio for Rent",
+                "image": "/img/deals/property-4.jpg",
+                "price": "$1,800/month",
+                "status": "For Rent",
+                "type": "Studio",
+                "location": "101 City Center, San Francisco, CA",
+                "sqft": "600 Sqft",
+                "beds": "1 Bed",
+                "baths": "1 Bath",
+                "category": ["tab-3"]
+              },
+              {
+                "id": 5,
+                "title": "Commercial Office Space",
+                "image": "/img/deals/office-1.jpg",
+                "price": "$1,200,000",
+                "status": "For Sell",
+                "type": "Office",
+                "location": "202 Business Park, Austin, TX",
+                "sqft": "10000 Sqft",
+                "beds": "N/A",
+                "baths": "4 Bath",
+                "category": ["featured", "tab-2"]
+              },
+              {
+                "id": 6,
+                "title": "Charming Suburban Home for Rent",
+                "image": "/img/deals/property-5.jpg",
+                "price": "$4,000/month",
+                "status": "For Rent",
+                "type": "Home",
+                "location": "303 Quiet Street, Seattle, WA",
+                "sqft": "1800 Sqft",
+                "beds": "3 Bed",
+                "baths": "2.5 Bath",
+                "category": ["tab-3"]
+              },
+              {
+                "id": 7,
+                "title": "Sleek Sports Car",
+                "image": "/img/deals/car-1.jpg",
+                "price": "$85,000",
+                "status": "For Sell",
+                "type": "Automobile",
+                "location": "Prestige Motors, LA",
+                "sqft": "N/A",
+                "beds": "N/A",
+                "baths": "N/A",
+                "category": ["featured", "tab-2"]
+              },
+              {
+                "id": 8,
+                "title": "Vintage Collector Watch",
+                "image": "/img/deals/watch-1.jpg",
+                "price": "$22,000",
+                "status": "For Sell",
+                "type": "Luxury Item",
+                "location": "Timeless Pieces Boutique",
+                "sqft": "N/A",
+                "beds": "N/A",
+                "baths": "N/A",
+                "category": ["tab-2"]
+              },
+              {
+                "id": 9,
+                "title": "High-End Gaming Laptop Rental",
+                "image": "/img/deals/laptop-1.jpg",
+                "price": "$200/week",
+                "status": "For Rent",
+                "type": "Electronics",
+                "location": "Tech Rentals Co.",
+                "sqft": "N/A",
+                "beds": "N/A",
+                "baths": "N/A",
+                "category": ["featured", "tab-3"]
+              }
+        ];
+        
+        return c.json({ success: true, data: deals });
+    } catch (error) {
+        console.error('Error fetching deals:', error);
+        return c.json({ success: false, message: 'Error fetching deals' }, 500);
+    }
+});
+
+// API endpoint for deal categories
+app.get('/api/categories', async (c) => {
+    try {
+        const categories = [
+            {
+                id: 1,
+                name: "Real Estate",
+                slug: "real-estate",
+                icon: "/img/icon-house.svg",
+                description: "Houses, apartments, villas and commercial properties",
+                count: 245
+            },
+            {
+                id: 2,
+                name: "Cars",
+                slug: "cars",
+                icon: "/img/icon-car-sedan.svg",
+                description: "New and used vehicles of all types",
+                count: 189
+            },
+            {
+                id: 3,
+                name: "Electronics",
+                slug: "electronics",
+                icon: "/img/icon-electronics.svg",
+                description: "Phones, laptops, gadgets and tech accessories",
+                count: 156
+            },
+            {
+                id: 4,
+                name: "Services",
+                slug: "services",
+                icon: "/img/icon-services.svg",
+                description: "Professional services and consultations",
+                count: 98
+            },
+            {
+                id: 5,
+                name: "Other Deals",
+                slug: "other-deals",
+                icon: "/img/icon-deal.svg",
+                description: "Miscellaneous items and special offers",
+                count: 67
+            }
+        ];
+        
+        return c.json({ success: true, data: categories });
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        return c.json({ success: false, message: 'Error fetching categories' }, 500);
     }
 });
 

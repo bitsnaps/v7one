@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@hono/node-server':
+    specifier: ^1.14.1
+    version: 1.14.1(hono@4.7.7)
   hono:
     specifier: ^4.7.7
     version: 4.7.7
@@ -13,6 +16,15 @@ dependencies:
     version: 6.10.1
 
 packages:
+
+  /@hono/node-server@1.14.1(hono@4.7.7):
+    resolution: {integrity: sha512-vmbuM+HPinjWzPe7FFPWMMQMsbKE9gDPhaH0FFdqbGpkT5lp++tcWDTxwBl5EgS5y6JVgIaCdjeHRfQ4XRBRjQ==}
+    engines: {node: '>=18.14.1'}
+    peerDependencies:
+      hono: ^4
+    dependencies:
+      hono: 4.7.7
+    dev: false
 
   /hono@4.7.7:
     resolution: {integrity: sha512-2PCpQRbN87Crty8/L/7akZN3UyZIAopSoRxCwRbJgUuV1+MHNFHzYFxZTg4v/03cXUm+jce/qa2VSBZpKBm3Qw==}
