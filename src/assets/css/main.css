@@ -109,9 +109,12 @@ body {
 
 /* Ensure dropdown menus open correctly in RTL */
 [dir="rtl"] .dropdown-menu {
-  text-align: right; /* Align text to the right */
-  left: auto !important; /* Reset left positioning */
-  right: 0; /* Position to the right edge of the parent */
+  /* Align text to the right */
+  text-align: right;
+  /* Reset left positioning */
+  left: auto !important;
+  /* Position to the right edge of the parent */
+  right: 0;
 }
 
 [dir="rtl"] .dropdown-menu-end {
@@ -128,6 +131,29 @@ body {
 [dir="rtl"] .dropdown-menu[data-bs-popper] {
     left: auto;
     right: 0;
+}
+
+
+/* Fix RTL dropdown positioning in mobile view */
+@media (max-width: 991.98px) {
+    [dir="rtl"] .dropdown-menu {
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        float: none;
+        width: auto;
+        margin: 0;
+        background-color: transparent;
+        border: 0;
+        box-shadow: none;
+    }
+    
+    [dir="rtl"] .dropdown-menu[data-bs-popper] {
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+    }
 }
 
 /* Fix for signin box text alignment */
