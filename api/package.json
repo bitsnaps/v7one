@@ -4,7 +4,10 @@
   "description": "The API backend for v7one",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "deploy:ui": "rm -rf /home/$USER/public_html/* && cp -R /home/$USER/repositories/v7one/dist/* /home/$USER/public_html/",
+    "deploy:api": "rm /home/$USER/app/*.js && cp -R /home/$USER/repositories/v7one/api/* /home/$USER/app/"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.1",

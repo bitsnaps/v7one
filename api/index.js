@@ -301,7 +301,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "5000 Sqft",
                 "beds": "5 Bed",
                 "baths": "6 Bath",
-                "category": ["featured", "tab-2"]
+                "category": ["tab-1", "tab-2"]
               },
               {
                 "id": 2,
@@ -314,7 +314,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "1200 Sqft",
                 "beds": "2 Bed",
                 "baths": "2 Bath",
-                "category": ["featured", "tab-3"]
+                "category": ["tab-1", "tab-3"]
               },
               {
                 "id": 3,
@@ -353,7 +353,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "10000 Sqft",
                 "beds": "N/A",
                 "baths": "4 Bath",
-                "category": ["featured", "tab-2"]
+                "category": ["tab-1", "tab-2"]
               },
               {
                 "id": 6,
@@ -379,7 +379,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "N/A",
                 "beds": "N/A",
                 "baths": "N/A",
-                "category": ["featured", "tab-2"]
+                "category": ["tab-1", "tab-2"]
               },
               {
                 "id": 8,
@@ -405,7 +405,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "N/A",
                 "beds": "N/A",
                 "baths": "N/A",
-                "category": ["featured", "tab-3"]
+                "category": ["tab-1", "tab-3"]
               }
         ];
         
