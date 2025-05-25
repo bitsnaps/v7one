@@ -11,7 +11,7 @@
     "hono": "^4.7.7",
     "nodemailer": "^6.10.1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["api","backend","hono"],
+  "author": "Ibrahim.H",
   "license": "MIT"
 }
