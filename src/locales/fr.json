@@ -131,17 +131,17 @@
   "contact": {
     "title": "Nous Contacter",
     "subtitle": "Contactez-nous pour toute question ou demande d'information.",
-    "downloadNow": "Télécharger Maintenant (FR)",
-    "nameLabel": "Votre Nom (FR)",
-    "namePlaceholder": "Votre Nom (FR)",
-    "emailLabel": "Votre Email (FR)",
-    "emailPlaceholder": "Votre Email (FR)",
-    "subjectLabel": "Sujet (FR)",
-    "subjectPlaceholder": "Sujet (FR)",
-    "messageLabel": "Message (FR)",
-    "messagePlaceholder": "Laissez un message ici (FR)",
-    "submitButton": "Envoyer le Message (FR)",
-    "successMessage": "Formulaire soumis avec succès ! (FR)"
+    "downloadNow": "Télécharger Maintenant",
+    "nameLabel": "Votre Nom",
+    "namePlaceholder": "Votre Nom",
+    "emailLabel": "Votre Email",
+    "emailPlaceholder": "Votre Email",
+    "subjectLabel": "Sujet",
+    "subjectPlaceholder": "Sujet",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Laissez un message ici",
+    "submitButton": "Envoyer le Message",
+    "successMessage": "Formulaire soumis avec succès !"
   },
   "signIn": {
     "title": "Se Connecter",
