@@ -3,22 +3,23 @@ import { ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const deals = ref([]);
-const activeTab = ref('tab-1'); // 'tab-1', 'tab-2', 'tab-3'
+const activeTab = ref('featured'); // 'featured', 'tab-2', 'tab-3'
 
 const { t } = useI18n();
 
 const fetchDeals = async () => {
   // Fetch deals from API (replace with actual API endpoint in production)
   // check if running of dev mode
-  const data = await fetch(`${import.meta.env.DEV?'http://localhost:8080':''}/api/deals`);
-  // check for data
-  if (!data.ok) {
+  const response = await fetch(`${import.meta.env.DEV?'http://localhost:3000':''}/api/deals`);
+  // check for response
+  if (!response.ok) {
     console.error('Failed to fetch deals');
     deals.value = [];
     return;
   }
 
-  deals.value = await data.json();
+  const results = await response.json();
+  deals.value = results.data;
 
   /*/ Simulate API call
   await new Promise(resolve => setTimeout(resolve, 500));
@@ -34,7 +35,7 @@ const fetchDeals = async () => {
       sqft: '5000 Sqft',
       beds: '5 Bed',
       baths: '6 Bath',
-      category: ['tab-1', 'tab-2'] // Featured and For Sell
+      category: ['featured', 'tab-2'] // Featured and For Sell
     },
     {
       id: 2,
@@ -47,7 +48,7 @@ const fetchDeals = async () => {
       sqft: '1200 Sqft',
       beds: '2 Bed',
       baths: '2 Bath',
-      category: ['tab-1', 'tab-3'] // Featured and For Rent
+      category: ['featured', 'tab-3'] // Featured and For Rent
     },
     {
       id: 3,
@@ -86,7 +87,7 @@ const fetchDeals = async () => {
       sqft: '10000 Sqft',
       beds: 'N/A',
       baths: '4 Bath',
-      category: ['tab-1', 'tab-2'] // Featured and For Sell
+      category: ['featured', 'tab-2'] // Featured and For Sell
     },
     {
       id: 6,
@@ -112,7 +113,7 @@ const fetchDeals = async () => {
       sqft: 'N/A',
       beds: 'N/A',
       baths: 'N/A',
-      category: ['tab-1', 'tab-2']
+      category: ['featured', 'tab-2']
     },
     {
       id: 8,
@@ -138,7 +139,7 @@ const fetchDeals = async () => {
       sqft: 'N/A',
       beds: 'N/A',
       baths: 'N/A',
-      category: ['tab-1', 'tab-3']
+      category: ['featured', 'tab-3']
     }
   ];*/
 };
@@ -152,8 +153,8 @@ const setActiveTab = (tabId) => {
 };
 
 const displayedDeals = computed(() => {
-  if (activeTab.value === 'tab-1') {
-    return deals.value.filter(deal => deal.category.includes('tab-1'));
+  if (activeTab.value === 'featured') {
+    return deals.value.filter(deal => deal.category.includes('featured'));
   }
   if (activeTab.value === 'tab-2') {
     return deals.value.filter(deal => deal.status === 'For Sell');
@@ -179,7 +180,7 @@ const displayedDeals = computed(() => {
                 <div class="col-lg-6 text-start text-lg-end">
                     <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'tab-1' }" @click.prevent="setActiveTab('tab-1')" href="#">{{ $t('dealsListing.tabs.featured', 'Featured') }}</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'featured' }" @click.prevent="setActiveTab('featured')" href="#">{{ $t('dealsListing.tabs.featured', 'Featured') }}</a>
                         </li>
                         <li class="nav-item me-2">
                             <a class="btn btn-outline-primary" :class="{ active: activeTab === 'tab-2' }" @click.prevent="setActiveTab('tab-2')" href="#">{{ $t('dealsListing.tabs.forSell', 'For Sell') }}</a>

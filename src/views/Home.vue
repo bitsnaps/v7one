@@ -41,7 +41,6 @@ const searchDeals = () => {
         </div>
         <!-- Header End -->
 
-
         <!-- Search Start -->
         <div class="container-fluid bg-primary mb-5 p-5">
           <div class="container">
