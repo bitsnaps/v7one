@@ -155,26 +155,13 @@
     "signInLink": "Sign In"
   },
   "testimonial": {
-    "title": "What Our Users Say!",
-    "description": "Discover how V7 is making a difference in finding properties, vehicles, and services. Real stories from our satisfied users.",
-    "loading": "Loading testimonials...",
-    "testimonials": {
-      "1": {
-        "text": "V7 helped me find the perfect apartment in downtown. The process was smooth and their agents were very professional!",
-        "clientName": "Sarah L.",
-        "profession": "Software Engineer"
-      },
-      "2": {
-        "text": "I sold my car through V7 within a week! They handled everything, and I got a great price. Highly recommended!",
-        "clientName": "John B.",
-        "profession": "Marketing Manager"
-      },
-      "3": {
-        "text": "Finding a reliable contractor for my home renovation was a challenge until I used V7. Their platform connected me with top-notch professionals.",
-        "clientName": "Maria G.",
-        "profession": "Architect"
-      }
-    }
+    "title": "What Our Clients Say",
+    "description": "Hear from our satisfied customers who have successfully found their perfect deals through our platform."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "We're sorry, the page you have looked for does not exist in our website! Maybe you want to go back to the home page or try to use a search.",
+    "goHome": "Go Back To Home"
   },
   "footer": {
     "getInTouch": "Get In Touch",

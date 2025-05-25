@@ -4,6 +4,7 @@ import About from '../views/About.vue';
 import Contact from '../views/Contact.vue';
 import PostDeal from '../views/PostDeal.vue';
 import SignIn from '../views/SignIn.vue';
+import NotFound from '../views/NotFound.vue';
 
 const routes = [
   {
@@ -35,6 +36,11 @@ const routes = [
     path: '/signup',
     name: 'SignUp',
     component: () => import('../views/SignUp.vue'),
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound,
   }
   // Add other routes here
 ];

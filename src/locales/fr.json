@@ -165,26 +165,13 @@
     "signInLink": "Se Connecter"
   },
   "testimonial": {
-    "title": "Ce que disent nos utilisateurs !",
-    "description": "Découvrez comment V7 fait la différence dans la recherche de propriétés, de véhicules et de services. De vraies histoires de nos utilisateurs satisfaits.",
-    "loading": "Chargement des témoignages...",
-    "testimonials": {
-      "1": {
-        "text": "V7 m'a aidé à trouver l'appartement parfait en centre-ville. Le processus s'est déroulé sans heurts et leurs agents ont été très professionnels !",
-        "clientName": "Sarah L.",
-        "profession": "Ingénieure logicielle"
-      },
-      "2": {
-        "text": "J'ai vendu ma voiture via V7 en une semaine ! Ils se sont occupés de tout et j'ai obtenu un excellent prix. Fortement recommandé !",
-        "clientName": "John B.",
-        "profession": "Responsable marketing"
-      },
-      "3": {
-        "text": "Trouver un entrepreneur fiable pour la rénovation de ma maison était un défi jusqu'à ce que j'utilise V7. Leur plateforme m'a mis en relation avec des professionnels de premier ordre.",
-        "clientName": "Maria G.",
-        "profession": "Architecte"
-      }
-    }
+    "title": "Ce Que Disent Nos Clients",
+    "description": "Écoutez nos clients satisfaits qui ont trouvé avec succès leurs offres parfaites grâce à notre plateforme."
+  },
+  "notFound": {
+    "title": "Page Non Trouvée",
+    "description": "Nous sommes désolés, la page que vous recherchez n'existe pas sur le site web ! Souhaitez-vous peut-être revenir à la page d'accueil ou essayer d'utiliser la recherche ?",
+    "goHome": "Retourner à l'Accueil"
   },
   "footer": {
     "getInTouch": "Contactez-Nous",
