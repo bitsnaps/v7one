@@ -181,9 +181,22 @@
     "goHome": "العودة إلى الصفحة الرئيسية"
   },
   "common": {
-    "loading": "جار تحميل الفئات...",
+    "loading": "جار التحميل...",
+    "loadingCategories": "جار تحميل الفئات...",
     "error": "خطأ في تحميل الفئات",
-    "retry": "حاول مرة أخرى"
+    "retry": "حاول مرة أخرى",
+    "noCategoriesFound": "لم يتم العثور على فئات لهذا القسم.",
+    "filterDeals": "تصفية الصفقات",
+    "filterPlaceholderText": "ستتوفر خيارات التصفية قريبًا."
+  },
+  "categoryView": {
+    "allCategories": "جميع الفئات",
+    "allCategoriesDesc": "تصفح جميع الصفقات المتاحة",
+    "categoryDesc": "تصفح الصفقات في هذه الفئة",
+    "loading": "جار التحميل...",
+    "noDeals": "لم يتم العثور على صفقات",
+    "noDealsDesc": "لا توجد صفقات متاحة في هذه الفئة في الوقت الحالي.",
+    "backToHome": "العودة إلى الصفحة الرئيسية"
   },
   "footer": {
     "getInTouch": "تواصل معنا",

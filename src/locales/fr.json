@@ -176,9 +176,22 @@
     "goHome": "Retourner à l'Accueil"
   },
   "common": {
-    "loading": "Chargement des catégories...",
+    "loading": "Chargement...",
+    "loadingCategories": "Chargement des catégories...",
     "error": "Erreur lors du chargement des catégories",
-    "retry": "Réessayer"
+    "retry": "Réessayer",
+    "noCategoriesFound": "Aucune catégorie trouvée pour cette section.",
+    "filterDeals": "Filtrer les Offres",
+    "filterPlaceholderText": "Les options de filtre seront bientôt disponibles."
+  },
+  "categoryView": {
+    "allCategories": "Toutes les Catégories",
+    "allCategoriesDesc": "Parcourir toutes les offres disponibles",
+    "categoryDesc": "Parcourir les offres de cette catégorie",
+    "loading": "Chargement...",
+    "noDeals": "Aucune Offre Trouvée",
+    "noDealsDesc": "Aucune offre n'est disponible dans cette catégorie pour le moment.",
+    "backToHome": "Retour à l'Accueil"
   },
   "footer": {
     "getInTouch": "Contactez-Nous",

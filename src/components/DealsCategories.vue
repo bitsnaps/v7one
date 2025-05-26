@@ -93,7 +93,7 @@ onMounted(() => {
               <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
             </circle>
           </svg>
-          <span>{{ $t('common.loading', 'Loading categories...') }}</span>
+          <span>{{ $t('common.loadingCategories', 'Loading categories...') }}</span>
         </div>
       </div>
 

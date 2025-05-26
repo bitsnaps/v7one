@@ -166,9 +166,22 @@
     "goHome": "Go Back To Home"
   },
   "common": {
-    "loading": "Loading categories...",
+    "loading": "Loading...",
+    "loadingCategories": "Loading categories...",
     "error": "Error loading categories",
-    "retry": "Try Again"
+    "retry": "Try Again",
+    "noCategoriesFound": "No categories found for this section.",
+    "filterDeals": "Filter Deals",
+    "filterPlaceholderText": "Filter options will be available soon."
+  },
+  "categoryView": {
+    "allCategories": "All Categories",
+    "allCategoriesDesc": "Browse all available deals",
+    "categoryDesc": "Browse deals in this category",
+    "loading": "Loading...",
+    "noDeals": "No Deals Found",
+    "noDealsDesc": "No deals are available in this category at the moment.",
+    "backToHome": "Back to Home"
   },
   "footer": {
     "getInTouch": "Get In Touch",
