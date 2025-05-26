@@ -420,45 +420,134 @@ app.get('/api/deals', async (c) => {
 app.get('/api/categories', async (c) => {
     try {
         const categories = [
+            // Real Estate Categories
             {
                 id: 1,
-                name: "Real Estate",
-                slug: "real-estate",
-                icon: "/img/icon-house.svg",
-                description: "Houses, apartments, villas and commercial properties",
-                count: 245
+                name: "Apartment",
+                slug: "apartments",
+                icon: "/img/icon-apartment.svg",
+                description: "Modern apartments and condos",
+                count: 123,
+                type: "real-estate"
             },
             {
                 id: 2,
-                name: "Cars",
-                slug: "cars",
-                icon: "/img/icon-car-sedan.svg",
-                description: "New and used vehicles of all types",
-                count: 189
+                name: "Villa",
+                slug: "villas",
+                icon: "/img/icon-villa.svg",
+                description: "Luxury villas and estates",
+                count: 89,
+                type: "real-estate"
             },
             {
                 id: 3,
+                name: "Home",
+                slug: "homes",
+                icon: "/img/icon-house.svg",
+                description: "Family homes and houses",
+                count: 156,
+                type: "real-estate"
+            },
+            {
+                id: 4,
+                name: "Office",
+                slug: "offices",
+                icon: "/img/icon-office.svg",
+                description: "Commercial office spaces",
+                count: 45,
+                type: "real-estate"
+            },
+            {
+                id: 5,
+                name: "Building",
+                slug: "buildings",
+                icon: "/img/icon-building.svg",
+                description: "Commercial buildings",
+                count: 30,
+                type: "real-estate"
+            },
+            {
+                id: 6,
+                name: "Townhouse",
+                slug: "townhouses",
+                icon: "/img/icon-townhouse.svg",
+                description: "Modern townhouses",
+                count: 67,
+                type: "real-estate"
+            },
+            {
+                id: 7,
+                name: "Shop",
+                slug: "shops",
+                icon: "/img/icon-shop.svg",
+                description: "Retail shops and stores",
+                count: 88,
+                type: "real-estate"
+            },
+            {
+                id: 8,
+                name: "Garage",
+                slug: "garages",
+                icon: "/img/icon-garage.svg",
+                description: "Parking spaces and garages",
+                count: 20,
+                type: "real-estate"
+            },
+            // Car Categories
+            {
+                id: 9,
+                name: "Sedan",
+                slug: "cars-sedan",
+                icon: "/img/icon-car-sedan.svg",
+                description: "Sedan cars and family vehicles",
+                count: 120,
+                type: "cars"
+            },
+            {
+                id: 10,
+                name: "SUV",
+                slug: "cars-suv",
+                icon: "/img/icon-car-suv.svg",
+                description: "SUVs and crossover vehicles",
+                count: 85,
+                type: "cars"
+            },
+            {
+                id: 11,
+                name: "Truck",
+                slug: "cars-truck",
+                icon: "/img/icon-car-truck.svg",
+                description: "Trucks and commercial vehicles",
+                count: 45,
+                type: "cars"
+            },
+            // Other Categories
+            {
+                id: 12,
                 name: "Electronics",
                 slug: "electronics",
                 icon: "/img/icon-electronics.svg",
                 description: "Phones, laptops, gadgets and tech accessories",
-                count: 156
+                count: 150,
+                type: "other"
             },
             {
-                id: 4,
+                id: 13,
                 name: "Services",
                 slug: "services",
                 icon: "/img/icon-services.svg",
                 description: "Professional services and consultations",
-                count: 98
+                count: 90,
+                type: "other"
             },
             {
-                id: 5,
+                id: 14,
                 name: "Other Deals",
                 slug: "other-deals",
                 icon: "/img/icon-deal.svg",
                 description: "Miscellaneous items and special offers",
-                count: 67
+                count: 110,
+                type: "other"
             }
         ];
         

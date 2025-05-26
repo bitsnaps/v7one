@@ -1,43 +1,13 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 
-// Group categories by type
-const realEstateCategories = [
-  // { name: 'Apartment', icon: '/img/icon-apartment.png', count: 123, link: '/category/apartments' },
-  { name: 'Apartment', icon: '/img/icon-apartment.svg', count: 123, link: '/category/apartments' },
-  // { name: 'Villa', icon: '/img/icon-villa.png', count: 123, link: '/category/villas' },
-  { name: 'Villa', icon: '/img/icon-villa.svg', count: 123, link: '/category/villas' },
-  // { name: 'Home', icon: '/img/icon-house.png', count: 123, link: '/category/homes' },
-  { name: 'Home', icon: '/img/icon-house.svg', count: 123, link: '/category/homes' },
-  // { name: 'Office', icon: '/img/icon-housing.png', count: 45, link: '/category/offices' },
-  { name: 'Office', icon: '/img/icon-office.svg', count: 45, link: '/category/offices' },
-  // { name: 'Building', icon: '/img/icon-building.png', count: 30, link: '/category/buildings' },
-  { name: 'Building', icon: '/img/icon-building.svg', count: 30, link: '/category/buildings' },
-  // { name: 'Townhouse', icon: '/img/icon-neighborhood.png', count: 67, link: '/category/townhouses' },
-  { name: 'Townhouse', icon: '/img/icon-townhouse.svg', count: 67, link: '/category/townhouses' },
-  // { name: 'Shop', icon: '/img/icon-condominium.png', count: 88, link: '/category/shops' },
-  { name: 'Shop', icon: '/img/icon-shop.svg', count: 88, link: '/category/shops' },
-  // { name: 'Garage', icon: '/img/icon-luxury.png', count: 20, link: '/category/garages' }
-  { name: 'Garage', icon: '/img/icon-garage.svg', count: 20, link: '/category/garages' }
-];
-
-const carCategories = [
-  { name: 'Sedan', icon: '/img/icon-car-sedan.svg', count: 120, link: '/category/cars/sedan' },
-  { name: 'SUV', icon: '/img/icon-car-suv.svg', count: 85, link: '/category/cars/suv' },
-  { name: 'Truck', icon: '/img/icon-car-truck.svg', count: 45, link: '/category/cars/truck' }
-];
-
-const otherCategories = [
-  { name: 'Electronics', icon: '/img/icon-electronics.svg', count: 150, link: '/category/electronics' },
-  { name: 'Services', icon: '/img/icon-services.svg', count: 90, link: '/category/services' },
-  { name: t('dealsCategories.tabs.otherDeals', 'Other Deals'), icon: '/img/icon-deal.svg', count: 110, link: '/category/other-deals' }
-];
-
-// For backward compatibility
-const dealCategories = [...realEstateCategories, ...carCategories, ...otherCategories];
+// Reactive data
+const categories = ref([]);
+const loading = ref(true);
+const error = ref(null);
 
 // Active tab tracking
 const activeTab = ref('real-estate');
@@ -45,6 +15,46 @@ const activeTab = ref('real-estate');
 const setActiveTab = (tab) => {
   activeTab.value = tab;
 };
+
+// Fetch categories from API
+const fetchCategories = async () => {
+  try {
+    loading.value = true;
+    const response = await fetch(`${import.meta.env.DEV?'http://localhost:3000':''}/api/categories`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch categories');
+    }
+    const result = await response.json();
+    if (result.success && result.data) {
+      categories.value = result.data;
+    } else {
+      throw new Error(result.message || 'Failed to fetch categories');
+    }
+  } catch (err) {
+    error.value = err.message;
+    console.error('Error fetching categories:', err);
+  } finally {
+    loading.value = false;
+  }
+};
+
+// Group categories by type
+const realEstateCategories = computed(() => {
+  return categories.value.filter(cat => cat.type === 'real-estate');
+});
+
+const carCategories = computed(() => {
+  return categories.value.filter(cat => cat.type === 'cars');
+});
+
+const otherCategories = computed(() => {
+  return categories.value.filter(cat => cat.type === 'other');
+});
+
+// Load categories on component mount
+onMounted(() => {
+  fetchCategories();
+});
 </script>
 
 <template>
@@ -74,51 +84,86 @@ const setActiveTab = (tab) => {
         </li>
       </ul>
       
+      <!-- Loading State -->
+      <div v-if="loading" class="text-center py-5">
+        <div class="d-flex justify-content-center align-items-center">
+          <svg class="spinner me-3" width="40" height="40" viewBox="0 0 50 50">
+            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke="#00B98E" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+              <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+              <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+          <span>{{ $t('common.loading', 'Loading categories...') }}</span>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="text-center py-5">
+        <div class="alert alert-danger" role="alert">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          {{ $t('common.error', 'Error loading categories') }}: {{ error }}
+        </div>
+        <button class="btn btn-primary" @click="fetchCategories()">
+          {{ $t('common.retry', 'Try Again') }}
+        </button>
+      </div>
+
       <!-- Tab Content -->
-      <div v-if="activeTab === 'real-estate'">
-        <div class="row g-4">
-          <div v-for="(category, index) in realEstateCategories" :key="index" class="col-lg-3 col-sm-6">
-            <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="category.link">
-              <div class="rounded p-4">
-                <div class="icon mb-3">
-                  <img class="img-fluid" :src="category.icon" :alt="category.name + ' Icon'">
+      <div v-else>
+        <div v-if="activeTab === 'real-estate'">
+          <div v-if="realEstateCategories.length === 0" class="text-center py-5">
+            <p class="text-muted">{{ $t('dealsCategories.noCategories', 'No categories found for this section.') }}</p>
+          </div>
+          <div v-else class="row g-4">
+            <div v-for="category in realEstateCategories" :key="category.id" class="col-lg-3 col-sm-6">
+              <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="`/category/${category.slug}`">
+                <div class="rounded p-4">
+                  <div class="icon mb-3">
+                    <img class="img-fluid" :src="category.icon" :alt="category.name + ' Icon'">
+                  </div>
+                  <h6>{{ $t('dealsCategories.categories.' + category.name.toLowerCase().replace(/\s+/g, '-'), category.name) }}</h6>
+                  <span>{{ category.count }} {{ $t('dealsCategories.dealsSuffix', 'Deals') }}</span>
                 </div>
-                <h6>{{ $t('dealsCategories.categories.' + category.name.toLowerCase().replace(/\s+/g, '-'), category.name) }}</h6>
-                <span>{{ category.count }} {{ $t('dealsCategories.dealsSuffix', 'Deals') }}</span>
-              </div>
-            </router-link>
+              </router-link>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div v-if="activeTab === 'cars'">
-        <div class="row g-4">
-          <div v-for="(category, index) in carCategories" :key="index" class="col-lg-4 col-sm-6">
-            <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="category.link">
-              <div class="rounded p-4">
-                <div class="icon mb-3">
-                  <img class="img-fluid" :src="category.icon" :alt="category.name + ' Icon'">
+        
+        <div v-if="activeTab === 'cars'">
+          <div v-if="carCategories.length === 0" class="text-center py-5">
+            <p class="text-muted">{{ $t('dealsCategories.noCategories', 'No categories found for this section.') }}</p>
+          </div>
+          <div v-else class="row g-4">
+            <div v-for="category in carCategories" :key="category.id" class="col-lg-4 col-sm-6">
+              <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="`/category/${category.slug}`">
+                <div class="rounded p-4">
+                  <div class="icon mb-3">
+                    <img class="img-fluid" :src="category.icon" :alt="category.name + ' Icon'">
+                  </div>
+                  <h6>{{ $t('dealsCategories.categories.' + category.name.toLowerCase().replace(/\s+/g, '-'), category.name) }}</h6>
+                  <span>{{ category.count }} {{ $t('dealsCategories.dealsSuffix', 'Deals') }}</span>
                 </div>
-                <h6>{{ $t('dealsCategories.categories.' + category.name.toLowerCase().replace(/\s+/g, '-'), category.name) }}</h6>
-                <span>{{ category.count }} {{ $t('dealsCategories.dealsSuffix', 'Deals') }}</span>
-              </div>
-            </router-link>
+              </router-link>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div v-if="activeTab === 'other'">
-        <div class="row g-4">
-          <div v-for="(category, index) in otherCategories" :key="index" class="col-lg-4 col-sm-6">
-            <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="category.link">
-              <div class="rounded p-4">
-                <div class="icon mb-3">
-                  <img class="img-fluid" :src="category.icon" :alt="category.name + ' Icon'">
+        
+        <div v-if="activeTab === 'other'">
+          <div v-if="otherCategories.length === 0" class="text-center py-5">
+            <p class="text-muted">{{ $t('dealsCategories.noCategories', 'No categories found for this section.') }}</p>
+          </div>
+          <div v-else class="row g-4">
+            <div v-for="category in otherCategories" :key="category.id" class="col-lg-4 col-sm-6">
+              <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="`/category/${category.slug}`">
+                <div class="rounded p-4">
+                  <div class="icon mb-3">
+                    <img class="img-fluid" :src="category.icon" :alt="category.name + ' Icon'">
+                  </div>
+                  <h6>{{ $t('dealsCategories.categories.' + category.name.toLowerCase().replace(/\s+/g, '-'), category.name) }}</h6>
+                  <span>{{ category.count }} {{ $t('dealsCategories.dealsSuffix', 'Deals') }}</span>
                 </div>
-                <h6>{{ $t('dealsCategories.categories.' + category.name.toLowerCase().replace(/\s+/g, '-'), category.name) }}</h6>
-                <span>{{ category.count }} {{ $t('dealsCategories.dealsSuffix', 'Deals') }}</span>
-              </div>
-            </router-link>
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -159,5 +204,16 @@ const setActiveTab = (tab) => {
 .nav-pills .nav-item .btn:hover,
 .nav-pills .nav-item .btn.active {
     color: #FFFFFF;
+}
+
+/*** Loading Spinner ***/
+.spinner {
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>
