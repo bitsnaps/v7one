@@ -63,7 +63,8 @@
       "services": "Services",
       "other-deals": "Other Deals"
     },
-    "dealsSuffix": "Deals"
+    "dealsSuffix": "Deals",
+    "noCategories": "No categories found for this section."
   },
   "dealsListing": {
     "title": "Deals Listing",
@@ -87,7 +88,8 @@
       "automobile": "Automobile",
       "luxuryitem": "Luxury Item",
       "electronics": "Electronics"
-    }
+    },
+    "noDealsFound": "No deals found for this category."
   },
   "teams": {
     "title": "Meet Our Deal Specialists",
@@ -162,6 +164,11 @@
     "title": "Page Not Found",
     "description": "We're sorry, the page you have looked for does not exist in our website! Maybe you want to go back to the home page or try to use a search.",
     "goHome": "Go Back To Home"
+  },
+  "common": {
+    "loading": "Loading categories...",
+    "error": "Error loading categories",
+    "retry": "Try Again"
   },
   "footer": {
     "getInTouch": "Get In Touch",

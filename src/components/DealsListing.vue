@@ -3,27 +3,42 @@ import { ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const deals = ref([]);
-const activeTab = ref('featured'); // 'featured', 'tab-2', 'tab-3'
+const activeTab = ref('featured'); // 'featured', 'for-sale', 'for-rent'
+const loading = ref(true);
+const error = ref(null);
 
 const { t } = useI18n();
 
 const fetchDeals = async () => {
+  loading.value = true;
+  error.value = null;
+  deals.value = []; // Clear previous deals
+  try {
   // Fetch deals from API (replace with actual API endpoint in production)
-  // check if running of dev mode
-  const response = await fetch(`${import.meta.env.DEV?'http://localhost:3000':''}/api/deals`);
-  // check for response
-  if (!response.ok) {
-    console.error('Failed to fetch deals');
-    deals.value = [];
-    return;
+    // check if running of dev mode
+    const response = await fetch(`${import.meta.env.DEV ? 'http://localhost:3000' : ''}/api/deals`);
+    // check for response
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const results = await response.json();
+    if (results.success && results.data) {
+      deals.value = results.data;
+    } else {
+      throw new Error(results.message || 'Failed to fetch deals: Invalid data format');
+    }
+  } catch (e) {
+    console.error('Failed to fetch deals:', e);
+    error.value = e.message || t('common.error');
+    deals.value = []; // Ensure deals are empty on error
+  } finally {
+    loading.value = false;
   }
 
-  const results = await response.json();
-  deals.value = results.data;
-
   /*/ Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 500));
-  deals.value = [
+  // await new Promise(resolve => setTimeout(resolve, 500));
+  // deals.value = [
     {
       id: 1,
       title: 'Luxury Villa with Ocean View',
@@ -35,7 +50,7 @@ const fetchDeals = async () => {
       sqft: '5000 Sqft',
       beds: '5 Bed',
       baths: '6 Bath',
-      category: ['featured', 'tab-2'] // Featured and For Sell
+      category: ['featured', 'for-sale'] // Featured and For Sale
     },
     {
       id: 2,
@@ -48,7 +63,7 @@ const fetchDeals = async () => {
       sqft: '1200 Sqft',
       beds: '2 Bed',
       baths: '2 Bath',
-      category: ['featured', 'tab-3'] // Featured and For Rent
+      category: ['featured', 'for-rent'] // Featured and For Rent
     },
     {
       id: 3,
@@ -61,7 +76,7 @@ const fetchDeals = async () => {
       sqft: '2500 Sqft',
       beds: '4 Bed',
       baths: '3 Bath',
-      category: ['tab-2'] // For Sell
+      category: ['for-sale'] // For Sale
     },
     {
       id: 4,
@@ -74,7 +89,7 @@ const fetchDeals = async () => {
       sqft: '600 Sqft',
       beds: '1 Bed',
       baths: '1 Bath',
-      category: ['tab-3'] // For Rent
+      category: ['for-rent'] // For Rent
     },
     {
       id: 5,
@@ -87,7 +102,7 @@ const fetchDeals = async () => {
       sqft: '10000 Sqft',
       beds: 'N/A',
       baths: '4 Bath',
-      category: ['featured', 'tab-2'] // Featured and For Sell
+      category: ['featured', 'for-sale'] // Featured and For Sale
     },
     {
       id: 6,
@@ -100,7 +115,7 @@ const fetchDeals = async () => {
       sqft: '1800 Sqft',
       beds: '3 Bed',
       baths: '2.5 Bath',
-      category: ['tab-3'] // For Rent
+      category: ['for-rent'] // For Rent
     },
     {
       id: 7,
@@ -113,7 +128,7 @@ const fetchDeals = async () => {
       sqft: 'N/A',
       beds: 'N/A',
       baths: 'N/A',
-      category: ['featured', 'tab-2']
+      category: ['featured', 'for-sale']
     },
     {
       id: 8,
@@ -126,7 +141,7 @@ const fetchDeals = async () => {
       sqft: 'N/A',
       beds: 'N/A',
       baths: 'N/A',
-      category: ['tab-2']
+      category: ['for-sale']
     },
     {
       id: 9,
@@ -139,7 +154,7 @@ const fetchDeals = async () => {
       sqft: 'N/A',
       beds: 'N/A',
       baths: 'N/A',
-      category: ['featured', 'tab-3']
+      category: ['featured', 'for-rent']
     }
   ];*/
 };
@@ -147,6 +162,10 @@ const fetchDeals = async () => {
 onMounted(() => {
   fetchDeals();
 });
+
+const retryFetch = () => {
+  fetchDeals();
+};
 
 const setActiveTab = (tabId) => {
   activeTab.value = tabId;
@@ -156,10 +175,10 @@ const displayedDeals = computed(() => {
   if (activeTab.value === 'featured') {
     return deals.value.filter(deal => deal.category.includes('featured'));
   }
-  if (activeTab.value === 'tab-2') {
+  if (activeTab.value === 'for-sale') {
     return deals.value.filter(deal => deal.status === 'For Sell');
   }
-  if (activeTab.value === 'tab-3') {
+  if (activeTab.value === 'for-rent') {
     return deals.value.filter(deal => deal.status === 'For Rent');
   }
   return [];
@@ -183,16 +202,36 @@ const displayedDeals = computed(() => {
                             <a class="btn btn-outline-primary" :class="{ active: activeTab === 'featured' }" @click.prevent="setActiveTab('featured')" href="#">{{ $t('dealsListing.tabs.featured', 'Featured') }}</a>
                         </li>
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'tab-2' }" @click.prevent="setActiveTab('tab-2')" href="#">{{ $t('dealsListing.tabs.forSell', 'For Sell') }}</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'for-sale' }" @click.prevent="setActiveTab('for-sale')" href="#">{{ $t('dealsListing.tabs.forSell', 'For Sell') }}</a>
                         </li>
                         <li class="nav-item me-0">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'tab-3' }" @click.prevent="setActiveTab('tab-3')" href="#">{{ $t('dealsListing.tabs.forRent', 'For Rent') }}</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'for-rent' }" @click.prevent="setActiveTab('for-rent')" href="#">{{ $t('dealsListing.tabs.forRent', 'For Rent') }}</a>
                         </li>
                     </ul>
                 </div>
             </div>
             <div class="tab-content">
-                <div class="row g-4">
+                <!-- Loading State -->
+                <div v-if="loading" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">{{ $t('common.loading') }}</span>
+                    </div>
+                    <p class="mt-2">{{ $t('common.loading') }}</p>
+                </div>
+
+                <!-- Error State -->
+                <div v-else-if="error" class="text-center py-5">
+                    <p class="text-danger">{{ $t('common.error') }}: {{ error }}</p>
+                    <button @click="retryFetch" class="btn btn-primary mt-2">{{ $t('common.retry') }}</button>
+                </div>
+
+                <!-- No Deals Found State -->
+                <div v-else-if="displayedDeals.length === 0" class="text-center py-5">
+                    <p>{{ $t('dealsListing.noDealsFound', 'No deals found for this category.') }}</p>
+                </div>
+
+                <!-- Deals Display -->
+                <div v-else class="row g-4">
                     <div v-for="deal in displayedDeals" :key="deal.id" class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="property-item rounded overflow-hidden">
                             <div class="position-relative overflow-hidden">

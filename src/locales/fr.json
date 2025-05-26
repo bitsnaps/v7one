@@ -72,7 +72,8 @@
       "services": "Services",
       "other-deals": "Autres Offres"
     },
-    "dealsSuffix": "Offres"
+    "dealsSuffix": "Offres",
+    "noCategories": "Aucune catégorie trouvée pour cette section."
   },
   "dealsListing": {
     "title": "Liste des offres",
@@ -97,7 +98,8 @@
       "automobile": "Automobile",
       "luxuryitem": "Article de luxe",
       "electronics": "Électronique"
-    }
+    },
+    "noDealsFound": "Aucune offre trouvée pour cette catégorie."
   },
   "teams": {
     "title": "Rencontrez nos spécialistes des offres",
@@ -172,6 +174,11 @@
     "title": "Page Non Trouvée",
     "description": "Nous sommes désolés, la page que vous recherchez n'existe pas sur le site web ! Souhaitez-vous peut-être revenir à la page d'accueil ou essayer d'utiliser la recherche ?",
     "goHome": "Retourner à l'Accueil"
+  },
+  "common": {
+    "loading": "Chargement des catégories...",
+    "error": "Erreur lors du chargement des catégories",
+    "retry": "Réessayer"
   },
   "footer": {
     "getInTouch": "Contactez-Nous",

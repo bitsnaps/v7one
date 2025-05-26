@@ -48,7 +48,7 @@ const app = new Hono();
 
 // Add CORS middleware (for Dev)
 app.use('/*', cors({
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  origin: ['https://www.v7one.com','http://localhost:5173', 'http://127.0.0.1:5173'],
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
   // This means the browser will expose these headers when it makes requests to your API
@@ -301,7 +301,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "5000 Sqft",
                 "beds": "5 Bed",
                 "baths": "6 Bath",
-                "category": ["tab-1", "tab-2"]
+                "category": ["featured", "for-sale"]
               },
               {
                 "id": 2,
@@ -314,7 +314,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "1200 Sqft",
                 "beds": "2 Bed",
                 "baths": "2 Bath",
-                "category": ["tab-1", "tab-3"]
+                "category": ["featured", "for-rent"]
               },
               {
                 "id": 3,
@@ -327,7 +327,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "2500 Sqft",
                 "beds": "4 Bed",
                 "baths": "3 Bath",
-                "category": ["tab-2"]
+                "category": ["for-sale"]
               },
               {
                 "id": 4,
@@ -340,7 +340,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "600 Sqft",
                 "beds": "1 Bed",
                 "baths": "1 Bath",
-                "category": ["tab-3"]
+                "category": ["for-rent"]
               },
               {
                 "id": 5,
@@ -353,7 +353,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "10000 Sqft",
                 "beds": "N/A",
                 "baths": "4 Bath",
-                "category": ["tab-1", "tab-2"]
+                "category": ["featured", "for-sale"]
               },
               {
                 "id": 6,
@@ -366,7 +366,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "1800 Sqft",
                 "beds": "3 Bed",
                 "baths": "2.5 Bath",
-                "category": ["tab-3"]
+                "category": ["for-rent"]
               },
               {
                 "id": 7,
@@ -379,7 +379,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "N/A",
                 "beds": "N/A",
                 "baths": "N/A",
-                "category": ["tab-1", "tab-2"]
+                "category": ["featured", "for-sale"]
               },
               {
                 "id": 8,
@@ -392,7 +392,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "N/A",
                 "beds": "N/A",
                 "baths": "N/A",
-                "category": ["tab-2"]
+                "category": ["for-sale"]
               },
               {
                 "id": 9,
@@ -405,7 +405,7 @@ app.get('/api/deals', async (c) => {
                 "sqft": "N/A",
                 "beds": "N/A",
                 "baths": "N/A",
-                "category": ["tab-1", "tab-3"]
+                "category": ["featured", "for-rent"]
               }
         ];
         
