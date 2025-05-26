@@ -1,6 +1,0 @@
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/$USER/public_html/
-    - export APIYPATH=/home/$USER/app/
-    - /bin/cp -R dist/* $DEPLOYPATH
-    - /bin/cp -R api $APIYPATH
