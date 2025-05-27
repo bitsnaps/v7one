@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { getApiBaseUrl } from '@/helpers/utils';
 
 const { t } = useI18n();
 
@@ -20,7 +21,7 @@ const setActiveTab = (tab) => {
 const fetchCategories = async () => {
   try {
     loading.value = true;
-    const response = await fetch(`${import.meta.env.DEV?'http://localhost:3000':''}/api/categories`);
+    const response = await fetch(`${getApiBaseUrl()}/api/categories`);
     if (!response.ok) {
       throw new Error('Failed to fetch categories');
     }

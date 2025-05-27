@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { getApiBaseUrl } from '@/helpers/utils';
 
 const deals = ref([]);
 const activeTab = ref('featured'); // 'featured', 'for-sale', 'for-rent'
@@ -16,7 +17,7 @@ const fetchDeals = async () => {
   try {
   // Fetch deals from API (replace with actual API endpoint in production)
     // check if running of dev mode
-    const response = await fetch(`${import.meta.env.DEV ? 'http://localhost:3000' : ''}/api/deals`);
+    const response = await fetch(`${getApiBaseUrl()}/api/deals`);
     // check for response
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { getApiBaseUrl } from '@/helpers/utils';
 
 const route = useRoute();
 const { t } = useI18n();
@@ -61,7 +62,7 @@ const fetchDeals = async () => {
   
   try {
     // Fetch deals from API
-    const response = await fetch(`${import.meta.env.DEV ? 'http://localhost:3000' : ''}/api/deals`);
+    const response = await fetch(`${getApiBaseUrl()}/api/deals`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
