@@ -182,7 +182,8 @@
     "retry": "Réessayer",
     "noCategoriesFound": "Aucune catégorie trouvée pour cette section.",
     "filterDeals": "Filtrer les Offres",
-    "filterPlaceholderText": "Les options de filtre seront bientôt disponibles."
+    "previous": "Précédent",
+    "next": "Suivant"
   },
   "categoryView": {
     "allCategories": "Toutes les Catégories",
@@ -190,8 +191,27 @@
     "categoryDesc": "Parcourir les offres de cette catégorie",
     "loading": "Chargement...",
     "noDeals": "Aucune Offre Trouvée",
-    "noDealsDesc": "Aucune offre n'est disponible dans cette catégorie pour le moment.",
-    "backToHome": "Retour à l'Accueil"
+    "noDealsDesc": "Aucune offre ne correspond à vos critères actuels. Essayez d'ajuster votre recherche ou vos filtres.",
+    "backToHome": "Retour à l'Accueil",
+    "viewAllDeals": "Voir Toutes les Offres",
+    "filters": {
+      "searchLabel": "Rechercher par Nom",
+      "searchPlaceholder": "Entrez le nom de l'offre...",
+      "propertyType": "Type de Propriété",
+      "allTypes": "Tous les Types",
+      "apartment": "Appartement",
+      "villa": "Villa",
+      "house": "Maison",
+      "office": "Bureau",
+      "building": "Immeuble",
+      "townhouse": "Maison de Ville",
+      "shop": "Magasin",
+      "garage": "Garage",
+      "vehicleType": "Type de Véhicule",
+      "carSedan": "Berline",
+      "carSuv": "SUV",
+      "carTruck": "Camion"
+    }
   },
   "footer": {
     "getInTouch": "Contactez-Nous",

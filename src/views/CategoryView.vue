@@ -11,6 +11,48 @@ const loading = ref(true);
 const error = ref(null);
 const categorySlug = computed(() => route.params.slug);
 const categoryInfo = ref(null);
+const searchQuery = ref('');
+const activeFilters = ref({}); // To store active filters, e.g., { propertyType: 'apartment' }
+
+// Mock filter options based on category - this would ideally come from an API or be more dynamic
+const categoryFilterOptions = computed(() => {
+  if (categorySlug.value === 'real-estate') {
+    return [
+      {
+        id: 'propertyType',
+        label: t('categoryView.filters.propertyType', 'Property Type'),
+        options: [
+          { value: 'all', text: t('categoryView.filters.allTypes', 'All Types') },
+          { value: 'apartment', text: t('categoryView.filters.apartment', 'Apartment') },
+          { value: 'villa', text: t('categoryView.filters.villa', 'Villa') },
+          { value: 'house', text: t('categoryView.filters.house', 'House') },
+          { value: 'office', text: t('categoryView.filters.office', 'Office') },
+          { value: 'building', text: t('categoryView.filters.building', 'Building') },
+          { value: 'townhouse', text: t('categoryView.filters.townhouse', 'Townhouse') },
+          { value: 'shop', text: t('categoryView.filters.shop', 'Shop') },
+          { value: 'garage', text: t('categoryView.filters.garage', 'Garage') },
+        ],
+      },
+      // Add more real-estate specific filters here, e.g., beds, baths
+    ];
+  } else if (categorySlug.value === 'cars-bikes-boats') {
+    return [
+      {
+        id: 'vehicleType',
+        label: t('categoryView.filters.vehicleType', 'Vehicle Type'),
+        options: [
+          { value: 'all', text: t('categoryView.filters.allTypes', 'All Types') },
+          { value: 'car-sedan', text: t('categoryView.filters.carSedan', 'Sedan') },
+          { value: 'car-suv', text: t('categoryView.filters.carSuv', 'SUV') },
+          { value: 'car-truck', text: t('categoryView.filters.carTruck', 'Truck') },
+          // Add more vehicle types
+        ],
+      },
+    ];
+  }
+  // Add other categories and their specific filters
+  return []; // Default to no specific filters
+});
 
 const fetchDeals = async () => {
   loading.value = true;
@@ -26,10 +68,9 @@ const fetchDeals = async () => {
 
     const results = await response.json();
     if (results.success && results.data) {
-      // Filter deals by category if a specific category is selected
+      // Initial category filtering (pre-search/dynamic filters)
       if (categorySlug.value && categorySlug.value !== 'all') {
         deals.value = results.data.filter(deal => {
-          // Check if deal has category array and includes the category slug
           return deal.category && deal.category.some(cat => 
             cat === categorySlug.value || 
             cat.includes(categorySlug.value) ||
@@ -51,12 +92,44 @@ const fetchDeals = async () => {
   }
 };
 
+const filteredDeals = computed(() => {
+  let items = deals.value;
+
+  // Filter by search query (name/title)
+  if (searchQuery.value) {
+    items = items.filter(deal => 
+      deal.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+  }
+
+  // Apply active dynamic filters
+  for (const filterKey in activeFilters.value) {
+    const filterValue = activeFilters.value[filterKey];
+    if (filterValue && filterValue !== 'all') { // 'all' means no filter for this criteria
+      items = items.filter(deal => {
+        // This is a simplified example. Real-world scenarios might need more complex logic
+        // depending on how filterable attributes are stored in the deal object.
+        // Assuming deal.attributes is an object like { propertyType: 'apartment', color: 'red' }
+        // Or deal.type for a primary type like in current mock data
+        if (filterKey === 'propertyType' || filterKey === 'vehicleType') {
+          return deal.type && deal.type.toLowerCase().replace(/\s+/g, '') === filterValue;
+        }
+        // Add more specific filter logic here based on filterKey
+        return true; // Fallback if filterKey isn't handled
+      });
+    }
+  }
+  return items;
+});
+
 const fetchCategoryInfo = async () => {
   if (!categorySlug.value || categorySlug.value === 'all') {
     categoryInfo.value = {
       name: t('categoryView.allCategories', 'All Categories'),
       description: t('categoryView.allCategoriesDesc', 'Browse all available deals')
     };
+    // Reset filters when viewing all categories or if no specific category
+    activeFilters.value = {}; 
     return;
   }
 
@@ -83,6 +156,8 @@ const fetchCategoryInfo = async () => {
       description: t('categoryView.categoryDesc', 'Browse deals in this category')
     };
   }
+  // Reset filters when category changes
+  activeFilters.value = {}; 
 };
 
 const retryFetch = () => {
@@ -92,20 +167,20 @@ const retryFetch = () => {
 
 // Watch for route changes
 watch(() => route.params.slug, () => {
-  fetchCategoryInfo();
+  searchQuery.value = ''; // Reset search query on category change
+  fetchCategoryInfo(); // This will also reset activeFilters
   fetchDeals();
 }, { immediate: true });
 
 onMounted(() => {
-  fetchCategoryInfo();
-  fetchDeals();
+  // Initial fetch is handled by the watcher with immediate: true
 });
 </script>
 
 <template>
   <div class="container-xxl bg-white p-0">
     <!-- Spinner Start -->
-    <div v-if="loading && !error" id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+    <div v-if="loading && !error && !filteredDeals.length" id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
       <div class="spinner-border text-primary" style="width: 3rem; height: 3rem" role="status">
         <span class="sr-only">{{ t('common.loading', 'Loading...') }}</span>
       </div>
@@ -115,21 +190,36 @@ onMounted(() => {
     <!-- Header Start -->
     <div class="container-fluid nav-bar bg-transparent">
       <div class="container">
-
         <!-- Generic Filter Start -->
-        <div class="row g-4 mb-5 mt-2 justify-content-center">
-          <div class="col-md-8 col-lg-6">
-            <div class="p-4 rounded bg-light filter-container">
-              <h5 class="text-center mb-3">{{ t('common.filterDeals', 'Filter Deals') }}</h5>
-              <!-- Actual filter controls will go here -->
-              <p class="text-muted text-center">{{ t('common.filterPlaceholderText', 'Filter options will be available soon.') }}</p>
-            </div>
+        <div class="row g-3 mb-5 mt-2 justify-content-center align-items-end">
+          <!-- Search Bar -->
+          <div class="col-md-6 col-lg-5">
+            <label for="searchQueryInput" class="form-label">{{ t('categoryView.filters.searchLabel', 'Search by Name') }}</label>
+            <input type="text" class="form-control" id="searchQueryInput" :placeholder="t('categoryView.filters.searchPlaceholder', 'Enter deal name...')" v-model="searchQuery">
           </div>
+
+          <!-- Dynamic Filters -->
+          <template v-for="filterGroup in categoryFilterOptions" :key="filterGroup.id">
+            <div class="col-md-6 col-lg-3">
+              <label :for="filterGroup.id" class="form-label">{{ filterGroup.label }}</label>
+              <select class="form-select" :id="filterGroup.id" v-model="activeFilters[filterGroup.id]">
+                <option v-for="option in filterGroup.options" :key="option.value" :value="option.value">
+                  {{ option.text }}
+                </option>
+              </select>
+            </div>
+          </template>
         </div>
         <!-- Generic Filter End -->
 
-        <!-- Loading State -->
-        <div v-if="loading" class="text-center py-5">
+        <!-- Category Info -->
+        <!-- <div v-if="categoryInfo && !loading && !error" class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+          <h1 class="mb-3">{{ categoryInfo.name }}</h1>
+          <p>{{ categoryInfo.description }}</p>
+        </div> -->
+
+        <!-- Loading State (only if initial deals are loading and no filters applied yet) -->
+        <div v-if="loading && deals.length === 0" class="text-center py-5">
           <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">{{ t('common.loading') }}</span>
           </div>
@@ -148,28 +238,34 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- No Deals Found State -->
-        <div v-else-if="deals.length === 0" class="text-center py-5">
+        <!-- No Deals Found State (after applying filters or initial load) -->
+        <div v-else-if="filteredDeals.length === 0" class="text-center py-5">
           <div class="alert alert-info" role="alert">
             <h4 class="alert-heading">{{ t('categoryView.noDeals', 'No Deals Found') }}</h4>
-            <p>{{ t('categoryView.noDealsDesc', 'No deals are available in this category at the moment.') }}</p>
+            <p>{{ t('categoryView.noDealsDesc', 'No deals match your current criteria. Try adjusting your search or filters.') }}</p>
             <hr>
+            <router-link v-if="categorySlug !== 'all'" :to="{ name: 'CategoryView', params: { slug: 'all' } }" class="btn btn-primary me-2">
+              {{ t('categoryView.viewAllDeals', 'View All Deals') }}
+            </router-link>
+            <!-- <router-link to="/" class="btn btn-outline-secondary">
+              {{ t('categoryView.backToHome', 'Back to Home') }}
+            </router-link> -->
           </div>
         </div>
 
         <!-- Deals Grid -->
         <div v-else class="row g-4">
-          <div v-for="deal in deals" :key="deal.id" class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+          <div v-for="deal in filteredDeals" :key="deal.id" class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
             <div class="property-item rounded overflow-hidden">
               <div class="position-relative overflow-hidden">
-                <a href="#">
-                  <img class="img-fluid" :src="deal.image" :alt="deal.title">
+                <a href="#"> <!-- Consider making this a router-link to a deal details page -->
+                  <img class="img-fluid" :src="deal.image || '/img/deal.svg'" :alt="deal.title">
                 </a>
                 <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">
-                  {{ t('dealsListing.status.' + deal.status.toLowerCase().replace(/\s+/g, ''), deal.status) }}
+                  {{ t('dealsListing.status.' + (deal.status ? deal.status.toLowerCase().replace(/\s+/g, '') : 'unknown'), deal.status || 'N/A') }}
                 </div>
                 <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
-                  {{ t('dealsListing.types.' + deal.type.toLowerCase().replace(/\s+/g, ''), deal.type) }}
+                  {{ t('dealsListing.types.' + (deal.type ? deal.type.toLowerCase().replace(/\s+/g, '') : 'unknown'), deal.type || 'N/A') }}
                 </div>
               </div>
               <div class="p-4 pb-0">
@@ -179,53 +275,69 @@ onMounted(() => {
               </div>
               <div class="d-flex border-top">
                 <small class="flex-fill text-center border-end py-2">
-                  <i class="fa fa-ruler-combined text-primary me-2"></i>{{ deal.sqft }}
+                  <i class="fa fa-ruler-combined text-primary me-2"></i>{{ deal.sqft || 'N/A' }}
                 </small>
                 <small class="flex-fill text-center border-end py-2">
-                  <i class="fa fa-bed text-primary me-2"></i>{{ deal.beds }}
+                  <i class="fa fa-bed text-primary me-2"></i>{{ deal.beds || 'N/A' }}
                 </small>
                 <small class="flex-fill text-center py-2">
-                  <i class="fa fa-bath text-primary me-2"></i>{{ deal.baths }}
+                  <i class="fa fa-bath text-primary me-2"></i>{{ deal.baths || 'N/A' }}
                 </small>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Pagination (if needed in the future) -->
-        <div v-if="deals.length > 0" class="row mt-5">
-          <div class="col-12">
+        <!-- Pagination (Placeholder - implement if needed) -->
+        <div v-if="filteredDeals.length > 0" class="row mt-5">
+          <div class="col-12 text-center">
             <nav aria-label="Deals pagination">
-              <!-- Pagination component can be added here -->
+              <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">{{ t('common.previous') }}</a>
+                </li>
+                <li class="page-item active" aria-current="page">
+                  <a class="page-link" href="#">1</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="#">{{ t('common.next') }}</a>
+                </li>
+              </ul>
             </nav>
           </div>
         </div>
       </div>
     </div>
+    <!-- Category End -->
   </div>
 </template>
 
 <style scoped>
-.property-item {
-  transition: transform 0.3s ease;
-}
-
-.property-item:hover {
-  transform: translateY(-5px);
-}
-
-.alert {
-  border: none;
-  border-radius: 10px;
-}
-
-.spinner-border {
-  width: 3rem;
-  height: 3rem;
-}
-
-/* Generic Filter Styles */
 .filter-container {
-  border: 1px solid #dee2e6; /* Light border for the filter box */
+  transition: all 0.3s ease-in-out;
 }
+
+.filter-container:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Add any additional styles for filters if needed */
+.form-label {
+  font-weight: 500;
+}
+
+/* Ensure consistent spacing for filter elements */
+.g-3 > [class*="col-"] {
+    padding-top: 0.5rem; /* Adjust as needed */
+    padding-bottom: 0.5rem; /* Adjust as needed */
+}
+
+.property-item img {
+  height: 200px; /* Or your desired fixed height */
+  object-fit: cover; /* Ensures the image covers the area, cropping if necessary */
+  width: 100%;
+}
+
 </style>

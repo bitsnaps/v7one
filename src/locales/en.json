@@ -172,7 +172,8 @@
     "retry": "Try Again",
     "noCategoriesFound": "No categories found for this section.",
     "filterDeals": "Filter Deals",
-    "filterPlaceholderText": "Filter options will be available soon."
+    "previous": "Previous",
+    "next": "Next"
   },
   "categoryView": {
     "allCategories": "All Categories",
@@ -180,8 +181,27 @@
     "categoryDesc": "Browse deals in this category",
     "loading": "Loading...",
     "noDeals": "No Deals Found",
-    "noDealsDesc": "No deals are available in this category at the moment.",
-    "backToHome": "Back to Home"
+    "noDealsDesc": "No deals match your current criteria. Try adjusting your search or filters.",
+    "backToHome": "Back to Home",
+    "viewAllDeals": "View All Deals",
+    "filters": {
+      "searchLabel": "Search by Name",
+      "searchPlaceholder": "Enter deal name...",
+      "propertyType": "Property Type",
+      "allTypes": "All Types",
+      "apartment": "Apartment",
+      "villa": "Villa",
+      "house": "House",
+      "office": "Office",
+      "building": "Building",
+      "townhouse": "Townhouse",
+      "shop": "Shop",
+      "garage": "Garage",
+      "vehicleType": "Vehicle Type",
+      "carSedan": "Sedan",
+      "carSuv": "SUV",
+      "carTruck": "Truck"
+    }
   },
   "footer": {
     "getInTouch": "Get In Touch",

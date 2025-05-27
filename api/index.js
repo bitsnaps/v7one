@@ -286,10 +286,8 @@ app.post('/contact', async (c) => {
     }
 });
 
-// API endpoint for deals
-app.get('/api/deals', async (c) => {
-    try {
-        const deals = [
+// deals and categories data
+const allDealsData = [
             {
                 "id": 1,
                 "title": "Luxury Villa with Ocean View",
@@ -408,8 +406,180 @@ app.get('/api/deals', async (c) => {
                 "category": ["featured", "for-rent"]
               }
         ];
-        
-        return c.json({ success: true, data: deals });
+
+const allCategoriesData = [
+    // Real Estate Categories
+    {
+        id: 1,
+        name: "Apartment",
+        slug: "apartments",
+        icon: "/img/icon-apartment.svg",
+        description: "Modern apartments and condos",
+        count: 123,
+        type: "real-estate"
+    },
+    {
+        id: 2,
+        name: "Villa",
+        slug: "villas",
+        icon: "/img/icon-villa.svg",
+        description: "Luxury villas and estates",
+        count: 89,
+        type: "real-estate"
+    },
+    {
+        id: 3,
+        name: "Home",
+        slug: "homes",
+        icon: "/img/icon-house.svg",
+        description: "Family homes and houses",
+        count: 156,
+        type: "real-estate"
+    },
+    {
+        id: 4,
+        name: "Office",
+        slug: "offices",
+        icon: "/img/icon-office.svg",
+        description: "Commercial office spaces",
+        count: 45,
+        type: "real-estate"
+    },
+    {
+        id: 5,
+        name: "Building",
+        slug: "buildings",
+        icon: "/img/icon-building.svg",
+        description: "Commercial buildings",
+        count: 30,
+        type: "real-estate"
+    },
+    {
+        id: 6,
+        name: "Townhouse",
+        slug: "townhouses",
+        icon: "/img/icon-townhouse.svg",
+        description: "Modern townhouses",
+        count: 67,
+        type: "real-estate"
+    },
+    {
+        id: 7,
+        name: "Shop",
+        slug: "shops",
+        icon: "/img/icon-shop.svg",
+        description: "Retail shops and stores",
+        count: 88,
+        type: "real-estate"
+    },
+    {
+        id: 8,
+        name: "Garage",
+        slug: "garages",
+        icon: "/img/icon-garage.svg",
+        description: "Parking spaces and garages",
+        count: 20,
+        type: "real-estate"
+    },
+    // Car Categories
+    {
+        id: 9,
+        name: "Sedan",
+        slug: "cars-sedan",
+        icon: "/img/icon-car-sedan.svg",
+        description: "Comfortable sedans",
+        count: 210,
+        type: "cars"
+    },
+    {
+        id: 10,
+        name: "SUV",
+        slug: "cars-suv",
+        icon: "/img/icon-car-suv.svg",
+        description: "Spacious SUVs",
+        count: 150,
+        type: "cars"
+    },
+    {
+        id: 11,
+        name: "Truck",
+        slug: "cars-truck",
+        icon: "/img/icon-car-truck.svg",
+        description: "Powerful trucks",
+        count: 75,
+        type: "cars"
+    },
+    // Other Categories
+    {
+        id: 12,
+        name: "Electronics",
+        slug: "electronics",
+        icon: "/img/icon-electronics.svg",
+        description: "Gadgets and electronics",
+        count: 300,
+        type: "other"
+    },
+    {
+        id: 13,
+        name: "Services",
+        slug: "services",
+        icon: "/img/icon-services.svg",
+        description: "Various services",
+        count: 95,
+        type: "other"
+    },
+    {
+        id: 14,
+        name: "Other Deals",
+        slug: "other-deals",
+        icon: "/img/icon-deal.svg",
+        description: "Miscellaneous deals",
+        count: 50,
+        type: "other"
+    }
+];
+
+// API endpoint for deals
+app.get('/api/deals', async (c) => {
+    try {
+        let filteredDeals = [...allDealsData]; // Start with all deals
+
+        const { category_slug, search, type, status } = c.req.query();
+
+        // 1. Filter by category_slug (primary category from route)
+        if (category_slug) {
+            const category = allCategoriesData.find(cat => cat.slug === category_slug);
+            if (category) {
+                let typeToFilter = category.name;
+                // Special handling for car categories if deal.type is generic like "Automobile"
+                if (category.type && category.type.toLowerCase() === 'cars') {
+                    typeToFilter = 'Automobile'; // Assuming all car deals in allDealsData have type "Automobile"
+                }
+                filteredDeals = filteredDeals.filter(deal => deal.type.toLowerCase() === typeToFilter.toLowerCase());
+            }
+        }
+
+        // 2. Filter by search query (on title)
+        if (search) {
+            const searchTerm = search.toLowerCase();
+            filteredDeals = filteredDeals.filter(deal => deal.title.toLowerCase().includes(searchTerm));
+        }
+
+        // 3. Filter by 'type' (from specific filter dropdowns like propertyType, vehicleType)
+        if (type) {
+            const filterType = type.toLowerCase();
+            // This filter might be less effective for 'cars' if all car deals are 'Automobile'
+            // and user filters by 'Sedan', unless data or this logic is more granular.
+            filteredDeals = filteredDeals.filter(deal => deal.type.toLowerCase() === filterType);
+        }
+
+        // 4. Filter by 'status' (e.g., "For Sell", "For Rent")
+        if (status) {
+            const filterStatus = status.toLowerCase();
+            filteredDeals = filteredDeals.filter(deal => deal.status.toLowerCase() === filterStatus);
+        }
+
+        return c.json({ success: true, data: filteredDeals });
     } catch (error) {
         console.error('Error fetching deals:', error);
         return c.json({ success: false, message: 'Error fetching deals' }, 500);
@@ -419,144 +589,13 @@ app.get('/api/deals', async (c) => {
 // API endpoint for deal categories
 app.get('/api/categories', async (c) => {
     try {
-        const categories = [
-            // Real Estate Categories
-            {
-                id: 1,
-                name: "Apartment",
-                slug: "apartments",
-                icon: "/img/icon-apartment.svg",
-                description: "Modern apartments and condos",
-                count: 123,
-                type: "real-estate"
-            },
-            {
-                id: 2,
-                name: "Villa",
-                slug: "villas",
-                icon: "/img/icon-villa.svg",
-                description: "Luxury villas and estates",
-                count: 89,
-                type: "real-estate"
-            },
-            {
-                id: 3,
-                name: "Home",
-                slug: "homes",
-                icon: "/img/icon-house.svg",
-                description: "Family homes and houses",
-                count: 156,
-                type: "real-estate"
-            },
-            {
-                id: 4,
-                name: "Office",
-                slug: "offices",
-                icon: "/img/icon-office.svg",
-                description: "Commercial office spaces",
-                count: 45,
-                type: "real-estate"
-            },
-            {
-                id: 5,
-                name: "Building",
-                slug: "buildings",
-                icon: "/img/icon-building.svg",
-                description: "Commercial buildings",
-                count: 30,
-                type: "real-estate"
-            },
-            {
-                id: 6,
-                name: "Townhouse",
-                slug: "townhouses",
-                icon: "/img/icon-townhouse.svg",
-                description: "Modern townhouses",
-                count: 67,
-                type: "real-estate"
-            },
-            {
-                id: 7,
-                name: "Shop",
-                slug: "shops",
-                icon: "/img/icon-shop.svg",
-                description: "Retail shops and stores",
-                count: 88,
-                type: "real-estate"
-            },
-            {
-                id: 8,
-                name: "Garage",
-                slug: "garages",
-                icon: "/img/icon-garage.svg",
-                description: "Parking spaces and garages",
-                count: 20,
-                type: "real-estate"
-            },
-            // Car Categories
-            {
-                id: 9,
-                name: "Sedan",
-                slug: "cars-sedan",
-                icon: "/img/icon-car-sedan.svg",
-                description: "Sedan cars and family vehicles",
-                count: 120,
-                type: "cars"
-            },
-            {
-                id: 10,
-                name: "SUV",
-                slug: "cars-suv",
-                icon: "/img/icon-car-suv.svg",
-                description: "SUVs and crossover vehicles",
-                count: 85,
-                type: "cars"
-            },
-            {
-                id: 11,
-                name: "Truck",
-                slug: "cars-truck",
-                icon: "/img/icon-car-truck.svg",
-                description: "Trucks and commercial vehicles",
-                count: 45,
-                type: "cars"
-            },
-            // Other Categories
-            {
-                id: 12,
-                name: "Electronics",
-                slug: "electronics",
-                icon: "/img/icon-electronics.svg",
-                description: "Phones, laptops, gadgets and tech accessories",
-                count: 150,
-                type: "other"
-            },
-            {
-                id: 13,
-                name: "Services",
-                slug: "services",
-                icon: "/img/icon-services.svg",
-                description: "Professional services and consultations",
-                count: 90,
-                type: "other"
-            },
-            {
-                id: 14,
-                name: "Other Deals",
-                slug: "other-deals",
-                icon: "/img/icon-deal.svg",
-                description: "Miscellaneous items and special offers",
-                count: 110,
-                type: "other"
-            }
-        ];
-        
-        return c.json({ success: true, data: categories });
+        return c.json({ success: true, data: allCategoriesData });
     } catch (error) {
         console.error('Error fetching categories:', error);
         return c.json({ success: false, message: 'Error fetching categories' }, 500);
     }
 });
+
 
 serve(app, (info) => {
   console.log(`Listening on http://localhost:${info.port}`) // Listening on http://localhost:3000
