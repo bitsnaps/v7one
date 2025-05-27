@@ -158,7 +158,10 @@
     "passwordPlaceholder": "ادخل كلمة المرور",
     "signInButton": "تسجيل الدخول",
     "noAccount": "ليس لديك حساب؟",
-    "signUpLink": "اشتراك"
+    "signUpLink": "اشتراك",
+    "or": "أو",
+    "signInWithGoogle": "تسجيل الدخول باستخدام جوجل",
+    "signInWithFacebook": "تسجيل الدخول باستخدام فيسبوك"
   },
   "signUp": {
     "title": "اشتراك",
@@ -169,7 +172,9 @@
     "confirmPasswordLabel": "تأكيد كلمة المرور",
     "signUpButton": "اشتراك",
     "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
-    "signInLink": "تسجيل الدخول"
+    "signInLink": "تسجيل الدخول",
+    "signUpWithGoogle": "الاشتراك باستخدام جوجل",
+    "signUpWithFacebook": "الاشتراك باستخدام فيسبوك"
   },
   "testimonial": {
     "title": "ما يقوله عملاؤنا",

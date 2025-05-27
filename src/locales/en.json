@@ -143,7 +143,10 @@
     "passwordPlaceholder": "Enter your password",
     "signInButton": "Sign In",
     "noAccount": "Don't have an account?",
-    "signUpLink": "Sign Up"
+    "signUpLink": "Sign Up",
+    "or": "OR",
+    "signInWithGoogle": "Sign In with Google",
+    "signInWithFacebook": "Sign In with Facebook"
   },
   "signUp": {
     "title": "Sign Up",
@@ -154,7 +157,9 @@
     "confirmPasswordLabel": "Confirm Password",
     "signUpButton": "Sign Up",
     "alreadyHaveAccount": "Already have an account?",
-    "signInLink": "Sign In"
+    "signInLink": "Sign In",
+    "signUpWithGoogle": "Sign Up with Google",
+    "signUpWithFacebook": "Sign Up with Facebook"
   },
   "testimonial": {
     "title": "What Our Clients Say",

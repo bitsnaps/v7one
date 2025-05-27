@@ -46,6 +46,18 @@ const handleSignIn = async () => {
     errorMessage.value = 'An unexpected error occurred. Please try again later.';
   }
 };
+
+const handleGoogleSignIn = () => {
+  console.log('Attempting to sign in with Google');
+  // Placeholder for Google Sign-In logic
+  alert('Google Sign-In not implemented yet.');
+};
+
+const handleFacebookSignIn = () => {
+  console.log('Attempting to sign in with Facebook');
+  // Placeholder for Facebook Sign-In logic
+  alert('Facebook Sign-In not implemented yet.');
+};
 </script>
 
 <template>
@@ -82,6 +94,20 @@ const handleSignIn = async () => {
           <button type="submit" class="btn btn-primary w-100">{{ $t('signIn.signInButton', 'Sign In') }}</button>
         </div>
       </form>
+
+      <div class="or-divider my-3">
+        <span>{{ $t('signIn.or', 'OR') }}</span>
+      </div>
+
+      <div class="d-grid gap-2">
+        <button @click="handleGoogleSignIn" class="btn btn-danger w-100">
+          <i class="fa-brands fa-google me-2"></i> {{ $t('signIn.signInWithGoogle', 'Sign In with Google') }}
+        </button>
+        <button @click="handleFacebookSignIn" class="btn btn-primary w-100" style="background-color: #3b5998; border-color: #3b5998;">
+          <i class="fa-brands fa-facebook me-2"></i> {{ $t('signIn.signInWithFacebook', 'Sign In with Facebook') }}
+        </button>
+      </div>
+
       <p class="mt-3 text-center">
         {{ $t('signIn.noAccount', "Don't have an account?") }} <router-link to="/signup">{{ $t('signIn.signUpLink', 'Sign Up') }}</router-link>
       </p>
@@ -106,6 +132,24 @@ const handleSignIn = async () => {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 400px; /* Max width for larger screens */
+}
+
+.or-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #6c757d; /* Bootstrap's secondary text color */
+}
+
+.or-divider::before,
+.or-divider::after {
+  content: '';
+  flex-grow: 1;
+  border-bottom: 1px solid #dee2e6; /* Bootstrap's border color */
+}
+
+.or-divider span {
+  padding: 0 0.5rem;
 }
 
 @media (max-width: 576px) { /* Mobile responsiveness */

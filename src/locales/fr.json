@@ -153,7 +153,10 @@
     "passwordPlaceholder": "Entrez votre mot de passe",
     "signInButton": "Se Connecter",
     "noAccount": "Vous n'avez pas de compte ?",
-    "signUpLink": "S'inscrire"
+    "signUpLink": "S'inscrire",
+    "or": "OU",
+    "signInWithGoogle": "Se connecter avec Google",
+    "signInWithFacebook": "Se connecter avec Facebook"
   },
   "signUp": {
     "title": "S'inscrire",
@@ -164,7 +167,9 @@
     "confirmPasswordLabel": "Confirmer le mot de passe",
     "signUpButton": "S'inscrire",
     "alreadyHaveAccount": "Vous avez déjà un compte ?",
-    "signInLink": "Se Connecter"
+    "signInLink": "Se Connecter",
+    "signUpWithGoogle": "S'inscrire avec Google",
+    "signUpWithFacebook": "S'inscrire avec Facebook"
   },
   "testimonial": {
     "title": "Ce Que Disent Nos Clients",
