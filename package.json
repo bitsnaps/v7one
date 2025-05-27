@@ -11,8 +11,10 @@
     "clean:all": "npm run clean && rm -rf node_modules"
   },
   "dependencies": {
+    "axios": "^1.9.0",
     "bootstrap": "^5.3.6",
     "bootstrap-vue-next": "^0.29.3",
+    "pinia": "^3.0.2",
     "vue": "^3.5.13",
     "vue-i18n": "11",
     "vue-router": "^4.5.1"

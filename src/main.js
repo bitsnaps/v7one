@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import { createBootstrap } from 'bootstrap-vue-next';
 import { createI18n } from 'vue-i18n';
+import { createPinia } from 'pinia';
 // Add the necessary CSS
 // import 'font-awesome/css/font-awesome.min.css' // Font-awesome (npm)
 // import 'bootstrap/dist/css/bootstrap.css' // Default Bootstrap
@@ -16,6 +17,8 @@ import en from './locales/en.json';
 import fr from './locales/fr.json';
 import ar from './locales/ar.json';
 
+
+const pinia = createPinia()
 
 const supportedLocales = ['en', 'fr', 'ar']; // Define supported locales
 const getInitialLocale = () => {
@@ -46,6 +49,6 @@ const i18n = createI18n({
 const app = createApp(App);
 app.use(router)
 app.use(i18n)
-// Initialize Bootstrap
+app.use(pinia)
 app.use(createBootstrap())
 app.mount('#app')
