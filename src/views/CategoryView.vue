@@ -2,7 +2,7 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { getApiBaseUrl } from '@/helpers/utils';
+import DealService from '@/services/DealService';
 
 const route = useRoute();
 const { t } = useI18n();
@@ -61,17 +61,12 @@ const fetchDeals = async () => {
   deals.value = [];
   
   try {
-    // Fetch deals from API
-    const response = await fetch(`${getApiBaseUrl()}/api/deals`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const results = await response.json();
-    if (results.success && results.data) {
+    const response = await DealService.getDeals(); // Pass params if your service/API supports it for pre-filtering
+    if (response.data && response.data.success) {
+      let fetchedDeals = response.data.data;
       // Initial category filtering (pre-search/dynamic filters)
       if (categorySlug.value && categorySlug.value !== 'all') {
-        deals.value = results.data.filter(deal => {
+        deals.value = fetchedDeals.filter(deal => {
           return deal.category && deal.category.some(cat => 
             cat === categorySlug.value || 
             cat.includes(categorySlug.value) ||
@@ -79,10 +74,10 @@ const fetchDeals = async () => {
           );
         });
       } else {
-        deals.value = results.data;
+        deals.value = fetchedDeals;
       }
     } else {
-      throw new Error(results.message || 'Failed to fetch deals: Invalid data format');
+      throw new Error(response.data.message || 'Failed to fetch deals: Invalid data format');
     }
   } catch (e) {
     console.error('Failed to fetch deals:', e);
@@ -135,19 +130,16 @@ const fetchCategoryInfo = async () => {
   }
 
   try {
-    const response = await fetch(`${import.meta.env.DEV ? 'http://localhost:3000' : ''}/api/categories`);
-    if (response.ok) {
-      const results = await response.json();
-      if (results.success && results.data) {
-        const category = results.data.find(cat => cat.slug === categorySlug.value);
-        if (category) {
-          categoryInfo.value = category;
-        } else {
-          categoryInfo.value = {
-            name: categorySlug.value.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-            description: t('categoryView.categoryDesc', 'Browse deals in this category')
-          };
-        }
+    const response = await DealService.getCategories();
+    if (response.data && response.data.success) {
+      const category = response.data.data.find(cat => cat.slug === categorySlug.value);
+      if (category) {
+        categoryInfo.value = category;
+      } else {
+        categoryInfo.value = {
+          name: categorySlug.value.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+          description: t('categoryView.categoryDesc', 'Browse deals in this category')
+        };
       }
     }
   } catch (e) {

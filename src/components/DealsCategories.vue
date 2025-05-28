@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { getApiBaseUrl } from '@/helpers/utils';
+import DealService from '@/services/DealService';
 
 const { t } = useI18n();
 
@@ -21,15 +21,11 @@ const setActiveTab = (tab) => {
 const fetchCategories = async () => {
   try {
     loading.value = true;
-    const response = await fetch(`${getApiBaseUrl()}/api/categories`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch categories');
-    }
-    const result = await response.json();
-    if (result.success && result.data) {
-      categories.value = result.data;
+    const response = await DealService.getCategories();
+    if (response.data && response.data.success) {
+      categories.value = response.data.data;
     } else {
-      throw new Error(result.message || 'Failed to fetch categories');
+      throw new Error(response.data.message || 'Failed to fetch categories');
     }
   } catch (err) {
     error.value = err.message;

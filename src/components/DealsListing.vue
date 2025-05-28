@@ -1,33 +1,27 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { getApiBaseUrl } from '@/helpers/utils';
+import DealService from '@/services/DealService';
 
 const deals = ref([]);
 const activeTab = ref('featured'); // 'featured', 'for-sale', 'for-rent'
 const loading = ref(true);
 const error = ref(null);
+const route = useRoute();
 
 const { t } = useI18n();
 
-const fetchDeals = async () => {
+const fetchDeals = async (queryParams = {}) => {
   loading.value = true;
   error.value = null;
   deals.value = []; // Clear previous deals
   try {
-  // Fetch deals from API (replace with actual API endpoint in production)
-    // check if running of dev mode
-    const response = await fetch(`${getApiBaseUrl()}/api/deals`);
-    // check for response
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const results = await response.json();
-    if (results.success && results.data) {
-      deals.value = results.data;
+    const response = await DealService.getDeals(queryParams);
+    if (response.data && response.data.success) {
+      deals.value = response.data.data;
     } else {
-      throw new Error(results.message || 'Failed to fetch deals: Invalid data format');
+      throw new Error(response.data.message || 'Failed to fetch deals: Invalid data format');
     }
   } catch (e) {
     console.error('Failed to fetch deals:', e);
@@ -161,7 +155,11 @@ const fetchDeals = async () => {
 };
 
 onMounted(() => {
-  fetchDeals();
+  fetchDeals(route.query);
+});
+
+watch(() => route.query, (newQuery) => {
+  fetchDeals(newQuery);
 });
 
 const retryFetch = () => {
@@ -173,16 +171,21 @@ const setActiveTab = (tabId) => {
 };
 
 const displayedDeals = computed(() => {
+  // If search query parameters are present, filtering is primarily done by the backend.
+  // The tabs can act as additional client-side filters on the already (potentially) filtered results.
+  let filtered = deals.value;
+
+  // Apply tab-based filtering
   if (activeTab.value === 'featured') {
-    return deals.value.filter(deal => deal.category.includes('featured'));
+    filtered = filtered.filter(deal => deal.category && deal.category.includes('featured'));
   }
   if (activeTab.value === 'for-sale') {
-    return deals.value.filter(deal => deal.status === 'For Sell');
+    filtered = filtered.filter(deal => deal.status === 'For Sell');
   }
   if (activeTab.value === 'for-rent') {
-    return deals.value.filter(deal => deal.status === 'For Rent');
+    filtered = filtered.filter(deal => deal.status === 'For Rent');
   }
-  return [];
+  return filtered;
 });
 
 </script>
