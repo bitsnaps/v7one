@@ -1,13 +1,20 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import { BCarousel, BCarouselSlide } from 'bootstrap-vue-next';
-import DealsCategories from '../components/DealsCategories.vue';
-import DealsListing from '../components/DealsListing.vue';
-import Teams from '../components/Teams.vue';
-import Testimonial from '../components/Testimonial.vue';
+import DealsCategories from '@/components/DealsCategories.vue';
+import DealsListing from '@/components/DealsListing.vue';
+import DealService from '@/services/DealService'; // Import DealService
+import Teams from '@/components/Teams.vue';
+import Testimonial from '@/components/Testimonial.vue';
 const searchKeyword = ref('');
 const selectedDealType = ref(''); // Changed from selectedPropertyType for broader V7 deals
 const selectedLocation = ref('');
+const searchResults = ref([]);
+const searchLoading = ref(false);
+const searchError = ref(null);
+
+const router = useRouter();
 
 const carouselItems = [
   { img: '/img/carousel-real-estate.jpg', alt: 'Real Estate' },
@@ -15,10 +22,36 @@ const carouselItems = [
   { img: '/img/carousel-trading-deal.jpg', alt: 'Other DealCategories' }
 ];
 
-const searchDeals = () => {
-  console.log('Searching for:', searchKeyword.value, selectedDealType.value, selectedLocation.value);
-  // Implement search logic here, possibly navigating to a search results page
-  // router.push({ name: 'SearchResults', query: { keyword: searchKeyword.value, type: selectedDealType.value, location: selectedLocation.value } });
+const searchDeals = async () => {
+  const queryParams = {};
+  if (searchKeyword.value) {
+    queryParams.keyword = searchKeyword.value;
+  }
+  if (selectedDealType.value) {
+    queryParams.type = selectedDealType.value;
+  }
+  if (selectedLocation.value) {
+    queryParams.location = selectedLocation.value;
+  }
+  searchLoading.value = true;
+  searchError.value = null;
+  searchResults.value = []; // Clear previous results
+
+  try {
+    const response = await DealService.getDeals(queryParams);
+    if (response.data && response.data.success) {
+      searchResults.value = response.data.data;
+      console.log(searchResults.value);
+      
+    } else {
+      throw new Error(response.data.message || 'Failed to fetch deals');
+    }
+  } catch (e) {
+    console.error('Failed to fetch deals:', e);
+    searchError.value = e.message || 'An error occurred while fetching deals.';
+  } finally {
+    searchLoading.value = false;
+  }
 };
 </script>
 
@@ -107,8 +140,53 @@ const searchDeals = () => {
         </div>
         <!-- About End -->
 
-        <!-- Property List Start -->
-         <DealsListing />
+        <!-- Search Results Start -->
+        <div class="container-xxl py-5" v-if="searchLoading || searchError || searchResults.length > 0">
+            <div class="container">
+                <div v-if="searchLoading" class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p>{{ $t('home.searchingDeals', 'Searching for deals...') }}</p>
+                </div>
+                <div v-else-if="searchError" class="alert alert-danger" role="alert">
+                    {{ $t('home.searchError', 'Error fetching deals:') }} {{ searchError }}
+                </div>
+                <div v-else-if="searchResults.length > 0">
+                    <h2 class="mb-4 text-center">{{ $t('home.searchResultsTitle', 'Search Results') }}</h2>
+                    <div class="row g-4">
+                        <div v-for="deal in searchResults" :key="deal.id" class="col-lg-4 col-md-6">
+                            <div class="property-item rounded overflow-hidden">
+                                <div class="position-relative overflow-hidden">
+                                    <router-link :to="{ name: 'DealDetail', params: { id: deal.id } }">
+                                      <img class="img-fluid" :src="deal.image || '/img/default-deal.jpg'" :alt="deal.title" style="height: 200px; object-fit: cover; width: 100%;">
+                                    </router-link>
+                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{ deal.status || $t('common.status.unknown', 'N/A') }}</div>
+                                    <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ deal.type || $t('common.type.unknown', 'N/A') }}</div>
+                                </div>
+                                <div class="p-4 pb-0">
+                                    <h5 class="text-primary mb-3">{{ deal.price || $t('common.priceOnRequest', 'Price on request') }}</h5>
+                                    <router-link class="d-block h5 mb-2" :to="{ name: 'DealDetail', params: { id: deal.id } }">{{ deal.title }}</router-link>
+                                    <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ deal.location || $t('common.location.unknown', 'N/A') }}</p>
+                                </div>
+                                <div class="d-flex border-top">
+                                    <small class="flex-fill text-center border-end py-2" v-if="deal.sqft"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ deal.sqft }}</small>
+                                    <small class="flex-fill text-center border-end py-2" v-if="deal.beds"><i class="fa fa-bed text-primary me-2"></i>{{ deal.beds }}</small>
+                                    <small class="flex-fill text-center py-2" v-if="deal.baths"><i class="fa fa-bath text-primary me-2"></i>{{ deal.baths }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else-if="!searchLoading && searchResults.length === 0 && (searchKeyword || selectedDealType || selectedLocation)" class="text-center">
+                    <p>{{ $t('home.noDealsFound', 'No deals found matching your criteria.') }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- Search Results End -->
+
+        <!-- Property List Start (Show if no search is active or no results from search) -->
+         <DealsListing v-if="!searchLoading && !searchError && searchResults.length === 0 && !(searchKeyword || selectedDealType || selectedLocation)"/>
         <!-- Property List End -->
 
 

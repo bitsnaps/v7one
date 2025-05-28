@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../views/Home.vue';
-import About from '../views/About.vue';
-import Contact from '../views/Contact.vue';
-import PostDeal from '../views/PostDeal.vue';
-import SignIn from '../views/SignIn.vue';
-import CategoryView from '../views/CategoryView.vue';
-import NotFound from '../views/NotFound.vue';
+import Home from '@/views/Home.vue';
+import About from '@/views/About.vue';
+import Contact from '@/views/Contact.vue';
+import PostDeal from '@/views/PostDeal.vue';
+import SignIn from '@/views/SignIn.vue';
+import CategoryView from '@/views/CategoryView.vue';
+import NotFound from '@/views/NotFound.vue';
+import DealDetail from '@/views/DealDetail.vue';
 
 const routes = [
   {
@@ -36,7 +37,7 @@ const routes = [
   {
     path: '/signup',
     name: 'SignUp',
-    component: () => import('../views/SignUp.vue'),
+    component: () => import('@/views/SignUp.vue'),
   },
   {
     path: '/category/:slug',
@@ -48,8 +49,13 @@ const routes = [
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: NotFound,
+  },
+  {
+    path: '/deal/:id',
+    name: 'DealDetail',
+    component: DealDetail,
+    props: true,
   }
-  // Add other routes here
 ];
 
 const router = createRouter({
