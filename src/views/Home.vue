@@ -2,11 +2,11 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { BCarousel, BCarouselSlide } from 'bootstrap-vue-next';
-import DealsCategories from '@/components/DealsCategories.vue';
-import DealsListing from '@/components/DealsListing.vue';
+import DealsCategories from '../components/DealsCategories.vue';
+import DealsListing from '../components/DealsListing.vue';
 import DealService from '@/services/DealService'; // Import DealService
-import Teams from '@/components/Teams.vue';
-import Testimonial from '@/components/Testimonial.vue';
+import Teams from '../components/Teams.vue';
+import Testimonial from '../components/Testimonial.vue';
 const searchKeyword = ref('');
 const selectedDealType = ref(''); // Changed from selectedPropertyType for broader V7 deals
 const selectedLocation = ref('');
@@ -41,8 +41,6 @@ const searchDeals = async () => {
     const response = await DealService.getDeals(queryParams);
     if (response.data && response.data.success) {
       searchResults.value = response.data.data;
-      console.log(searchResults.value);
-      
     } else {
       throw new Error(response.data.message || 'Failed to fetch deals');
     }
@@ -114,32 +112,6 @@ const searchDeals = async () => {
         </div>
         <!-- Search End -->
 
-        <!-- Category Start -->
-        <DealsCategories />
-        <!-- Category End -->
-
-        <!-- About Start -->
-        <div class="container-xxl py-5">
-          <div class="container">
-              <div class="row g-5 align-items-center">
-                  <div class="col-lg-6 ">
-                      <div class="about-img position-relative overflow-hidden p-5 pe-0">
-                          <img class="img-fluid w-100" src="/img/about.svg" alt="About V7 Deals">
-                      </div>
-                  </div>
-                  <div class="col-lg-6 ">
-                      <h1 class="mb-4">{{ $t('home.aboutTitle', '#1 Marketplace for Your Deals') }}</h1>
-                      <p class="mb-4">{{ $t('home.aboutDescription', 'V7 Deals is your trusted platform for finding and making deals on real estate, cars, and much more. We connect buyers and sellers in a seamless and secure environment, focusing on quality and trust.') }}</p>
-                      <p><i class="fa fa-check text-primary me-3"></i>{{ $t('home.aboutFeature1', 'Wide Range of Categories') }}</p>
-                      <p><i class="fa fa-check text-primary me-3"></i>{{ $t('home.aboutFeature2', 'Verified Listings & Sellers') }}</p>
-                      <p><i class="fa fa-check text-primary me-3"></i>{{ $t('home.aboutFeature3', 'Secure Transaction Options') }}</p>
-                      <router-link to="/about" class="btn btn-primary py-3 px-5 mt-3">{{ $t('home.readMore', 'Read More') }}</router-link>
-                  </div>
-              </div>
-          </div>
-        </div>
-        <!-- About End -->
-
         <!-- Search Results Start -->
         <div class="container-xxl py-5" v-if="searchLoading || searchError || searchResults.length > 0">
             <div class="container">
@@ -184,6 +156,32 @@ const searchDeals = async () => {
             </div>
         </div>
         <!-- Search Results End -->
+
+        <!-- Category Start -->
+        <DealsCategories />
+        <!-- Category End -->
+
+        <!-- About Start -->
+        <div class="container-xxl py-5">
+          <div class="container">
+              <div class="row g-5 align-items-center">
+                  <div class="col-lg-6 ">
+                      <div class="about-img position-relative overflow-hidden p-5 pe-0">
+                          <img class="img-fluid w-100" src="/img/about.svg" alt="About V7 Deals">
+                      </div>
+                  </div>
+                  <div class="col-lg-6 ">
+                      <h1 class="mb-4">{{ $t('home.aboutTitle', '#1 Marketplace for Your Deals') }}</h1>
+                      <p class="mb-4">{{ $t('home.aboutDescription', 'V7 Deals is your trusted platform for finding and making deals on real estate, cars, and much more. We connect buyers and sellers in a seamless and secure environment, focusing on quality and trust.') }}</p>
+                      <p><i class="fa fa-check text-primary me-3"></i>{{ $t('home.aboutFeature1', 'Wide Range of Categories') }}</p>
+                      <p><i class="fa fa-check text-primary me-3"></i>{{ $t('home.aboutFeature2', 'Verified Listings & Sellers') }}</p>
+                      <p><i class="fa fa-check text-primary me-3"></i>{{ $t('home.aboutFeature3', 'Secure Transaction Options') }}</p>
+                      <router-link to="/about" class="btn btn-primary py-3 px-5 mt-3">{{ $t('home.readMore', 'Read More') }}</router-link>
+                  </div>
+              </div>
+          </div>
+        </div>
+        <!-- About End -->
 
         <!-- Property List Start (Show if no search is active or no results from search) -->
          <DealsListing v-if="!searchLoading && !searchError && searchResults.length === 0 && !(searchKeyword || selectedDealType || selectedLocation)"/>

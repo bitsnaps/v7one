@@ -24,10 +24,12 @@ async function createTestAccount() {
 }
 
 let transporter;
-createTestAccount().then(t => {
-    transporter = t;
-    console.log('Email test account created');
-});
+if (process.env.NODE_ENV){
+    createTestAccount().then(t => {
+        transporter = t;
+        console.log('Email test account created');
+    });
+}
 
 const EMAIL_CONTACT = process.env.EMAIL_CONTACT || 'admin@email.com';
 const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
