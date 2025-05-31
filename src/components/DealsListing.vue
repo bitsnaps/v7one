@@ -118,7 +118,7 @@ const displayedDeals = computed(() => {
                         <div class="property-item rounded overflow-hidden">
                             <div class="position-relative overflow-hidden">
                                 <router-link :to="{ name: 'DealDetail', params: { id: deal.id } }">
-                                      <img class="img-fluid" :src="deal.image || '/img/default-deal.jpg'" :alt="deal.title">
+                                      <img class="img-fluid" :src="deal.image || '/img/deal.svg'" :alt="deal.title">
                                     </router-link>
                                 <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{ $t('dealsListing.status.' + deal.status.toLowerCase().replace(/\s+/g, ''), deal.status) }}</div>
                                 <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $t('dealsListing.types.' + deal.type.toLowerCase().replace(/\s+/g, ''), deal.type) }}</div>
