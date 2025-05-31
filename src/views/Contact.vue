@@ -33,14 +33,14 @@ const submitForm = () => {
 <template>
     <div class="container-xxl py-5">
         <div class="container">
-            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+            <div class="text-center mx-auto mb-5" style="max-width: 600px;">
                 <h1 class="mb-3">{{ $t('contact.title', 'Contact Us') }}</h1>
                 <p>{{ $t('contact.subtitle', 'You can contact us via this form for any inqueries.') }}</p>
             </div>
             <div class="row g-4">
                 <div class="col-12">
                     <div class="row gy-4">
-                        <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="col-md-6 col-lg-4">
                             <div class="bg-light rounded p-3">
                                 <div class="d-flex align-items-center bg-white rounded p-3" style="border: 1px dashed rgba(0, 185, 142, .3)">
                                     <div class="icon me-3" style="width: 45px; height: 45px;">
@@ -50,7 +50,7 @@ const submitForm = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.3s">
+                        <div class="col-md-6 col-lg-4">
                             <div class="bg-light rounded p-3">
                                 <div class="d-flex align-items-center bg-white rounded p-3" style="border: 1px dashed rgba(0, 185, 142, .3)">
                                     <div class="icon me-3" style="width: 45px; height: 45px;">
@@ -60,7 +60,7 @@ const submitForm = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.5s">
+                        <div class="col-md-6 col-lg-4">
                             <div class="bg-light rounded p-3">
                                 <div class="d-flex align-items-center bg-white rounded p-3" style="border: 1px dashed rgba(0, 185, 142, .3)">
                                     <div class="icon me-3" style="width: 45px; height: 45px;">
@@ -72,11 +72,10 @@ const submitForm = () => {
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="col-md-6 ">
                     <iframe class="position-relative rounded w-100 h-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d199.79562686592078!2d2.8886350338917293!3d36.75305071199806!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fbb319ef1395b%3A0x24f8a7c2ef15813c!2sBanque%20de%20D%C3%A9veloppement%20Local!5e0!3m2!1sfr!2sdz!4v1747765346794!5m2!1sfr!2sdz" frameborder="0" style="min-height: 400px; border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
                 </div>
                 <div class="col-md-6">
-                    <div class="wow fadeInUp" data-wow-delay="0.5s">
                         <form @submit.prevent="submitForm">
                             <div class="row g-3">
                                 <div class="col-md-6">
@@ -112,7 +111,6 @@ const submitForm = () => {
                         <div v-if="formSubmitted" class="alert alert-success mt-3" role="alert">
                             {{ $t('contact.successMessage', 'Form submitted successfully!') }}
                         </div>
-                    </div>
                 </div>
             </div>
         </div>

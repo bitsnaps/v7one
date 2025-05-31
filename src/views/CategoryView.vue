@@ -206,7 +206,7 @@ onMounted(() => {
         <!-- Generic Filter End -->
 
         <!-- Category Info -->
-        <!-- <div v-if="categoryInfo && !loading && !error" class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+        <!-- <div v-if="categoryInfo && !loading && !error" class="text-center mx-auto mb-5" style="max-width: 600px;">
           <h1 class="mb-3">{{ categoryInfo.name }}</h1>
           <p>{{ categoryInfo.description }}</p>
         </div> -->
@@ -241,14 +241,14 @@ onMounted(() => {
               {{ t('categoryView.viewAllDeals', 'View All Deals') }}
             </router-link>
             <!-- <router-link to="/" class="btn btn-outline-secondary">
-              {{ t('categoryView.backToHome', 'Back to Home') }}
+              {{ t('common.backToHome', 'Back to Home') }}
             </router-link> -->
           </div>
         </div>
 
         <!-- Deals Grid -->
         <div v-else class="row g-4">
-          <div v-for="deal in filteredDeals" :key="deal.id" class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+          <div v-for="deal in filteredDeals" :key="deal.id" class="col-lg-4 col-md-6">
             <div class="property-item rounded overflow-hidden">
               <div class="position-relative overflow-hidden">
                 <a href="#"> <!-- Consider making this a router-link to a deal details page -->

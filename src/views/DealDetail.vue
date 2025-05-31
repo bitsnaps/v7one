@@ -17,7 +17,11 @@ onMounted(async () => {
       loading.value = true;
       error.value = null;
       const response = await DealService.getDealById(dealId);
-      deal.value = response.data;
+      if (!response.data.success){
+        error.value = response.data.message;
+        throw new Error(response.data.message);
+      }
+      deal.value = response.data.deal;
     } catch (err) {
       console.error('Failed to fetch deal:', err);
       error.value = err;
@@ -42,18 +46,23 @@ onMounted(async () => {
       </div>
       <div v-else-if="deal">
         <div class="row g-5 align-items-center">
-          <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+          <div class="col-lg-6">
             <div class="about-img position-relative overflow-hidden p-5 pe-0">
               <img class="img-fluid w-100" :src="deal.image || '/img/deal.svg'" :alt="deal.title">
             </div>
           </div>
-          <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+          <div class="col-lg-6">
             <h1 class="mb-4">{{ deal.title }}</h1>
             <p class="mb-4">{{ deal.description }}</p>
             <p><i class="fa fa-check text-primary me-3"></i>{{ $t('dealDetail.price') }}: {{ deal.price }}</p>
             <p><i class="fa fa-check text-primary me-3"></i>{{ $t('dealDetail.location') }}: {{ deal.location }}</p>
             <p><i class="fa fa-check text-primary me-3"></i>{{ $t('dealDetail.category') }}: {{ deal.category?.name || $t('dealDetail.notAvailable') }}</p>
             <a class="btn btn-primary py-3 px-5 mt-3" href="">{{ $t('dealDetail.contactSeller') }}</a>
+          </div>
+          <div class="col-lg-6">
+            <router-link to="/" class="btn btn-outline-secondary">
+              {{ t('common.backToHome', 'Back to Home') }}
+            </router-link>
           </div>
         </div>
       </div>

@@ -127,6 +127,23 @@ app.post('/api/signup', async (c) => {
     }
 });
 
+// API endpoint for a single deal by ID
+app.get('/api/deals/:id', async (c) => {
+    try {
+        const dealId = parseInt(c.req.param('id'));
+        const deal = allDealsData.find(d => d.id === dealId);
+
+        if (deal) {
+            return c.json({ success: true, deal });
+        } else {
+            return c.json({ success: false, message: 'Deal not found' }, 404);
+        }
+    } catch (error) {
+        console.error('Error fetching deal by ID:', error);
+        return c.json({ success: false, message: 'Error fetching deal' }, 500);
+    }
+});
+
 app.post('/api/login', async (c) => {
     try {
         const { username, password } = await c.req.json();
@@ -150,6 +167,23 @@ app.post('/api/login', async (c) => {
     } catch (error) {
         console.error('Login error:', error);
         return c.json({ success: false, message: 'An error occurred during login' }, 500);
+    }
+});
+
+// API endpoint for a single deal by ID
+app.get('/api/deals/:id', async (c) => {
+    try {
+        const dealId = parseInt(c.req.param('id'));
+        const deal = allDealsData.find(d => d.id === dealId);
+
+        if (deal) {
+            return c.json({ success: true, data: deal });
+        } else {
+            return c.json({ success: false, message: 'Deal not found' }, 404);
+        }
+    } catch (error) {
+        console.error('Error fetching deal by ID:', error);
+        return c.json({ success: false, message: 'Error fetching deal' }, 500);
     }
 });
 
@@ -191,6 +225,23 @@ app.post('/api/offers', async (c) => {
     } catch (error) {
         console.error('Offer creation error:', error);
         return c.json({ success: false, message: 'An error occurred while creating the offer' }, 500);
+    }
+});
+
+// API endpoint for a single deal by ID
+app.get('/api/deals/:id', async (c) => {
+    try {
+        const dealId = parseInt(c.req.param('id'));
+        const deal = allDealsData.find(d => d.id === dealId);
+
+        if (deal) {
+            return c.json({ success: true, data: deal });
+        } else {
+            return c.json({ success: false, message: 'Deal not found' }, 404);
+        }
+    } catch (error) {
+        console.error('Error fetching deal by ID:', error);
+        return c.json({ success: false, message: 'Error fetching deal' }, 500);
     }
 });
 
@@ -285,6 +336,23 @@ app.post('/contact', async (c) => {
     } catch (error) {
         console.error('Error processing contact form:', error);
         return c.json({ success: false, message: genericErrorMessage }, 500);
+    }
+});
+
+// API endpoint for a single deal by ID
+app.get('/api/deals/:id', async (c) => {
+    try {
+        const dealId = parseInt(c.req.param('id'));
+        const deal = allDealsData.find(d => d.id === dealId);
+
+        if (deal) {
+            return c.json({ success: true, data: deal });
+        } else {
+            return c.json({ success: false, message: 'Deal not found' }, 404);
+        }
+    } catch (error) {
+        console.error('Error fetching deal by ID:', error);
+        return c.json({ success: false, message: 'Error fetching deal' }, 500);
     }
 });
 
@@ -595,6 +663,23 @@ app.get('/api/deals', async (c) => {
     }
 });
 
+// API endpoint for a single deal by ID
+app.get('/api/deals/:id', async (c) => {
+    try {
+        const dealId = parseInt(c.req.param('id'));
+        const deal = allDealsData.find(d => d.id === dealId);
+
+        if (deal) {
+            return c.json({ success: true, data: deal });
+        } else {
+            return c.json({ success: false, message: 'Deal not found' }, 404);
+        }
+    } catch (error) {
+        console.error('Error fetching deal by ID:', error);
+        return c.json({ success: false, message: 'Error fetching deal' }, 500);
+    }
+});
+
 // API endpoint for deal categories
 app.get('/api/categories', async (c) => {
     try {
@@ -602,6 +687,23 @@ app.get('/api/categories', async (c) => {
     } catch (error) {
         console.error('Error fetching categories:', error);
         return c.json({ success: false, message: 'Error fetching categories' }, 500);
+    }
+});
+
+// API endpoint for a single deal by ID
+app.get('/api/deals/:id', async (c) => {
+    try {
+        const dealId = parseInt(c.req.param('id'));
+        const deal = allDealsData.find(d => d.id === dealId);
+
+        if (deal) {
+            return c.json({ success: true, data: deal });
+        } else {
+            return c.json({ success: false, message: 'Deal not found' }, 404);
+        }
+    } catch (error) {
+        console.error('Error fetching deal by ID:', error);
+        return c.json({ success: false, message: 'Error fetching deal' }, 500);
     }
 });
 
