@@ -54,13 +54,11 @@ const searchDeals = async () => {
 
 
 const resetSearch = () => {
-  // reset search
   searchKeyword.value = '';
   searchLoading.value = false;
   searchResults.value = [];
   searchError.value = null;
 }
-
 </script>
 
 <template>
