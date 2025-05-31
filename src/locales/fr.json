@@ -188,7 +188,8 @@
     "noCategoriesFound": "Aucune catégorie trouvée pour cette section.",
     "filterDeals": "Filtrer les Offres",
     "previous": "Précédent",
-    "next": "Suivant"
+    "next": "Suivant",
+    "backToHome": "Retour à l'Accueil"
   },
   "categoryView": {
     "allCategories": "Toutes les Catégories",
@@ -197,9 +198,18 @@
     "loading": "Chargement...",
     "noDeals": "Aucune Offre Trouvée",
     "noDealsDesc": "Aucune offre ne correspond à vos critères actuels. Essayez d'ajuster votre recherche ou vos filtres.",
-    "backToHome": "Retour à l'Accueil",
-    "viewAllDeals": "Voir Toutes les Offres",
-    "filters": {
+    "viewAllDeals": "Voir toutes les offres"
+  },
+  "dealDetail": {
+    "errorLoading": "Erreur lors du chargement des détails de l'offre",
+    "price": "Prix",
+    "location": "Emplacement",
+    "category": "Catégorie",
+    "notAvailable": "N/A",
+    "contactSeller": "Contacter le vendeur",
+    "dealNotFound": "Offre introuvable."
+  },
+  "filters": {
       "searchLabel": "Rechercher par Nom",
       "searchPlaceholder": "Entrez le nom de l'offre...",
       "propertyType": "Type de Propriété",
@@ -216,7 +226,6 @@
       "carSedan": "Berline",
       "carSuv": "SUV",
       "carTruck": "Camion"
-    }
   },
   "footer": {
     "getInTouch": "Contactez-Nous",

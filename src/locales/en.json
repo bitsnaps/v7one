@@ -170,6 +170,15 @@
     "description": "We're sorry, the page you have looked for does not exist in our website! Maybe you want to go back to the home page or try to use a search.",
     "goHome": "Go Back To Home"
   },
+  "dealDetail": {
+    "errorLoading": "Failed to load deal details",
+    "price": "Price",
+    "location": "Location",
+    "category": "Category",
+    "notAvailable": "N/A",
+    "contactSeller": "Contact Seller",
+    "dealNotFound": "Deal not found"
+  },
   "common": {
     "loading": "Loading...",
     "loadingCategories": "Loading categories...",
@@ -178,7 +187,8 @@
     "noCategoriesFound": "No categories found for this section.",
     "filterDeals": "Filter Deals",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "backToHome": "Back to Home"
   },
   "categoryView": {
     "allCategories": "All Categories",
@@ -187,9 +197,9 @@
     "loading": "Loading...",
     "noDeals": "No Deals Found",
     "noDealsDesc": "No deals match your current criteria. Try adjusting your search or filters.",
-    "backToHome": "Back to Home",
-    "viewAllDeals": "View All Deals",
-    "filters": {
+    "viewAllDeals": "View All Deals"
+  },
+  "filters": {
       "searchLabel": "Search by Name",
       "searchPlaceholder": "Enter deal name...",
       "propertyType": "Property Type",
@@ -206,7 +216,6 @@
       "carSedan": "Sedan",
       "carSuv": "SUV",
       "carTruck": "Truck"
-    }
   },
   "footer": {
     "getInTouch": "Get In Touch",
