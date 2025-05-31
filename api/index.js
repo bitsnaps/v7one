@@ -546,7 +546,7 @@ app.get('/api/deals', async (c) => {
     try {
         let filteredDeals = [...allDealsData]; // Start with all deals
 
-        const { category_slug, search, type, status } = c.req.query();
+        const { category_slug, search, type, status, location, keyword } = c.req.query();
 
         // 1. Filter by category_slug (primary category from route)
         if (category_slug) {
@@ -561,9 +561,10 @@ app.get('/api/deals', async (c) => {
             }
         }
 
-        // 2. Filter by search query (on title)
-        if (search) {
-            const searchTerm = search.toLowerCase();
+        // 2. Filter by search query (on title) - 'search' or 'keyword'
+        const keywordToSearch = search || keyword;
+        if (keywordToSearch) {
+            const searchTerm = keywordToSearch.toLowerCase();
             filteredDeals = filteredDeals.filter(deal => deal.title.toLowerCase().includes(searchTerm));
         }
 
@@ -579,6 +580,12 @@ app.get('/api/deals', async (c) => {
         if (status) {
             const filterStatus = status.toLowerCase();
             filteredDeals = filteredDeals.filter(deal => deal.status.toLowerCase() === filterStatus);
+        }
+
+        // 5. Filter by 'location'
+        if (location) {
+            const filterLocation = location.toLowerCase();
+            filteredDeals = filteredDeals.filter(deal => deal.location.toLowerCase().includes(filterLocation));
         }
 
         return c.json({ success: true, data: filteredDeals });

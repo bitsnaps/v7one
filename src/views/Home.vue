@@ -157,6 +157,10 @@ const searchDeals = async () => {
         </div>
         <!-- Search Results End -->
 
+        <!-- Property List Start (Show if no search is active or no results from search) -->
+        <DealsListing v-if="!searchLoading && !searchError && searchResults.length === 0 && !(searchKeyword || selectedDealType || selectedLocation)"/>
+        <!-- Property List End -->
+
         <!-- Category Start -->
         <DealsCategories />
         <!-- Category End -->
@@ -182,11 +186,6 @@ const searchDeals = async () => {
           </div>
         </div>
         <!-- About End -->
-
-        <!-- Property List Start (Show if no search is active or no results from search) -->
-         <DealsListing v-if="!searchLoading && !searchError && searchResults.length === 0 && !(searchKeyword || selectedDealType || selectedLocation)"/>
-        <!-- Property List End -->
-
 
         <!-- Call to Action Start -->
         <div class="container-xxl py-5">
