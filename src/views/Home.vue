@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import { BCarousel, BCarouselSlide } from 'bootstrap-vue-next';
+import { BCarousel, BCarouselSlide, BInputGroup, BFormInput } from 'bootstrap-vue-next';
 import DealsCategories from '../components/DealsCategories.vue';
 import DealsListing from '../components/DealsListing.vue';
 import DealService from '@/services/DealService'; // Import DealService
@@ -51,6 +51,16 @@ const searchDeals = async () => {
     searchLoading.value = false;
   }
 };
+
+
+const resetSearch = () => {
+  // reset search
+  searchKeyword.value = '';
+  searchLoading.value = false;
+  searchResults.value = [];
+  searchError.value = null;
+}
+
 </script>
 
 <template>
@@ -75,12 +85,18 @@ const searchDeals = async () => {
         <!-- Search Start -->
         <div class="container-fluid bg-primary mb-5 p-5">
           <div class="container">
-            <form @submit.prevent="searchDeals">
+            <form @submit.prevent="searchDeals" @reset.prevent="resetSearch">
               <div class="row g-2">
                 <div class="col-md-10">
                   <div class="row g-2">
                     <div class="col-md-4">
-                      <input type="text" v-model="searchKeyword" class="form-control border-0 py-3" :placeholder="$t('home.searchKeywordPlaceholder', 'Search Keyword (e.g., \'3-bedroom house\', \'pickup car\')')">
+                      <!-- <input type="text" v-model="searchKeyword" class="form-control border-0 py-3" :placeholder="$t('home.searchKeywordPlaceholder', 'Search Keyword (e.g., \'3-bedroom house\', \'pickup car\')')"> -->
+                      <BInputGroup>
+                        <template #append>
+                          <BButton type="reset" variant="light">X</BButton>
+                        </template>
+                        <BFormInput v-model="searchKeyword" class="form-control border-0 py-3" :placeholder="$t('home.searchKeywordPlaceholder', 'Search Keyword (e.g., \'3-bedroom house\', \'pickup car\')')" />
+                      </BInputGroup>
                     </div>
                     <div class="col-md-4">
                       <select v-model="selectedDealType" class="form-select border-0 py-3">
