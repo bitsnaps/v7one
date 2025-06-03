@@ -73,7 +73,6 @@ app.use(
   })
 );
 
-
 app.get('/csrf', async (c) => {
     const ts = c.req.query('ts');
     if (!ts){
