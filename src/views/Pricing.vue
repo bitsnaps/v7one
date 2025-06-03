@@ -8,7 +8,7 @@ const pricingPlans = [
     level: 'Basic',
     price: 'Free',
     features: [
-      'Upload N photos',
+      'Upload photos',
       'Free ad on social media platforms',
       'Normal pricing',
     ],
@@ -60,7 +60,7 @@ const pricingPlans = [
     <div class="text-center mb-5">
       <h1 class="display-4 fw-bold">{{ t('pricing.title') }}</h1>
       <p class="lead text-muted">{{ t('pricing.description') }}</p>
-      <p class="text-muted">{{ t('pricing.note', { n: 10, m: 10 }) }}</p>
+      <p class="text-muted">(*) {{ t('pricing.note') }}</p>
     </div>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
@@ -80,7 +80,7 @@ const pricingPlans = [
                 {{ t(`pricing.plans.${plan.level.toLowerCase()}.features[${fIndex}]`) }}
               </li>
             </ul>
-            <p class="text-center text-muted">{{ t('pricing.sponsoredAd') }}: {{ t(`pricing.plans.${plan.level.toLowerCase()}.sponsoredAd`) }}</p>
+            <p class="text-center text-danger fw-bold">{{ t('pricing.sponsoredAd') }}: {{ t(`pricing.plans.${plan.level.toLowerCase()}.sponsoredAd`) }}</p>
             <button type="button" :class="['w-100', 'btn', 'btn-lg', plan.btnClass]">
               {{ t('pricing.choosePlan') }}
             </button>

@@ -212,9 +212,9 @@
       "basic": {
         "level": "Basic",
         "features": [
-          "Upload {n} photos",
+          "Upload photos (*)",
           "Free ad on social media platforms",
-          "Normal pricing"
+          "Free limited support"
         ],
         "sponsoredAd": "Not available"
       },
