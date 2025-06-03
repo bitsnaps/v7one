@@ -199,6 +199,54 @@
     "noDealsDesc": "No deals match your current criteria. Try adjusting your search or filters.",
     "viewAllDeals": "View All Deals"
   },
+  "pricing": {
+    "title": "Our Pricing",
+    "description": "Choose the plan that best suits your needs to promote your deals effectively.",
+    "note": "You can upload a maximum of 10 photos in the Free plan. Additional 10 photos for Silver and above.",
+    "free": "Free",
+    "ofDealValue": "of deal value",
+    "month": "month",
+    "sponsoredAd": "Sponsored Ad",
+    "choosePlan": "Choose Plan",
+    "plans": {
+      "basic": {
+        "level": "Basic",
+        "features": [
+          "Upload {n} photos",
+          "Free ad on social media platforms",
+          "Normal pricing"
+        ],
+        "sponsoredAd": "Not available"
+      },
+      "silver": {
+        "level": "Silver",
+        "features": [
+          "All in Basic package plus:",
+          "Upload {m} additional photos",
+          "Professional video",
+          "Documentation"
+        ],
+        "sponsoredAd": "Local"
+      },
+      "gold": {
+        "level": "Gold",
+        "features": [
+          "All in Silver package plus:",
+          "Special professional video",
+          "Special documentation"
+        ],
+        "sponsoredAd": "International"
+      },
+      "special": {
+        "level": "Special",
+        "features": [
+          "All in Gold package plus:",
+          "Consulting services"
+        ],
+        "sponsoredAd": "Special"
+      }
+    }
+  },
   "filters": {
       "searchLabel": "Search by Name",
       "searchPlaceholder": "Enter deal name...",

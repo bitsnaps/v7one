@@ -200,6 +200,54 @@
     "noDealsDesc": "Aucune offre ne correspond à vos critères actuels. Essayez d'ajuster votre recherche ou vos filtres.",
     "viewAllDeals": "Voir toutes les offres"
   },
+  "pricing": {
+    "title": "Nos Plans",
+    "description": "Choisissez le plan qui correspond le mieux à vos besoins pour promouvoir efficacement vos offres.",
+    "note": "N représente un minimum de {n} photos. M représente {m} photos supplémentaires pour Silver et plus.",
+    "free": "Gratuit",
+    "ofDealValue": "de la valeur de l'offre",
+    "month": "mois",
+    "sponsoredAd": "Annonce Sponsorisée",
+    "choosePlan": "Choisir ce Plan",
+    "plans": {
+      "basic": {
+        "level": "Basique",
+        "features": [
+          "Télécharger {n} photos",
+          "Annonce gratuite sur les plateformes de médias sociaux",
+          "Tarification normale"
+        ],
+        "sponsoredAd": "Non disponible"
+      },
+      "silver": {
+        "level": "Argent",
+        "features": [
+          "Tout dans le forfait Basique plus :",
+          "Télécharger {m} photos supplémentaires",
+          "Vidéo professionnelle",
+          "Documentation"
+        ],
+        "sponsoredAd": "Local"
+      },
+      "gold": {
+        "level": "Or",
+        "features": [
+          "Tout dans le forfait Argent plus :",
+          "Vidéo professionnelle spéciale",
+          "Documentation spéciale"
+        ],
+        "sponsoredAd": "International"
+      },
+      "special": {
+        "level": "Spécial",
+        "features": [
+          "Tout dans le forfait Or plus :",
+          "Services de conseil"
+        ],
+        "sponsoredAd": "Spécial"
+      }
+    }
+  },
   "dealDetail": {
     "errorLoading": "Erreur lors du chargement des détails de l'offre",
     "price": "Prix",

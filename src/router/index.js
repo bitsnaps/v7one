@@ -3,6 +3,7 @@ import Home from '@/views/Home.vue';
 import About from '@/views/About.vue';
 import Contact from '@/views/Contact.vue';
 import PostDeal from '@/views/PostDeal.vue';
+import Pricing from '@/views/Pricing.vue';
 import SignIn from '@/views/SignIn.vue';
 import CategoryView from '@/views/CategoryView.vue';
 import NotFound from '@/views/NotFound.vue';
@@ -49,6 +50,12 @@ const routes = [
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: NotFound,
+  },
+  {
+    path: '/pricing',
+    name: 'Pricing',
+    component: Pricing,
+    props: true,
   },
   {
     path: '/deal/:id',
