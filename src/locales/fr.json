@@ -6,6 +6,7 @@
     "home": "Accueil",
     "about": "À Propos",
     "deals": "Offres",
+    "pricing": "Tarifs",
     "real-estate": "Immobilier",
     "cars": "Voitures",
     "other-deals": "Autres Offres",
@@ -206,7 +207,6 @@
     "note": "Vous pouvez téléverser jusqu'à 10 photos avec l'abonnement Gratuit. 10 photos supplémentaires pour les abonnements Silver et supérieurs.",
     "free": "Gratuit",
     "ofDealValue": "de la valeur de l'offre",
-    "month": "mois",
     "sponsoredAd": "Annonce Sponsorisée",
     "choosePlan": "Choisir ce Plan",
     "plans": {

@@ -72,7 +72,7 @@ const pricingPlans = [
           <div class="card-body d-flex flex-column">
             <h1 class="card-title pricing-card-title text-center">
               {{ plan.price === 'Free' ? t('pricing.free') : plan.price.startsWith('1%') ? `1% ${t('pricing.ofDealValue')}` : plan.price }}
-              <small v-if="plan.price !== 'Free' && !plan.price.startsWith('1%')" class="text-muted fw-light">/ {{ t('pricing.month') }}</small>
+              <small v-if="plan.price !== 'Free' && !plan.price.startsWith('1%')" class="text-muted fw-light"></small>
             </h1>
             <ul class="list-unstyled mt-3 mb-4 flex-grow-1">
               <li v-for="(feature, fIndex) in plan.features" :key="fIndex" class="mb-2">
