@@ -1,22 +1,21 @@
 const { Sequelize, DataTypes, Op } = require('sequelize');
 
-// Initialize Sequelize (replace with your actual connection details)
 // For local SQLite:
-// const sequelize = new Sequelize({
-//   dialect: 'sqlite',
-//   storage: '7vdb.sqlite',
-//   logging: false, // set to console.log to see SQL queries
-// });
-
-// For PostgreSQL (example):
-const sequelize = new Sequelize(process.env.DATABASE_URL || 'postgres://user:pass@example.com:5432/dbname', {
-  dialect: 'postgres',
-  protocol: 'postgres',
-  dialectOptions: {
-    ssl: process.env.NODE_ENV === 'production' ? { require: true, rejectUnauthorized: false } : false
-  },
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: '7vdb.sqlite',
   logging: false, // set to console.log to see SQL queries
 });
+
+// For PostgreSQL (example):
+// const sequelize = new Sequelize(process.env.DATABASE_URL || 'postgres://user:pass@example.com:5432/dbname', {
+//   dialect: 'postgres',
+//   protocol: 'postgres',
+//   dialectOptions: {
+//     ssl: process.env.NODE_ENV === 'production' ? { require: true, rejectUnauthorized: false } : false
+//   },
+//   logging: false, // set to console.log to see SQL queries
+// });
 
 
 // --- User Model ---
@@ -393,7 +392,7 @@ const PricingPlan = sequelize.define('PricingPlan', {
         allowNull: false,
         unique: true,
     },
-    priceDZD: { // Price in Algerian Dinars
+    price: { // Price 
         type: DataTypes.DECIMAL(10,2),
         allowNull: true, // Basic might be free or 0
     },
