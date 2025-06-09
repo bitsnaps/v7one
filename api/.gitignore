@@ -34,3 +34,8 @@ docs/
 
 # var env
 .env
+
+# sqlite
+*.sqlite
+*.sqlite3
+*.sqlite-journal
