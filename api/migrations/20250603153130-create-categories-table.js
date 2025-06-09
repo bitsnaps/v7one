@@ -3,60 +3,40 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('Categories', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
         allowNull: false,
       },
-      email: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          isEmail: true,
-        },
       },
-      passwordHash: {
+      slug: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
-      displayName: {
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      iconUrl: {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      profilePictureUrl: {
-        type: Sequelize.STRING,
+      parentId: {
+        type: Sequelize.UUID,
         allowNull: true,
-      },
-      phoneNumber: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      city: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      region: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      isVerified: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-      },
-      isAdmin: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-      },
-      isActive: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: true,
-      },
-      lastLoginAt: {
-        type: Sequelize.DATE,
-        allowNull: true,
+        references: {
+          model: 'Categories', // Name of the table
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL', // Or 'CASCADE' or 'RESTRICT' depending on desired behavior
       },
       createdAt: {
         allowNull: false,
@@ -72,6 +52,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('Categories');
   }
 };

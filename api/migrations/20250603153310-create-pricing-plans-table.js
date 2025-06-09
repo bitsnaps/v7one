@@ -3,60 +3,49 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('PricingPlans', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
         allowNull: false,
       },
-      email: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          isEmail: true,
-        },
       },
-      passwordHash: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      displayName: {
-        type: Sequelize.STRING,
+      price: {
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: true,
       },
-      profilePictureUrl: {
-        type: Sequelize.STRING,
+      pricePercentage: {
+        type: Sequelize.DECIMAL(5, 2),
         allowNull: true,
       },
-      phoneNumber: {
-        type: Sequelize.STRING,
+      description: {
+        type: Sequelize.TEXT,
         allowNull: true,
       },
-      city: {
-        type: Sequelize.STRING,
+      features: {
+        type: Sequelize.JSONB, // Use JSON for SQLite
         allowNull: true,
       },
-      region: {
-        type: Sequelize.STRING,
+      maxPhotosN: {
+        type: Sequelize.INTEGER,
         allowNull: true,
       },
-      isVerified: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
+      additionalPhotosM: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
       },
-      isAdmin: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
+      sponsoredAdType: {
+        type: Sequelize.ENUM('NONE', 'LOCAL', 'INTERNATIONAL', 'SPECIAL'),
+        defaultValue: 'NONE',
       },
       isActive: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
-      },
-      lastLoginAt: {
-        type: Sequelize.DATE,
-        allowNull: true,
       },
       createdAt: {
         allowNull: false,
@@ -72,6 +61,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('PricingPlans');
   }
 };
