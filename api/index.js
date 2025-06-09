@@ -5,6 +5,12 @@ const { cors } = require('hono/cors');
 const { rateLimiter } = require('./honoRateLimiter');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+// Import sequelize
+const { Sequelize, DataTypes } = require('sequelize');
+// Import the Sequelize instance from config.js
+const { sequelize } = require('./config/config');
+// Import the User model
+const { User } = require('./models');
 
 const MAX_TIMESTAMP_AGE_MS = 15 * 60 * 1000; // 15 minutes validity for timestamp/token
 
@@ -104,6 +110,11 @@ function verifyPassword(password, storedPassword) {
     const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
     return hash === originalHash;
 }
+
+// app.get('/api/users', async (c) => {
+//     const users = await User.findAll();
+//     return c.json({success: true, users: users});
+// })
 
 app.post('/api/signup', async (c) => {
     try {

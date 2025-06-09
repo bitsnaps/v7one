@@ -60,10 +60,27 @@ If you have a custom migration file:
 ```bash
 npx sequelize-cli db:migrate:undo:all --to <migration_file_name>.js
 ```
+## Create seeds
+This will create `XXXXXXXXXXXXXX-admin-user.js` file under `seeders` directory:
+```bash
+npx sequelize-cli seed:generate --name admin-user
+```
 
 ## Run seeds    
 ```bash
 npx sequelize-cli db:seed:all
+```
+## Undoing Seeds
+Seeders can be undone if they are using any storage. There are two commands available for that:
+
+If you wish to undo the most recent seed:
+
+```bash
+npx sequelize-cli db:seed:undo
+```
+If you wish to undo all seeds:
+```bash
+npx sequelize-cli db:seed:undo:all
 ```
 
 ## Help
