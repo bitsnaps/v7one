@@ -182,9 +182,6 @@ app.post('/api/install', async (c) => {
 
 // Should be executed with:
 // curl -X POST http://localhost:3000/api/seeds
-
-// Should be executed with:
-// curl -X POST http://localhost:3000/api/seeds
 app.post('/api/seeds', async (c) => {
     // Only allow in debug mode
     if (process.env.NODE_ENV === 'production') {
@@ -234,10 +231,23 @@ app.post('/api/seeds', async (c) => {
   });
 
 // Should be executed with:
-// curl -X POST -d '{"username":"admin","password":"master"}' http://localhost:3000/api/create-admin
+// curl -X POST -d '{"username":"admin@example.com","password":"master"}' http://localhost:3000/api/create-admin
 app.post('/api/create-admin', async (c) => {
+    // Only allow in debug mode
+    if (process.env.NODE_ENV === 'production') {
+        return c.json({ error: 'This endpoint is only available in debug mode' }, 403);
+      }
+  
     const { username, password } = await c.req.json();
-    return c.json({ success: true, message: `User: ${username} has been created with password: ${password}`})
+    await models.sequelize.authenticate();
+    const hashedPassword = hashPassword(password);
+    const adminUser = await models.User.create({
+        email: username,
+        passwordHash: hashedPassword,
+        isAdmin: true,
+        isVerified: true
+    });
+    return c.json({ success: true, adminUser})
 })
 
 app.post('/api/signup', async (c) => {

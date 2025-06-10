@@ -5,10 +5,10 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert('Users', [
       {
-        id: 1,
+        id: '0d827236-f4cc-4a86-b55a-024a7723ae5c',
         displayName: 'admin',
         email: 'admin@example.com',
-        passwordHash: 'YOUR_HASHED_PASSWORD_HERE', // IMPORTANT: Replace with a securely hashed password
+        passwordHash: '8408dd9c2311bd608517bd62827439a8:16443aa8eb03758e2b9866e562f14cc101182b6463b4798a09a926f50da26abe1bba2e53a7691aab075c5fd8338f20c8e23292fb7d5c668880bd42e755ba3153',
         isAdmin: true,
         createdAt: new Date(),
         updatedAt: new Date()
