@@ -37,6 +37,260 @@ if (process.env.NODE_ENV){
 const EMAIL_CONTACT = process.env.EMAIL_CONTACT || 'admin@email.com';
 const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 
+
+// deals and categories data
+const allDealsData = [
+    {
+        "id": 1,
+        "title": "Luxury Villa with Ocean View",
+        "image": "/img/deals/property-1.jpg",
+        "price": "$2,500,000",
+        "status": "For Sell",
+        "type": "Villa",
+        "location": "123 Ocean Drive, Miami, FL",
+        "sqft": "5000 Sqft",
+        "beds": "5 Bed",
+        "baths": "6 Bath",
+        "category": ["featured", "for-sale"]
+      },
+      {
+        "id": 2,
+        "title": "Modern Downtown Apartment",
+        "image": "/img/deals/property-2.jpg",
+        "price": "$3,500/month",
+        "status": "For Rent",
+        "type": "Apartment",
+        "location": "456 Main Street, New York, NY",
+        "sqft": "1200 Sqft",
+        "beds": "2 Bed",
+        "baths": "2 Bath",
+        "category": ["featured", "for-rent"]
+      },
+      {
+        "id": 3,
+        "title": "Spacious Family House",
+        "image": "/img/deals/property-3.jpg",
+        "price": "$750,000",
+        "status": "For Sell",
+        "type": "House",
+        "location": "789 Suburb Lane, Chicago, IL",
+        "sqft": "2500 Sqft",
+        "beds": "4 Bed",
+        "baths": "3 Bath",
+        "category": ["for-sale"]
+      },
+      {
+        "id": 4,
+        "title": "Cozy Studio for Rent",
+        "image": "/img/deals/property-4.jpg",
+        "price": "$1,800/month",
+        "status": "For Rent",
+        "type": "Studio",
+        "location": "101 City Center, San Francisco, CA",
+        "sqft": "600 Sqft",
+        "beds": "1 Bed",
+        "baths": "1 Bath",
+        "category": ["for-rent"]
+      },
+      {
+        "id": 5,
+        "title": "Commercial Office Space",
+        "image": "/img/deals/office-1.jpg",
+        "price": "$1,200,000",
+        "status": "For Sell",
+        "type": "Office",
+        "location": "202 Business Park, Austin, TX",
+        "sqft": "10000 Sqft",
+        "beds": "N/A",
+        "baths": "4 Bath",
+        "category": ["featured", "for-sale"]
+      },
+      {
+        "id": 6,
+        "title": "Charming Suburban Home for Rent",
+        "image": "/img/deals/property-5.jpg",
+        "price": "$4,000/month",
+        "status": "For Rent",
+        "type": "Home",
+        "location": "303 Quiet Street, Seattle, WA",
+        "sqft": "1800 Sqft",
+        "beds": "3 Bed",
+        "baths": "2.5 Bath",
+        "category": ["for-rent"]
+      },
+      {
+        "id": 7,
+        "title": "Sleek Sports Car",
+        "image": "/img/deals/car-1.jpg",
+        "price": "$85,000",
+        "status": "For Sell",
+        "type": "Automobile",
+        "location": "Prestige Motors, LA",
+        "sqft": "N/A",
+        "beds": "N/A",
+        "baths": "N/A",
+        "category": ["featured", "for-sale"]
+      },
+      {
+        "id": 8,
+        "title": "Vintage Collector Watch",
+        "image": "/img/deals/watch-1.jpg",
+        "price": "$22,000",
+        "status": "For Sell",
+        "type": "Luxury Item",
+        "location": "Timeless Pieces Boutique",
+        "sqft": "N/A",
+        "beds": "N/A",
+        "baths": "N/A",
+        "category": ["for-sale"]
+      },
+      {
+        "id": 9,
+        "title": "High-End Gaming Laptop Rental",
+        "image": "/img/deals/laptop-1.jpg",
+        "price": "$200/week",
+        "status": "For Rent",
+        "type": "Electronics",
+        "location": "Tech Rentals Co.",
+        "sqft": "N/A",
+        "beds": "N/A",
+        "baths": "N/A",
+        "category": ["featured", "for-rent"]
+      }
+];
+
+const allCategoriesData = [
+    // Real Estate Categories
+    {
+    id: 1,
+    name: "Apartment",
+    slug: "apartments",
+    icon: "/img/icon-apartment.svg",
+    description: "Modern apartments and condos",
+    count: 123,
+    type: "real-estate"
+    },
+    {
+    id: 2,
+    name: "Villa",
+    slug: "villas",
+    icon: "/img/icon-villa.svg",
+    description: "Luxury villas and estates",
+    count: 89,
+    type: "real-estate"
+    },
+    {
+    id: 3,
+    name: "Home",
+    slug: "homes",
+    icon: "/img/icon-house.svg",
+    description: "Family homes and houses",
+    count: 156,
+    type: "real-estate"
+    },
+    {
+    id: 4,
+    name: "Office",
+    slug: "offices",
+    icon: "/img/icon-office.svg",
+    description: "Commercial office spaces",
+    count: 45,
+    type: "real-estate"
+    },
+    {
+    id: 5,
+    name: "Building",
+    slug: "buildings",
+    icon: "/img/icon-building.svg",
+    description: "Commercial buildings",
+    count: 30,
+    type: "real-estate"
+    },
+    {
+    id: 6,
+    name: "Townhouse",
+    slug: "townhouses",
+    icon: "/img/icon-townhouse.svg",
+    description: "Modern townhouses",
+    count: 67,
+    type: "real-estate"
+    },
+    {
+    id: 7,
+    name: "Shop",
+    slug: "shops",
+    icon: "/img/icon-shop.svg",
+    description: "Retail shops and stores",
+    count: 88,
+    type: "real-estate"
+    },
+    {
+    id: 8,
+    name: "Garage",
+    slug: "garages",
+    icon: "/img/icon-garage.svg",
+    description: "Parking spaces and garages",
+    count: 20,
+    type: "real-estate"
+    },
+    // Car Categories
+    {
+    id: 9,
+    name: "Sedan",
+    slug: "cars-sedan",
+    icon: "/img/icon-car-sedan.svg",
+    description: "Comfortable sedans",
+    count: 210,
+    type: "cars"
+    },
+    {
+    id: 10,
+    name: "SUV",
+    slug: "cars-suv",
+    icon: "/img/icon-car-suv.svg",
+    description: "Spacious SUVs",
+    count: 150,
+    type: "cars"
+    },
+    {
+    id: 11,
+    name: "Truck",
+    slug: "cars-truck",
+    icon: "/img/icon-car-truck.svg",
+    description: "Powerful trucks",
+    count: 75,
+    type: "cars"
+    },
+    // Other Categories
+    {
+    id: 12,
+    name: "Electronics",
+    slug: "electronics",
+    icon: "/img/icon-electronics.svg",
+    description: "Gadgets and electronics",
+    count: 300,
+    type: "other"
+    },
+    {
+    id: 13,
+    name: "Services",
+    slug: "services",
+    icon: "/img/icon-services.svg",
+    description: "Various services",
+    count: 95,
+    type: "other"
+    },
+    {
+    id: 14,
+    name: "Other Deals",
+    slug: "other-deals",
+    icon: "/img/icon-deal.svg",
+    description: "Miscellaneous deals",
+    count: 50,
+    type: "other"
+    }
+];
+
 /*/ PROD: Configure email transporter
 const transporter = nodemailer.createTransport({
     host: 'mail.ecosiumevent.com', // Replace with your SMTP host ('smtp.example.com')
@@ -314,6 +568,70 @@ app.post('/api/login', async (c) => {
     }
 });
 
+// API endpoint for deals
+app.get('/api/deals', async (c) => {
+    try {
+        let filteredDeals = [...allDealsData]; // Start with all deals
+
+        const { category_slug, search, type, status, location, keyword } = c.req.query();
+
+        // 1. Filter by category_slug (primary category from route)
+        if (category_slug) {
+            const category = allCategoriesData.find(cat => cat.slug === category_slug);
+            if (category) {
+                let typeToFilter = category.name;
+                // Special handling for car categories if deal.type is generic like "Automobile"
+                if (category.type && category.type.toLowerCase() === 'cars') {
+                    typeToFilter = 'Automobile'; // Assuming all car deals in allDealsData have type "Automobile"
+                }
+                filteredDeals = filteredDeals.filter(deal => deal.type.toLowerCase() === typeToFilter.toLowerCase());
+            }
+        }
+
+        // 2. Filter by search query (on title) - 'search' or 'keyword'
+        const keywordToSearch = search || keyword;
+        if (keywordToSearch) {
+            const searchTerm = keywordToSearch.toLowerCase();
+            filteredDeals = filteredDeals.filter(deal => deal.title.toLowerCase().includes(searchTerm));
+        }
+
+        // 3. Filter by 'type' (from specific filter dropdowns like propertyType, vehicleType)
+        if (type) {
+            const filterType = type.toLowerCase();
+            // This filter might be less effective for 'cars' if all car deals are 'Automobile'
+            // and user filters by 'Sedan', unless data or this logic is more granular.
+            filteredDeals = filteredDeals.filter(deal => deal.type.toLowerCase() === filterType);
+        }
+
+        // 4. Filter by 'status' (e.g., "For Sell", "For Rent")
+        if (status) {
+            const filterStatus = status.toLowerCase();
+            filteredDeals = filteredDeals.filter(deal => deal.status.toLowerCase() === filterStatus);
+        }
+
+        // 5. Filter by 'location'
+        if (location) {
+            const filterLocation = location.toLowerCase();
+            filteredDeals = filteredDeals.filter(deal => deal.location.toLowerCase().includes(filterLocation));
+        }
+
+        return c.json({ success: true, data: filteredDeals });
+    } catch (error) {
+        console.error('Error fetching deals:', error);
+        return c.json({ success: false, message: 'Error fetching deals' }, 500);
+    }
+});
+
+// API endpoint for deal categories
+app.get('/api/categories', async (c) => {
+    try {
+        return c.json({ success: true, data: allCategoriesData });
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        return c.json({ success: false, message: 'Error fetching categories' }, 500);
+    }
+});
+
 // API endpoint for a single deal by ID
 app.get('/api/deals/:id', async (c) => {
     try {
@@ -369,23 +687,6 @@ app.post('/api/offers', async (c) => {
     } catch (error) {
         console.error('Offer creation error:', error);
         return c.json({ success: false, message: 'An error occurred while creating the offer' }, 500);
-    }
-});
-
-// API endpoint for a single deal by ID
-app.get('/api/deals/:id', async (c) => {
-    try {
-        const dealId = parseInt(c.req.param('id'));
-        const deal = allDealsData.find(d => d.id === dealId);
-
-        if (deal) {
-            return c.json({ success: true, data: deal });
-        } else {
-            return c.json({ success: false, message: 'Deal not found' }, 404);
-        }
-    } catch (error) {
-        console.error('Error fetching deal by ID:', error);
-        return c.json({ success: false, message: 'Error fetching deal' }, 500);
     }
 });
 
@@ -482,375 +783,6 @@ app.post('/contact', async (c) => {
         return c.json({ success: false, message: genericErrorMessage }, 500);
     }
 });
-
-// API endpoint for a single deal by ID
-app.get('/api/deals/:id', async (c) => {
-    try {
-        const dealId = parseInt(c.req.param('id'));
-        const deal = allDealsData.find(d => d.id === dealId);
-
-        if (deal) {
-            return c.json({ success: true, data: deal });
-        } else {
-            return c.json({ success: false, message: 'Deal not found' }, 404);
-        }
-    } catch (error) {
-        console.error('Error fetching deal by ID:', error);
-        return c.json({ success: false, message: 'Error fetching deal' }, 500);
-    }
-});
-
-// deals and categories data
-const allDealsData = [
-            {
-                "id": 1,
-                "title": "Luxury Villa with Ocean View",
-                "image": "/img/deals/property-1.jpg",
-                "price": "$2,500,000",
-                "status": "For Sell",
-                "type": "Villa",
-                "location": "123 Ocean Drive, Miami, FL",
-                "sqft": "5000 Sqft",
-                "beds": "5 Bed",
-                "baths": "6 Bath",
-                "category": ["featured", "for-sale"]
-              },
-              {
-                "id": 2,
-                "title": "Modern Downtown Apartment",
-                "image": "/img/deals/property-2.jpg",
-                "price": "$3,500/month",
-                "status": "For Rent",
-                "type": "Apartment",
-                "location": "456 Main Street, New York, NY",
-                "sqft": "1200 Sqft",
-                "beds": "2 Bed",
-                "baths": "2 Bath",
-                "category": ["featured", "for-rent"]
-              },
-              {
-                "id": 3,
-                "title": "Spacious Family House",
-                "image": "/img/deals/property-3.jpg",
-                "price": "$750,000",
-                "status": "For Sell",
-                "type": "House",
-                "location": "789 Suburb Lane, Chicago, IL",
-                "sqft": "2500 Sqft",
-                "beds": "4 Bed",
-                "baths": "3 Bath",
-                "category": ["for-sale"]
-              },
-              {
-                "id": 4,
-                "title": "Cozy Studio for Rent",
-                "image": "/img/deals/property-4.jpg",
-                "price": "$1,800/month",
-                "status": "For Rent",
-                "type": "Studio",
-                "location": "101 City Center, San Francisco, CA",
-                "sqft": "600 Sqft",
-                "beds": "1 Bed",
-                "baths": "1 Bath",
-                "category": ["for-rent"]
-              },
-              {
-                "id": 5,
-                "title": "Commercial Office Space",
-                "image": "/img/deals/office-1.jpg",
-                "price": "$1,200,000",
-                "status": "For Sell",
-                "type": "Office",
-                "location": "202 Business Park, Austin, TX",
-                "sqft": "10000 Sqft",
-                "beds": "N/A",
-                "baths": "4 Bath",
-                "category": ["featured", "for-sale"]
-              },
-              {
-                "id": 6,
-                "title": "Charming Suburban Home for Rent",
-                "image": "/img/deals/property-5.jpg",
-                "price": "$4,000/month",
-                "status": "For Rent",
-                "type": "Home",
-                "location": "303 Quiet Street, Seattle, WA",
-                "sqft": "1800 Sqft",
-                "beds": "3 Bed",
-                "baths": "2.5 Bath",
-                "category": ["for-rent"]
-              },
-              {
-                "id": 7,
-                "title": "Sleek Sports Car",
-                "image": "/img/deals/car-1.jpg",
-                "price": "$85,000",
-                "status": "For Sell",
-                "type": "Automobile",
-                "location": "Prestige Motors, LA",
-                "sqft": "N/A",
-                "beds": "N/A",
-                "baths": "N/A",
-                "category": ["featured", "for-sale"]
-              },
-              {
-                "id": 8,
-                "title": "Vintage Collector Watch",
-                "image": "/img/deals/watch-1.jpg",
-                "price": "$22,000",
-                "status": "For Sell",
-                "type": "Luxury Item",
-                "location": "Timeless Pieces Boutique",
-                "sqft": "N/A",
-                "beds": "N/A",
-                "baths": "N/A",
-                "category": ["for-sale"]
-              },
-              {
-                "id": 9,
-                "title": "High-End Gaming Laptop Rental",
-                "image": "/img/deals/laptop-1.jpg",
-                "price": "$200/week",
-                "status": "For Rent",
-                "type": "Electronics",
-                "location": "Tech Rentals Co.",
-                "sqft": "N/A",
-                "beds": "N/A",
-                "baths": "N/A",
-                "category": ["featured", "for-rent"]
-              }
-        ];
-
-const allCategoriesData = [
-    // Real Estate Categories
-    {
-        id: 1,
-        name: "Apartment",
-        slug: "apartments",
-        icon: "/img/icon-apartment.svg",
-        description: "Modern apartments and condos",
-        count: 123,
-        type: "real-estate"
-    },
-    {
-        id: 2,
-        name: "Villa",
-        slug: "villas",
-        icon: "/img/icon-villa.svg",
-        description: "Luxury villas and estates",
-        count: 89,
-        type: "real-estate"
-    },
-    {
-        id: 3,
-        name: "Home",
-        slug: "homes",
-        icon: "/img/icon-house.svg",
-        description: "Family homes and houses",
-        count: 156,
-        type: "real-estate"
-    },
-    {
-        id: 4,
-        name: "Office",
-        slug: "offices",
-        icon: "/img/icon-office.svg",
-        description: "Commercial office spaces",
-        count: 45,
-        type: "real-estate"
-    },
-    {
-        id: 5,
-        name: "Building",
-        slug: "buildings",
-        icon: "/img/icon-building.svg",
-        description: "Commercial buildings",
-        count: 30,
-        type: "real-estate"
-    },
-    {
-        id: 6,
-        name: "Townhouse",
-        slug: "townhouses",
-        icon: "/img/icon-townhouse.svg",
-        description: "Modern townhouses",
-        count: 67,
-        type: "real-estate"
-    },
-    {
-        id: 7,
-        name: "Shop",
-        slug: "shops",
-        icon: "/img/icon-shop.svg",
-        description: "Retail shops and stores",
-        count: 88,
-        type: "real-estate"
-    },
-    {
-        id: 8,
-        name: "Garage",
-        slug: "garages",
-        icon: "/img/icon-garage.svg",
-        description: "Parking spaces and garages",
-        count: 20,
-        type: "real-estate"
-    },
-    // Car Categories
-    {
-        id: 9,
-        name: "Sedan",
-        slug: "cars-sedan",
-        icon: "/img/icon-car-sedan.svg",
-        description: "Comfortable sedans",
-        count: 210,
-        type: "cars"
-    },
-    {
-        id: 10,
-        name: "SUV",
-        slug: "cars-suv",
-        icon: "/img/icon-car-suv.svg",
-        description: "Spacious SUVs",
-        count: 150,
-        type: "cars"
-    },
-    {
-        id: 11,
-        name: "Truck",
-        slug: "cars-truck",
-        icon: "/img/icon-car-truck.svg",
-        description: "Powerful trucks",
-        count: 75,
-        type: "cars"
-    },
-    // Other Categories
-    {
-        id: 12,
-        name: "Electronics",
-        slug: "electronics",
-        icon: "/img/icon-electronics.svg",
-        description: "Gadgets and electronics",
-        count: 300,
-        type: "other"
-    },
-    {
-        id: 13,
-        name: "Services",
-        slug: "services",
-        icon: "/img/icon-services.svg",
-        description: "Various services",
-        count: 95,
-        type: "other"
-    },
-    {
-        id: 14,
-        name: "Other Deals",
-        slug: "other-deals",
-        icon: "/img/icon-deal.svg",
-        description: "Miscellaneous deals",
-        count: 50,
-        type: "other"
-    }
-];
-
-// API endpoint for deals
-app.get('/api/deals', async (c) => {
-    try {
-        let filteredDeals = [...allDealsData]; // Start with all deals
-
-        const { category_slug, search, type, status, location, keyword } = c.req.query();
-
-        // 1. Filter by category_slug (primary category from route)
-        if (category_slug) {
-            const category = allCategoriesData.find(cat => cat.slug === category_slug);
-            if (category) {
-                let typeToFilter = category.name;
-                // Special handling for car categories if deal.type is generic like "Automobile"
-                if (category.type && category.type.toLowerCase() === 'cars') {
-                    typeToFilter = 'Automobile'; // Assuming all car deals in allDealsData have type "Automobile"
-                }
-                filteredDeals = filteredDeals.filter(deal => deal.type.toLowerCase() === typeToFilter.toLowerCase());
-            }
-        }
-
-        // 2. Filter by search query (on title) - 'search' or 'keyword'
-        const keywordToSearch = search || keyword;
-        if (keywordToSearch) {
-            const searchTerm = keywordToSearch.toLowerCase();
-            filteredDeals = filteredDeals.filter(deal => deal.title.toLowerCase().includes(searchTerm));
-        }
-
-        // 3. Filter by 'type' (from specific filter dropdowns like propertyType, vehicleType)
-        if (type) {
-            const filterType = type.toLowerCase();
-            // This filter might be less effective for 'cars' if all car deals are 'Automobile'
-            // and user filters by 'Sedan', unless data or this logic is more granular.
-            filteredDeals = filteredDeals.filter(deal => deal.type.toLowerCase() === filterType);
-        }
-
-        // 4. Filter by 'status' (e.g., "For Sell", "For Rent")
-        if (status) {
-            const filterStatus = status.toLowerCase();
-            filteredDeals = filteredDeals.filter(deal => deal.status.toLowerCase() === filterStatus);
-        }
-
-        // 5. Filter by 'location'
-        if (location) {
-            const filterLocation = location.toLowerCase();
-            filteredDeals = filteredDeals.filter(deal => deal.location.toLowerCase().includes(filterLocation));
-        }
-
-        return c.json({ success: true, data: filteredDeals });
-    } catch (error) {
-        console.error('Error fetching deals:', error);
-        return c.json({ success: false, message: 'Error fetching deals' }, 500);
-    }
-});
-
-// API endpoint for a single deal by ID
-app.get('/api/deals/:id', async (c) => {
-    try {
-        const dealId = parseInt(c.req.param('id'));
-        const deal = allDealsData.find(d => d.id === dealId);
-
-        if (deal) {
-            return c.json({ success: true, data: deal });
-        } else {
-            return c.json({ success: false, message: 'Deal not found' }, 404);
-        }
-    } catch (error) {
-        console.error('Error fetching deal by ID:', error);
-        return c.json({ success: false, message: 'Error fetching deal' }, 500);
-    }
-});
-
-// API endpoint for deal categories
-app.get('/api/categories', async (c) => {
-    try {
-        return c.json({ success: true, data: allCategoriesData });
-    } catch (error) {
-        console.error('Error fetching categories:', error);
-        return c.json({ success: false, message: 'Error fetching categories' }, 500);
-    }
-});
-
-// API endpoint for a single deal by ID
-app.get('/api/deals/:id', async (c) => {
-    try {
-        const dealId = parseInt(c.req.param('id'));
-        const deal = allDealsData.find(d => d.id === dealId);
-
-        if (deal) {
-            return c.json({ success: true, data: deal });
-        } else {
-            return c.json({ success: false, message: 'Deal not found' }, 404);
-        }
-    } catch (error) {
-        console.error('Error fetching deal by ID:', error);
-        return c.json({ success: false, message: 'Error fetching deal' }, 500);
-    }
-});
-
 
 serve(app, (info) => {
   console.log(`Listening on http://localhost:${info.port}`) // Listening on http://localhost:3000
