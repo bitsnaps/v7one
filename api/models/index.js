@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes, Op } = require('sequelize');
 
+
 // For local SQLite:
 const sequelize = new Sequelize({
   dialect: 'sqlite',
@@ -278,8 +279,8 @@ const Conversation = sequelize.define('Conversation', {
     updatedAt: DataTypes.DATE,
 });
 
-Message.belongsTo(Conversation); // Each message belongs to one conversation
-Conversation.hasMany(Message);   // A conversation can have many messages
+// Message.belongsTo(Conversation); // Each message belongs to one conversation
+// Conversation.hasMany(Message);   // A conversation can have many messages
 
 // --- Review Model ---
 const Review = sequelize.define('Review', {

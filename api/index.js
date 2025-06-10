@@ -5,13 +5,10 @@ const { cors } = require('hono/cors');
 const { rateLimiter } = require('./honoRateLimiter');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-// Import sequelize
-const { Sequelize, DataTypes } = require('sequelize');
-// Import the Sequelize instance from config.js
-const { sequelize } = require('./config/config');
-// Import the User model
-const { User } = require('./models');
-
+const models = require('./models');
+const { Sequelize } = require('sequelize');
+const path = require('path');
+const fs = require('node:fs');
 const MAX_TIMESTAMP_AGE_MS = 15 * 60 * 1000; // 15 minutes validity for timestamp/token
 
 
@@ -112,9 +109,136 @@ function verifyPassword(password, storedPassword) {
 }
 
 // app.get('/api/users', async (c) => {
-//     const users = await User.findAll();
+//     const users = await models.User.findAll();
 //     return c.json({success: true, users: users});
 // })
+
+// Should be executed with:
+// curl -X POST http://localhost:3000/api/install
+app.post('/api/install', async (c) => {
+  // Only allow in debug mode
+  if (process.env.NODE_ENV === 'production') {
+    return c.json({ error: 'Install endpoint is only available in debug mode' }, 403);
+  }
+
+  try {
+    const tableStatus = {};
+    
+    // Test connection
+    await models.sequelize.authenticate();
+    
+    // Check each model's table existence
+    for (const [modelName, model] of Object.entries(models)) {
+      if (model.tableName) { // Only check actual models, not sequelize/Op
+        try {
+          await model.describe(); // This will throw if table doesn't exist
+          tableStatus[modelName] = 'exists';
+        } catch (err) {
+          tableStatus[modelName] = 'missing';
+        }
+      }
+    }
+
+    // Create missing tables
+    await models.sequelize.sync({ alter: false }); // Don't alter existing tables
+    
+    // Verify all tables after sync
+    const finalStatus = {};
+    for (const [modelName, model] of Object.entries(models)) {
+      if (model.tableName) {
+        try {
+          const tableInfo = await model.describe();
+          finalStatus[modelName] = {
+            status: 'ready',
+            columns: Object.keys(tableInfo).length
+          };
+        } catch (err) {
+          finalStatus[modelName] = {
+            status: 'error',
+            error: err.message
+          };
+        }
+      }
+    }
+
+    return c.json({
+      success: (Object.keys(finalStatus).length == Object.keys(tableStatus).length),
+      message: `Database installation completed`,
+      details: {
+        initialStatus: tableStatus,
+        finalStatus: finalStatus
+      }
+    });
+
+  } catch (error) {
+    console.error('Installation error:', error);
+    return c.json({
+      success: false,
+      error: error.message,
+      details: error.stack
+    }, 500);
+  }
+});
+
+// Should be executed with:
+// curl -X POST http://localhost:3000/api/seeds
+
+// Should be executed with:
+// curl -X POST http://localhost:3000/api/seeds
+app.post('/api/seeds', async (c) => {
+    // Only allow in debug mode
+    if (process.env.NODE_ENV === 'production') {
+      return c.json({ error: 'Seeds endpoint is only available in debug mode' }, 403);
+    }
+  
+    await models.sequelize.authenticate();
+    
+    const queryInterface = models.sequelize.getQueryInterface();
+    // const Sequelize = db.Sequelize;
+    const seedersDir = path.join(__dirname, 'seeders');
+    const results = [];
+  
+    // Define the order of seeders
+    const orderedSeederFiles = [
+      '20250603153301-admin-user.js',
+      '20250603153302-categories-deals.js',
+      '20250603153332-initial-plans.js', // Plans can be seeded before or after users/categories, but before deals if deals depend on plans (not the case here)
+      '20250603153313-initial-deals.js' // Deals depend on users and categories
+    ];
+  
+    try {
+      for (const seederFile of orderedSeederFiles) {
+        const seederPath = path.join(seedersDir, seederFile);
+        if (fs.existsSync(seederPath)) {
+          const seeder = require(seederPath);
+          if (seeder && typeof seeder.up === 'function') {
+            console.log(`Running seeder: ${seederFile}`);
+            await seeder.up(queryInterface, Sequelize);
+            results.push({ seeder: seederFile, status: 'success' });
+            console.log(`Successfully ran seeder: ${seederFile}`);
+          } else {
+            results.push({ seeder: seederFile, status: 'failed', error: 'Invalid seeder structure (missing up function)' });
+            console.error(`Invalid seeder structure for ${seederFile}`);
+          }
+        } else {
+          results.push({ seeder: seederFile, status: 'failed', error: 'File not found' });
+          console.error(`Seeder file not found: ${seederFile}`);
+        }
+      }
+      return c.json({ success: true, message: 'Seeders executed successfully.', results });
+    } catch (error) {
+      console.error('Error running seeders:', error);
+      results.push({ seeder: 'general', status: 'failed', error: error.message });
+      return c.json({ success: false, error: 'Failed to run seeders.', details: error.message, results }, 500);
+    }
+  });
+
+// Should be executed with:
+// curl -X POST -d '{"username":"admin","password":"master"}' http://localhost:3000/api/create-admin
+app.post('/api/create-admin', async (c) => {
+    const { username, password } = await c.req.json();
+    return c.json({ success: true, message: `User: ${username} has been created with password: ${password}`})
+})
 
 app.post('/api/signup', async (c) => {
     try {
