@@ -1,11 +1,12 @@
 'use strict';
+const crypto = require('crypto');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert('Categories', [
       {
-        id: 1,
+        id: crypto.randomUUID(),
         name: 'Real Estate',
         slug: 'real-estate',
         iconUrl: 'icon-house.svg',
@@ -14,7 +15,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        id: 2,
+        id: crypto.randomUUID(),
         name: 'Vehicles',
         slug: 'vehicles',
         iconUrl: 'icon-car-sedan.svg',
@@ -23,7 +24,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        id: 3,
+        id: crypto.randomUUID(),
         name: 'Electronics',
         slug: 'electronics',
         iconUrl: 'icon-electronics.svg',

@@ -8,15 +8,15 @@ const sequelize = new Sequelize({
   logging: false, // set to console.log to see SQL queries
 });
 
-// For PostgreSQL (example):
-// const sequelize = new Sequelize(process.env.DATABASE_URL || 'postgres://user:pass@example.com:5432/dbname', {
-//   dialect: 'postgres',
-//   protocol: 'postgres',
-//   dialectOptions: {
-//     ssl: process.env.NODE_ENV === 'production' ? { require: true, rejectUnauthorized: false } : false
-//   },
-//   logging: false, // set to console.log to see SQL queries
-// });
+/*/ For PostgreSQL (example):
+const sequelize = new Sequelize(process.env.DATABASE_URL || 'postgres://user:pass@example.com:5432/dbname', {
+  dialect: 'postgres',
+  protocol: 'postgres',
+  dialectOptions: {
+    ssl: process.env.NODE_ENV === 'production' ? { require: true, rejectUnauthorized: false } : false
+  },
+  logging: false, // set to console.log to see SQL queries
+});*/
 
 
 // --- User Model ---

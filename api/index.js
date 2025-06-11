@@ -367,7 +367,7 @@ function verifyPassword(password, storedPassword) {
 //     return c.json({success: true, users: users});
 // })
 
-// Should be executed with:
+// 1- Should be executed with:
 // curl -X POST http://localhost:3000/api/install
 app.post('/api/install', async (c) => {
   // Only allow in debug mode
@@ -434,7 +434,27 @@ app.post('/api/install', async (c) => {
   }
 });
 
-// Should be executed with:
+// 2- Should be executed with:
+// curl -X POST -d '{"username":"admin@example.com","password":"master"}' http://localhost:3000/api/create-admin
+app.post('/api/create-admin', async (c) => {
+  // Only allow in debug mode
+  if (process.env.NODE_ENV === 'production') {
+      return c.json({ error: 'This endpoint is only available in debug mode' }, 403);
+    }
+
+  const { username, password } = await c.req.json();
+  await models.sequelize.authenticate();
+  const hashedPassword = hashPassword(password);
+  const adminUser = await models.User.create({
+      email: username,
+      passwordHash: hashedPassword,
+      isAdmin: true,
+      isVerified: true
+  });
+  return c.json({ success: true, adminUser})
+})
+
+// 3- Should be executed with:
 // curl -X POST http://localhost:3000/api/seeds
 app.post('/api/seeds', async (c) => {
     // Only allow in debug mode
@@ -451,7 +471,7 @@ app.post('/api/seeds', async (c) => {
   
     // Define the order of seeders
     const orderedSeederFiles = [
-      '20250603153301-admin-user.js',
+      //'20250603153301-admin-user.js', // call /api/create-admin to create the admin user
       '20250603153302-categories-deals.js',
       '20250603153332-initial-plans.js', // Plans can be seeded before or after users/categories, but before deals if deals depend on plans (not the case here)
       '20250603153313-initial-deals.js' // Deals depend on users and categories
@@ -483,26 +503,6 @@ app.post('/api/seeds', async (c) => {
       return c.json({ success: false, error: 'Failed to run seeders.', details: error.message, results }, 500);
     }
   });
-
-// Should be executed with:
-// curl -X POST -d '{"username":"admin@example.com","password":"master"}' http://localhost:3000/api/create-admin
-app.post('/api/create-admin', async (c) => {
-    // Only allow in debug mode
-    if (process.env.NODE_ENV === 'production') {
-        return c.json({ error: 'This endpoint is only available in debug mode' }, 403);
-      }
-  
-    const { username, password } = await c.req.json();
-    await models.sequelize.authenticate();
-    const hashedPassword = hashPassword(password);
-    const adminUser = await models.User.create({
-        email: username,
-        passwordHash: hashedPassword,
-        isAdmin: true,
-        isVerified: true
-    });
-    return c.json({ success: true, adminUser})
-})
 
 app.post('/api/signup', async (c) => {
     try {
@@ -571,6 +571,7 @@ app.post('/api/login', async (c) => {
 // API endpoint for deals
 app.get('/api/deals', async (c) => {
     try {
+        // const listingDeals = await models.Listing.findAll();
         let filteredDeals = [...allDealsData]; // Start with all deals
 
         const { category_slug, search, type, status, location, keyword } = c.req.query();
@@ -670,7 +671,9 @@ app.post('/api/offers', async (c) => {
         }
 
         const newOffer = {
-            id: crypto.randomBytes(16).toString('hex'), // Generate a unique ID for the offer
+            // id: crypto.randomBytes(16).toString('hex'), // Generate a unique ID for the offer
+            // Generate a UUID for the offer
+            id: crypto.randomUUID(), // Generate a random UUID v4
             type,
             title,
             description,

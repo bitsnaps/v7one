@@ -1,4 +1,5 @@
 'use strict';
+const crypto = require('crypto');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -20,7 +21,7 @@ module.exports = {
 
     await queryInterface.bulkInsert('Listings', [
       {
-        id: 1,
+        id: crypto.randomUUID(),
         title: 'Cozy Apartment in Downtown',
         description: 'A beautiful and cozy apartment located in the heart of the city. Perfect for singles or couples.',
         price: 1200.00,
@@ -40,7 +41,7 @@ module.exports = {
         expiresAt: new Date(new Date().setDate(new Date().getDate() + 30)) // Expires in 30 days
       },
       {
-        id: 2,
+        id: crypto.randomUUID(),
         title: 'Spacious Family House with Garden',
         description: 'Large family house with a beautiful garden and modern amenities. Ideal for families with children.',
         price: 250000.00,
@@ -60,7 +61,7 @@ module.exports = {
         expiresAt: new Date(new Date().setDate(new Date().getDate() + 60)) // Expires in 60 days
       },
       {
-        id: 3,
+        id: crypto.randomUUID(),
         title: 'Vintage Car Collection',
         description: 'A rare collection of vintage cars, well-maintained and in excellent condition.',
         price: 50000.00,

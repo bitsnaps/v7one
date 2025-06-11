@@ -1,11 +1,12 @@
 'use strict';
+const crypto = require('crypto');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert('PricingPlans', [
       {
-        id: 1,
+        id: crypto.randomUUID(),
         name: 'Free Plan',
         price: 0.00,
         pricePercentage: null,
@@ -19,7 +20,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        id: 2,
+        id: crypto.randomUUID(),
         name: 'Standard Plan',
         price: 9.99,
         pricePercentage: null,
@@ -33,7 +34,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        id: 3,
+        id: crypto.randomUUID(),
         name: 'Premium Plan',
         price: 19.99,
         pricePercentage: null,
