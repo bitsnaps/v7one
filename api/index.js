@@ -361,8 +361,8 @@ function verifyPassword(password, storedPassword) {
     const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
     return hash === originalHash;
 }
-
-/*app.get('/api/users', async (c) => {
+/*
+app.get('/api/users', async (c) => {
     const users = await models.User.findAll(); // {"success":true,"users":[{"id":"0..Z"}]}
     // const users = await models.User.findOne(); // {"success":true,"users":{"id":"0..Z"}}
     // const users = await models.User.findAndCountAll(); // {"success":true,"users":{"count":1,"rows":[{"id":"0..Z"}]}}

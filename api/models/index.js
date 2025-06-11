@@ -1,23 +1,7 @@
 const { Sequelize, DataTypes, Op } = require('sequelize');
+const config = require('../config/config');
 
-
-// For local SQLite:
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: '7vdb.sqlite',
-  logging: false, // set to console.log to see SQL queries
-});
-
-/*/ For PostgreSQL (example):
-const sequelize = new Sequelize(process.env.DATABASE_URL || 'postgres://user:pass@example.com:5432/dbname', {
-  dialect: 'postgres',
-  protocol: 'postgres',
-  dialectOptions: {
-    ssl: process.env.NODE_ENV === 'production' ? { require: true, rejectUnauthorized: false } : false
-  },
-  logging: false, // set to console.log to see SQL queries
-});*/
-
+const sequelize = new Sequelize(config[process.env.NODE_ENV || 'development']);
 
 // --- User Model ---
 const User = sequelize.define('User', {
