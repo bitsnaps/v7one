@@ -362,10 +362,15 @@ function verifyPassword(password, storedPassword) {
     return hash === originalHash;
 }
 
-// app.get('/api/users', async (c) => {
-//     const users = await models.User.findAll();
-//     return c.json({success: true, users: users});
-// })
+/*app.get('/api/users', async (c) => {
+    const users = await models.User.findAll(); // {"success":true,"users":[{"id":"0..Z"}]}
+    // const users = await models.User.findOne(); // {"success":true,"users":{"id":"0..Z"}}
+    // const users = await models.User.findAndCountAll(); // {"success":true,"users":{"count":1,"rows":[{"id":"0..Z"}]}}
+    // const users = await models.sequelize.query(
+    //   `SELECT id from Users;`
+    // ); // {"success":true,"users":[[{"id":"0..c"}],{}]}
+    return c.json({success: true, users: users});
+})*/
 
 // 1- Should be executed with:
 // curl -X POST http://localhost:3000/api/install

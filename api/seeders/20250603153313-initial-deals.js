@@ -1,18 +1,21 @@
 'use strict';
 const crypto = require('crypto');
+const models = require('../models');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    const users = await queryInterface.sequelize.query(
-      `SELECT id from Users;`
-    );
-    const categories = await queryInterface.sequelize.query(
-      `SELECT id from Categories;`
-    );
+    const userRows = await models.User.findAll();
+    // const users = await queryInterface.sequelize.query(
+    //   `SELECT id from Users;`
+    // );
+    // const userRows = users[0];
+    // const categories = await queryInterface.sequelize.query(
+    //   `SELECT id from Categories;`
+    // );
+    // const categoryRows = categories[0];
 
-    const userRows = users[0];
-    const categoryRows = categories[0];
+    const categoryRows = await models.Category.findAll();
 
     if (userRows.length === 0 || categoryRows.length === 0) {
       console.log('Cannot seed Listings: No users or categories found. Please seed Users and Categories first.');
