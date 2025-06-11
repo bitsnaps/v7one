@@ -34,6 +34,8 @@ docs/
 
 # var env
 .env
+.env.production
+.env.*
 
 # sqlite
 *.sqlite
