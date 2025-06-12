@@ -174,139 +174,139 @@ const dealsData = [
         "category": ["featured", "for-rent"]
       }
 ];
-
+/*
 const categoriesData = [
     // Real Estate Categories
     {
-    id: 1,
-    name: "Apartment",
-    slug: "apartments",
-    icon: "/img/icon-apartment.svg",
-    description: "Modern apartments and condos",
-    count: 123,
-    type: "real-estate"
+      id: 1,
+      name: "Apartment",
+      slug: "apartments",
+      iconUrl: "/img/icon-apartment.svg",
+      description: "Modern apartments and condos",
+      count: 123,
+      type: "real-estate"
     },
     {
-    id: 2,
-    name: "Villa",
-    slug: "villas",
-    icon: "/img/icon-villa.svg",
-    description: "Luxury villas and estates",
-    count: 89,
-    type: "real-estate"
+      id: 2,
+      name: "Villa",
+      slug: "villas",
+      iconUrl: "/img/icon-villa.svg",
+      description: "Luxury villas and estates",
+      count: 89,
+      type: "real-estate"
     },
     {
-    id: 3,
-    name: "Home",
-    slug: "homes",
-    icon: "/img/icon-house.svg",
-    description: "Family homes and houses",
-    count: 156,
-    type: "real-estate"
+      id: 3,
+      name: "Home",
+      slug: "homes",
+      iconUrl: "/img/icon-house.svg",
+      description: "Family homes and houses",
+      count: 156,
+      type: "real-estate"
     },
     {
-    id: 4,
-    name: "Office",
-    slug: "offices",
-    icon: "/img/icon-office.svg",
-    description: "Commercial office spaces",
-    count: 45,
-    type: "real-estate"
+      id: 4,
+      name: "Office",
+      slug: "offices",
+      iconUrl: "/img/icon-office.svg",
+      description: "Commercial office spaces",
+      count: 45,
+      type: "real-estate"
     },
     {
-    id: 5,
-    name: "Building",
-    slug: "buildings",
-    icon: "/img/icon-building.svg",
-    description: "Commercial buildings",
-    count: 30,
-    type: "real-estate"
+      id: 5,
+      name: "Building",
+      slug: "buildings",
+      iconUrl: "/img/icon-building.svg",
+      description: "Commercial buildings",
+      count: 30,
+      type: "real-estate"
     },
     {
-    id: 6,
-    name: "Townhouse",
-    slug: "townhouses",
-    icon: "/img/icon-townhouse.svg",
-    description: "Modern townhouses",
-    count: 67,
-    type: "real-estate"
+      id: 6,
+      name: "Townhouse",
+      slug: "townhouses",
+      iconUrl: "/img/icon-townhouse.svg",
+      description: "Modern townhouses",
+      count: 67,
+      type: "real-estate"
     },
     {
-    id: 7,
-    name: "Shop",
-    slug: "shops",
-    icon: "/img/icon-shop.svg",
-    description: "Retail shops and stores",
-    count: 88,
-    type: "real-estate"
+      id: 7,
+      name: "Shop",
+      slug: "shops",
+      iconUrl: "/img/icon-shop.svg",
+      description: "Retail shops and stores",
+      count: 88,
+      type: "real-estate"
     },
     {
-    id: 8,
-    name: "Garage",
-    slug: "garages",
-    icon: "/img/icon-garage.svg",
-    description: "Parking spaces and garages",
-    count: 20,
-    type: "real-estate"
+      id: 8,
+      name: "Garage",
+      slug: "garages",
+      iconUrl: "/img/icon-garage.svg",
+      description: "Parking spaces and garages",
+      count: 20,
+      type: "real-estate"
     },
     // Car Categories
     {
-    id: 9,
-    name: "Sedan",
-    slug: "cars-sedan",
-    icon: "/img/icon-car-sedan.svg",
-    description: "Comfortable sedans",
-    count: 210,
-    type: "cars"
+      id: 9,
+      name: "Sedan",
+      slug: "cars-sedan",
+      iconUrl: "/img/icon-car-sedan.svg",
+      description: "Comfortable sedans",
+      count: 210,
+      type: "cars"
     },
     {
-    id: 10,
-    name: "SUV",
-    slug: "cars-suv",
-    icon: "/img/icon-car-suv.svg",
-    description: "Spacious SUVs",
-    count: 150,
-    type: "cars"
+      id: 10,
+      name: "SUV",
+      slug: "cars-suv",
+      iconUrl: "/img/icon-car-suv.svg",
+      description: "Spacious SUVs",
+      count: 150,
+      type: "cars"
     },
     {
-    id: 11,
-    name: "Truck",
-    slug: "cars-truck",
-    icon: "/img/icon-car-truck.svg",
-    description: "Powerful trucks",
-    count: 75,
-    type: "cars"
+      id: 11,
+      name: "Truck",
+      slug: "cars-truck",
+      iconUrl: "/img/icon-car-truck.svg",
+      description: "Powerful trucks",
+      count: 75,
+      type: "cars"
     },
     // Other Categories
     {
-    id: 12,
-    name: "Electronics",
-    slug: "electronics",
-    icon: "/img/icon-electronics.svg",
-    description: "Gadgets and electronics",
-    count: 300,
-    type: "other"
+      id: 12,
+      name: "Electronics",
+      slug: "electronics",
+      iconUrl: "/img/icon-electronics.svg",
+      description: "Gadgets and electronics",
+      count: 300,
+      type: "other"
     },
     {
-    id: 13,
-    name: "Services",
-    slug: "services",
-    icon: "/img/icon-services.svg",
-    description: "Various services",
-    count: 95,
-    type: "other"
+      id: 13,
+      name: "Services",
+      slug: "services",
+      iconUrl: "/img/icon-services.svg",
+      description: "Various services",
+      count: 95,
+      type: "other"
     },
     {
-    id: 14,
-    name: "Other Deals",
-    slug: "other-deals",
-    icon: "/img/icon-deal.svg",
-    description: "Miscellaneous deals",
-    count: 50,
-    type: "other"
+      id: 14,
+      name: "Other Deals",
+      slug: "other-deals",
+      iconUrl: "/img/icon-deal.svg",
+      description: "Miscellaneous deals",
+      count: 50,
+      type: "other"
     }
 ];
-
+*/
 const app = new Hono();
 
 // Add CORS middleware (for Dev)
@@ -589,6 +589,7 @@ app.get('/api/deals', async (c) => {
 
         // 1. Filter by category_slug (primary category from route)
         if (category_slug) {
+            const categoriesData = await models.Category.findAll();
             const category = categoriesData.find(cat => cat.slug === category_slug);
             if (category) {
                 let typeToFilter = category.name;
@@ -637,7 +638,7 @@ app.get('/api/deals', async (c) => {
 // API endpoint for deal categories
 app.get('/api/categories', async (c) => {
     try {
-        // const categoriesData = await models.Category.findAll();
+        const categoriesData = await models.Category.findAll();
         return c.json({ success: true, data: categoriesData });
     } catch (error) {
         console.error('Error fetching categories:', error);

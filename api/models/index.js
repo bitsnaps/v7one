@@ -79,6 +79,10 @@ const Category = sequelize.define('Category', {
     allowNull: false,
     unique: true,
   },
+  type: {
+    type: DataTypes.ENUM('real-estate', 'cars', 'other'),
+    allowNull: false,
+  },
   description: {
     type: DataTypes.TEXT,
     allowNull: true,

@@ -116,7 +116,7 @@ onMounted(() => {
               <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="`/category/${category.slug}`">
                 <div class="rounded p-4">
                   <div class="icon mb-3">
-                    <img class="img-fluid" :src="category.icon" :alt="category.name + ' Icon'">
+                    <img class="img-fluid" :src="category.iconUrl" :alt="category.name + ' Icon'">
                   </div>
                   <h6>{{ $t('dealsCategories.categories.' + category.name.toLowerCase().replace(/\s+/g, '-'), category.name) }}</h6>
                   <span>{{ category.count }} {{ $t('dealsCategories.dealsSuffix', 'Deals') }}</span>
@@ -135,7 +135,7 @@ onMounted(() => {
               <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="`/category/${category.slug}`">
                 <div class="rounded p-4">
                   <div class="icon mb-3">
-                    <img class="img-fluid" :src="category.icon" :alt="category.name + ' Icon'">
+                    <img class="img-fluid" :src="category.iconUrl" :alt="category.name + ' Icon'">
                   </div>
                   <h6>{{ $t('dealsCategories.categories.' + category.name.toLowerCase().replace(/\s+/g, '-'), category.name) }}</h6>
                   <span>{{ category.count }} {{ $t('dealsCategories.dealsSuffix', 'Deals') }}</span>
@@ -154,7 +154,7 @@ onMounted(() => {
               <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="`/category/${category.slug}`">
                 <div class="rounded p-4">
                   <div class="icon mb-3">
-                    <img class="img-fluid" :src="category.icon" :alt="category.name + ' Icon'">
+                    <img class="img-fluid" :src="category.iconUrl" :alt="category.name + ' Icon'">
                   </div>
                   <h6>{{ $t('dealsCategories.categories.' + category.name.toLowerCase().replace(/\s+/g, '-'), category.name) }}</h6>
                   <span>{{ category.count }} {{ $t('dealsCategories.dealsSuffix', 'Deals') }}</span>
