@@ -31,20 +31,31 @@ async function createTestAccount() {
   return null;
 }
 
+const HOST =  process.env.DB_HOST; // Assuming DB_HOST equals domain name
+const EMAIL_CONTACT = process.env.EMAIL_CONTACT || `contact@${HOST}`;
+const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
+
 let transporter;
 if (process.env.NODE_ENV !== 'production'){
     createTestAccount().then(t => {
         transporter = t;
         console.log('Email test account created');
     });
+} else {
+// PROD: Configure email transporter
+transporter = nodemailer.createTransport({
+    host: `mail.${HOST}`, // Replace with your SMTP host ('smtp.example.com')
+    port: 465, //993, // Common SMTP port (587 worked with secure:false)
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: EMAIL_CONTACT, // Replace with your email
+      pass: EMAIL_PASSWORD // Replace with your password or app-specific password
+    },
+  });
 }
 
-const EMAIL_CONTACT = process.env.EMAIL_CONTACT || 'admin@email.com';
-const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
-
-
 // deals and categories data
-const allDealsData = [
+const dealsData = [
     {
         "id": 1,
         "title": "Luxury Villa with Ocean View",
@@ -164,7 +175,7 @@ const allDealsData = [
       }
 ];
 
-const allCategoriesData = [
+const categoriesData = [
     // Real Estate Categories
     {
     id: 1,
@@ -295,18 +306,6 @@ const allCategoriesData = [
     type: "other"
     }
 ];
-
-/*/ PROD: Configure email transporter
-const transporter = nodemailer.createTransport({
-    host: 'mail.ecosiumevent.com', // Replace with your SMTP host ('smtp.example.com')
-    port: 465, //993, // Common SMTP port (587 worked with secure:false)
-    secure: true, // true for 465, false for other ports
-    auth: {
-      user: EMAIL_CONTACT, // Replace with your email
-      pass: EMAIL_PASSWORD // Replace with your password or app-specific password
-    },
-  });
-*/
 
 const app = new Hono();
 
@@ -535,11 +534,37 @@ app.post('/api/signup', async (c) => {
     }
 });
 
+app.post('/api/login', async (c) => {
+  try {
+      const { username, password } = await c.req.json();
+
+      if (!username || !password) {
+          return c.json({ success: false, message: 'Username and password are required' }, 400);
+      }
+
+      const user = users[username];
+      if (!user) {
+          return c.json({ success: false, message: 'Invalid username or password' }, 401);
+      }
+
+      if (!verifyPassword(password, user.password)) {
+          return c.json({ success: false, message: 'Invalid username or password' }, 401);
+      }
+      
+      console.log('User logged in:', username);
+      // In a real application, you would generate and return a JWT or session token here
+      return c.json({ success: true, message: 'Login successful' });
+  } catch (error) {
+      console.error('Login error:', error);
+      return c.json({ success: false, message: 'An error occurred during login' }, 500);
+  }
+});
+
 // API endpoint for a single deal by ID
 app.get('/api/deals/:id', async (c) => {
     try {
         const dealId = parseInt(c.req.param('id'));
-        const deal = allDealsData.find(d => d.id === dealId);
+        const deal = dealsData.find(d => d.id === dealId);
 
         if (deal) {
             return c.json({ success: true, deal });
@@ -552,48 +577,24 @@ app.get('/api/deals/:id', async (c) => {
     }
 });
 
-app.post('/api/login', async (c) => {
-    try {
-        const { username, password } = await c.req.json();
-
-        if (!username || !password) {
-            return c.json({ success: false, message: 'Username and password are required' }, 400);
-        }
-
-        const user = users[username];
-        if (!user) {
-            return c.json({ success: false, message: 'Invalid username or password' }, 401);
-        }
-
-        if (!verifyPassword(password, user.password)) {
-            return c.json({ success: false, message: 'Invalid username or password' }, 401);
-        }
-        
-        console.log('User logged in:', username);
-        // In a real application, you would generate and return a JWT or session token here
-        return c.json({ success: true, message: 'Login successful' });
-    } catch (error) {
-        console.error('Login error:', error);
-        return c.json({ success: false, message: 'An error occurred during login' }, 500);
-    }
-});
-
 // API endpoint for deals
 app.get('/api/deals', async (c) => {
     try {
         // const listingDeals = await models.Listing.findAll();
-        let filteredDeals = [...allDealsData]; // Start with all deals
+        
+        // let filteredDeals = [...listingDeals]; // Start with all deals
+        let filteredDeals = [...dealsData];
 
         const { category_slug, search, type, status, location, keyword } = c.req.query();
 
         // 1. Filter by category_slug (primary category from route)
         if (category_slug) {
-            const category = allCategoriesData.find(cat => cat.slug === category_slug);
+            const category = categoriesData.find(cat => cat.slug === category_slug);
             if (category) {
                 let typeToFilter = category.name;
                 // Special handling for car categories if deal.type is generic like "Automobile"
                 if (category.type && category.type.toLowerCase() === 'cars') {
-                    typeToFilter = 'Automobile'; // Assuming all car deals in allDealsData have type "Automobile"
+                    typeToFilter = 'Automobile'; // Assuming all car deals in dealsData have type "Automobile"
                 }
                 filteredDeals = filteredDeals.filter(deal => deal.type.toLowerCase() === typeToFilter.toLowerCase());
             }
@@ -636,27 +637,11 @@ app.get('/api/deals', async (c) => {
 // API endpoint for deal categories
 app.get('/api/categories', async (c) => {
     try {
-        return c.json({ success: true, data: allCategoriesData });
+        // const categoriesData = await models.Category.findAll();
+        return c.json({ success: true, data: categoriesData });
     } catch (error) {
         console.error('Error fetching categories:', error);
         return c.json({ success: false, message: 'Error fetching categories' }, 500);
-    }
-});
-
-// API endpoint for a single deal by ID
-app.get('/api/deals/:id', async (c) => {
-    try {
-        const dealId = parseInt(c.req.param('id'));
-        const deal = allDealsData.find(d => d.id === dealId);
-
-        if (deal) {
-            return c.json({ success: true, data: deal });
-        } else {
-            return c.json({ success: false, message: 'Deal not found' }, 404);
-        }
-    } catch (error) {
-        console.error('Error fetching deal by ID:', error);
-        return c.json({ success: false, message: 'Error fetching deal' }, 500);
     }
 });
 
