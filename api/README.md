@@ -8,6 +8,7 @@ require('dotenv').config({ path: '../.env' }); // Adjust if needed
 
 module.exports = {
   development: {
+    // In case of using SQLite database
     dialect: 'sqlite',
     storage: './7vdb.sqlite', // Relative to the 'api' directory
     logging: false,
