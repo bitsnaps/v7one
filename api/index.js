@@ -14,20 +14,25 @@ const MAX_TIMESTAMP_AGE_MS = 15 * 60 * 1000; // 15 minutes validity for timestam
 
 // TEST: Create a test account for Ethereal Email
 async function createTestAccount() {
-    const testAccount = await nodemailer.createTestAccount();
-    return nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
-        port: 587,
-        secure: false,
-        auth: {
-            user: testAccount.user,
-            pass: testAccount.pass,
-        },
-    });
+  try {
+      const testAccount = await nodemailer.createTestAccount();
+      return nodemailer.createTransport({
+          host: 'smtp.ethereal.email',
+          port: 587,
+          secure: false,
+          auth: {
+              user: testAccount.user,
+              pass: testAccount.pass,
+          },
+      });
+  } catch (error) {
+    console.error(`ERROR: ${error.message}`);
+  }
+  return null;
 }
 
 let transporter;
-if (process.env.NODE_ENV){
+if (process.env.NODE_ENV !== 'production'){
     createTestAccount().then(t => {
         transporter = t;
         console.log('Email test account created');
