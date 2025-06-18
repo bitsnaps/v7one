@@ -127,6 +127,17 @@ const Listing = sequelize.define('Listing', {
     type: DataTypes.DECIMAL(10, 2), // Adjust precision as needed
     allowNull: true, // Can be 'Contact for Price' or 'Free'
   },
+  // Listing Type enum (whether the deal for: rent, sell, exchange...etc.)
+  listType: {
+    type: DataTypes.ENUM('FOR_SALE', 'FOR_RENT', 'FOR_EXCHANGE', 'SERVICE', 'COMMUNITY'),
+    allowNull: false,
+    defaultValue: 'FOR_SALE',
+  },
+  // The main image url (other images urls will be stored in ListingMedia)
+  imageUrl: {
+    type: DataTypes.STRING,
+    allowNull: true, // Can be null if no primary image, or if using ListingMedia exclusively
+  },
   priceType: {
     type: DataTypes.ENUM('FIXED', 'NEGOTIABLE', 'CONTACT_FOR_PRICE', 'FREE'),
     defaultValue: 'FIXED',

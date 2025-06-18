@@ -22,6 +22,15 @@ module.exports = {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: true,
       },
+      listType: {
+        type: Sequelize.ENUM('FOR_SALE', 'FOR_RENT', 'FOR_EXCHANGE', 'SERVICE', 'COMMUNITY'),
+        allowNull: false,
+        defaultValue: 'FOR_SALE',
+      },
+      imageUrl: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       priceType: {
         type: Sequelize.ENUM('FIXED', 'NEGOTIABLE', 'CONTACT_FOR_PRICE', 'FREE'),
         defaultValue: 'FIXED',

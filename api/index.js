@@ -54,7 +54,7 @@ transporter = nodemailer.createTransport({
   });
 }
 
-// deals and categories data
+/*/ deals and categories data
 const dealsData = [
     {
         "id": 1,
@@ -174,6 +174,8 @@ const dealsData = [
         "category": ["featured", "for-rent"]
       }
 ];
+*/
+
 /*
 const categoriesData = [
     // Real Estate Categories
@@ -307,6 +309,7 @@ const categoriesData = [
     }
 ];
 */
+
 const app = new Hono();
 
 // Add CORS middleware (for Dev)
@@ -365,6 +368,11 @@ function verifyPassword(password, storedPassword) {
     const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
     return hash === originalHash;
 }
+
+function isValidUUID(id) {
+  return id && id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+}
+
 /*
 app.get('/api/users', async (c) => {
     const users = await models.User.findAll(); // {"success":true,"users":[{"id":"0..Z"}]}
@@ -642,75 +650,126 @@ app.post('/api/login', async (c) => {
 // API endpoint for a single deal by ID
 app.get('/api/deals/:id', async (c) => {
     try {
-        const dealId = parseInt(c.req.param('id'));
-        const deal = dealsData.find(d => d.id === dealId);
+        const dealId = c.req.param('id');
+        if (!isValidUUID(dealId)) {
+            return c.json({ success: false, message: 'Invalid query' }, 400);
+        }
+        const deal = await models.Listing.findByPk(dealId, {
+            include: [
+                { model: models.User, as: 'seller', attributes: ['id', 'email'] },
+                { model: models.Category, as: 'category', attributes: ['id', 'name', 'slug'] }
+            ]
+        });
 
         if (deal) {
-            return c.json({ success: true, deal });
+            // Transform the deal to match the old structure if necessary
+            const formattedDeal = {
+                id: deal.id,
+                title: deal.title,
+                image: deal.imageUrl, // Assuming image_url is the field in Listing model
+                price: deal.price, 
+                status: deal.status,
+                type: deal.listType, 
+                location: deal.location,
+                sqft: deal.sqft ? `${deal.sqft} Sqft` : 'N/A',
+                beds: deal.beds ? `${deal.beds} Bed` : 'N/A',
+                baths: deal.baths ? `${deal.baths} Bath` : 'N/A',
+                category: deal.category ? [deal.category.slug] : [],
+                description: deal.description,
+                // Add other fields as necessary
+            };
+            return c.json({ success: true, deal: formattedDeal });
         } else {
             return c.json({ success: false, message: 'Deal not found' }, 404);
         }
     } catch (error) {
-        console.error('Error fetching deal by ID:', error);
-        return c.json({ success: false, message: 'Error fetching deal' }, 500);
+        console.error('Error fetching deal:', error);
+        return c.json({ success: false, message: 'An error occurred', error: error.message }, 500);
     }
 });
 
-// API endpoint for deals
+// API endpoint for all deals with optional category filter, pagination, and search
 app.get('/api/deals', async (c) => {
     try {
-        // const listingDeals = await models.Listing.findAll();
-        
-        // let filteredDeals = [...listingDeals]; // Start with all deals
-        let filteredDeals = [...dealsData];
+        const page = parseInt(c.req.query('page')) || 1;
+        const limit = parseInt(c.req.query('limit')) || 10; 
+        const offset = (page - 1) * limit;
 
-        const { category_slug, search, type, status, location, keyword } = c.req.query();
+        const categorySlug = c.req.query('category_slug') || c.req.query('category'); // Support both for flexibility
+        const statusQuery = c.req.query('status');
+        const typeQuery = c.req.query('type');
+        const locationQuery = c.req.query('location');
+        const searchQuery = c.req.query('search') || c.req.query('keyword');
 
-        // 1. Filter by category_slug (primary category from route)
-        if (category_slug) {
-            const categoriesData = await models.Category.findAll();
-            const category = categoriesData.find(cat => cat.slug === category_slug);
-            if (category) {
-                let typeToFilter = category.name;
-                // Special handling for car categories if deal.type is generic like "Automobile"
-                if (category.type && category.type.toLowerCase() === 'cars') {
-                    typeToFilter = 'Automobile'; // Assuming all car deals in dealsData have type "Automobile"
-                }
-                filteredDeals = filteredDeals.filter(deal => deal.type.toLowerCase() === typeToFilter.toLowerCase());
+        const whereClause = {};
+        const includeClause = [
+            { model: models.User, as: 'seller', attributes: ['id', 'email'] }, 
+            { model: models.Category, as: 'category', attributes: ['id', 'name', 'slug'] }
+        ];
+
+        if (categorySlug) {
+            // Ensure the include for Categories has a 'where' clause added or modified
+            let categoryInclude = includeClause.find(inc => inc.as === 'category');
+            if (categoryInclude) {
+                categoryInclude.where = { slug: categorySlug };
+            } else {
+                // This case should ideally not happen if 'category' is always included
+                includeClause.push({ model: models.Category, as: 'category', where: { slug: categorySlug }, attributes: ['id', 'name', 'slug'] });
             }
         }
-
-        // 2. Filter by search query (on title) - 'search' or 'keyword'
-        const keywordToSearch = search || keyword;
-        if (keywordToSearch) {
-            const searchTerm = keywordToSearch.toLowerCase();
-            filteredDeals = filteredDeals.filter(deal => deal.title.toLowerCase().includes(searchTerm));
+        if (statusQuery) {
+            whereClause.status = statusQuery;
+        }
+        if (typeQuery) {
+            whereClause.type = typeQuery; 
+        }
+        if (locationQuery) {
+            whereClause.location = { [models.Sequelize.Op.iLike]: `%${locationQuery}%` }; 
+        }
+        if (searchQuery) {
+            whereClause[models.Sequelize.Op.or] = [
+                { title: { [models.Sequelize.Op.iLike]: `%${searchQuery}%` } },
+                { description: { [models.Sequelize.Op.iLike]: `%${searchQuery}%` } },
+            ];
         }
 
-        // 3. Filter by 'type' (from specific filter dropdowns like propertyType, vehicleType)
-        if (type) {
-            const filterType = type.toLowerCase();
-            // This filter might be less effective for 'cars' if all car deals are 'Automobile'
-            // and user filters by 'Sedan', unless data or this logic is more granular.
-            filteredDeals = filteredDeals.filter(deal => deal.type.toLowerCase() === filterType);
-        }
+        const { count, rows } = await models.Listing.findAndCountAll({
+            where: whereClause,
+            include: includeClause,
+            limit: limit,
+            offset: offset,
+            order: [['createdAt', 'DESC']],
+            distinct: true, // Important for counts when using includes with where clauses on associated models
+            subQuery: false // May be needed depending on complexity, test with and without
+        });
 
-        // 4. Filter by 'status' (e.g., "For Sell", "For Rent")
-        if (status) {
-            const filterStatus = status.toLowerCase();
-            filteredDeals = filteredDeals.filter(deal => deal.status.toLowerCase() === filterStatus);
-        }
+        const formattedDeals = rows.map(deal => ({
+            id: deal.id,
+            title: deal.title,
+            image: deal.imageUrl,
+            price: deal.price,
+            status: deal.status,
+            type: deal.listType,
+            location: deal.location,
+            isFeatured: deal.isFeatured,
+            sqft: deal.sqft ? `${deal.sqft} Sqft` : 'N/A',
+            beds: deal.beds ? `${deal.beds} Bed` : 'N/A',
+            baths: deal.baths ? `${deal.baths} Bath` : 'N/A',
+            category: deal.category ? [deal.category.name.toLowerCase()] : [],
+            description: deal.description
+        }));
 
-        // 5. Filter by 'location'
-        if (location) {
-            const filterLocation = location.toLowerCase();
-            filteredDeals = filteredDeals.filter(deal => deal.location.toLowerCase().includes(filterLocation));
-        }
-
-        return c.json({ success: true, data: filteredDeals });
+        return c.json({
+            success: true,
+            data: formattedDeals, // Changed from 'deals' to 'data' to match existing structure for /api/deals
+            total: count,
+            page: page,
+            limit: limit,
+            totalPages: Math.ceil(count / limit)
+        });
     } catch (error) {
         console.error('Error fetching deals:', error);
-        return c.json({ success: false, message: 'Error fetching deals' }, 500);
+        return c.json({ success: false, message: 'An error occurred while fetching deals', error: error.message }, 500);
     }
 });
 
