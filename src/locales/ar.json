@@ -198,7 +198,9 @@
     "filterDeals": "تصفية الصفقات",
     "previous": "السابق",
     "next": "التالي",
-    "backToHome": "العودة إلى الصفحة الرئيسية"
+    "backToHome": "العودة إلى الصفحة الرئيسية",
+    "priceOnRequest": "السعر حسب الطلب",
+    "unknown": "غير متوفر"
   },
   "categoryView": {
     "allCategories": "جميع الفئات",

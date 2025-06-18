@@ -182,7 +182,9 @@
     "filterDeals": "Filter Deals",
     "previous": "Previous",
     "next": "Next",
-    "backToHome": "Back to Home"
+    "backToHome": "Back to Home",
+    "priceOnRequest": "Price on request",
+    "unknown": "N/A"
   },
   "categoryView": {
     "allCategories": "All Categories",

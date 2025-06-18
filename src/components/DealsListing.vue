@@ -44,22 +44,10 @@ const retryFetch = () => {
   fetchDeals();
 };
 
-const setActiveTab = (tabId) => {
-  activeTab.value = tabId;
-};
-
 const displayedDeals = computed(() => {
   // If search query parameters are present, filtering is primarily done by the backend.
   // The tabs can act as additional client-side filters on the already (potentially) filtered results.
-  let filtered = deals.value;
-
-  // Apply tab-based filtering
-  if (activeTab.value === 'featured') {
-    filtered = filtered.filter(deal => deal.isFeatured);
-  } else {
-    filtered = filtered.filter(deal => deal.type === activeTab.value);
-  }
-  return filtered;
+  return deals.value.filter(deal => activeTab.value === 'featured'? deal.isFeatured: deal.type === activeTab.value);
 });
 
 </script>
@@ -77,13 +65,13 @@ const displayedDeals = computed(() => {
                 <div class="col-lg-6 text-start text-lg-end">
                     <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'featured' }" @click.prevent="setActiveTab('featured')" href="#">{{ $t('dealsListing.featured', 'Featured') }}</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'featured' }" @click.prevent="activeTab = 'featured'" href="#">{{ $t('dealsListing.featured', 'Featured') }}</a>
                         </li>
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'FOR_SALE' }" @click.prevent="setActiveTab('FOR_SALE')" href="#">{{ $t('dealsListing.forsale', 'For Sell') }}</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'FOR_SALE' }" @click.prevent="activeTab = 'FOR_SALE'" href="#">{{ $t('dealsListing.forsale', 'For Sell') }}</a>
                         </li>
                         <li class="nav-item me-0">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'FOR_RENT' }" @click.prevent="setActiveTab('FOR_RENT')" href="#">{{ $t('dealsListing.forrent', 'For Rent') }}</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'FOR_RENT' }" @click.prevent="activeTab = 'FOR_RENT'" href="#">{{ $t('dealsListing.forrent', 'For Rent') }}</a>
                         </li>
                     </ul>
                 </div>
@@ -111,25 +99,7 @@ const displayedDeals = computed(() => {
                 <!-- Deals Display -->
                 <div v-else class="row g-4">
                     <div v-for="deal in displayedDeals" :key="deal.id" class="col-lg-4 col-md-6">
-                        <div class="property-item rounded overflow-hidden">
-                            <div class="position-relative overflow-hidden">
-                                <router-link :to="{ name: 'DealDetail', params: { id: deal.id } }">
-                                      <img class="img-fluid" :src="deal.image || '/img/deal.svg'" :alt="deal.title">
-                                    </router-link>
-                                <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{ $t('dealsListing.' + deal.type?.toLowerCase().replace('_', ''), deal.type) }}</div>
-                                <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $t('dealsListing.types.' + deal.category[0], deal.category[0]) }}</div>
-                            </div>
-                            <div class="p-4 pb-0">
-                                <h5 class="text-primary mb-3">{{ deal.price }}</h5>
-                                <router-link class="d-block h5 mb-2" :to="{ name: 'DealDetail', params: { id: deal.id } }">{{ deal.title }}</router-link>
-                                <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ deal.location }}</p>
-                            </div>
-                            <div class="d-flex border-top">
-                                <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ deal.sqft }}</small>
-                                <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{ deal.beds }}</small>
-                                <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{ deal.baths }}</small>
-                            </div>
-                        </div>
+                      <DealCard :deal="deal" />
                     </div>
                     <div v-if="displayedDeals.length === 0" class="col-12 text-center">
                         <p>No deals found for this category.</p>

@@ -184,7 +184,9 @@
     "filterDeals": "Filtrer les Offres",
     "previous": "Précédent",
     "next": "Suivant",
-    "backToHome": "Retour à l'Accueil"
+    "backToHome": "Retour à l'Accueil",
+    "priceOnRequest": "Prix sur demande",
+    "unknown": "N/A"
   },
   "categoryView": {
     "allCategories": "Toutes les Catégories",
