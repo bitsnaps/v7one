@@ -22,9 +22,8 @@ defineProps({
         </div>
         <div class="d-flex border-top">
             <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ deal.sqft || 'N/A' }}</small>
+            
             <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{ deal.beds || 'N/A' }}</small>
-
-            <!-- <small class="flex-fill text-center py-2" v-if="deal.baths"><i class="fa fa-bath text-primary me-2"></i>{{ deal.baths }}</small> -->
 
             <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{ deal.baths || 'N/A' }}</small>
         </div>
