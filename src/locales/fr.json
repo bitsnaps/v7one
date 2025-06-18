@@ -80,15 +80,9 @@
     "title": "Liste des offres",
     "browseMoreDeals": "Parcourir plus d'offres",
     "description": "Explorez notre gamme variée d'offres. Que vous recherchiez une maison, une villa, un appartement ou un espace commercial, nous avons ce qu'il vous faut.",
-    "tabs": {
-      "featured": "À la une",
-      "forSell": "À vendre",
-      "forRent": "À louer"
-    },
-    "status": {
-      "forsell": "À vendre",
-      "forrent": "À louer"
-    },
+    "featured": "À la une",
+    "forsale": "À vendre",
+    "forrent": "À louer",
     "types": {
       "villa": "Villa",
       "apartment": "Appartement",

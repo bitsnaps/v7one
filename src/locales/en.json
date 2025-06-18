@@ -69,15 +69,9 @@
   "dealsListing": {
     "title": "Deals Listing",
     "description": "Explore our diverse range of deals. Whether you're looking for a house, villa, apartment, or a commercial space, we've got you covered.",
-    "tabs": {
-      "featured": "Featured",
-      "forSell": "For Sell",
-      "forRent": "For Rent"
-    },
-    "status": {
-      "forsell": "For Sell",
-      "forrent": "For Rent"
-    },
+    "featured": "Featured",
+    "forsale": "For Sell",
+    "forrent": "For Rent",
     "types": {
       "villa": "Villa",
       "apartment": "Apartment",

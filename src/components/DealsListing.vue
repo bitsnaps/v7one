@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n';
 import DealService from '@/services/DealService';
 
 const deals = ref([]);
-const activeTab = ref('featured'); // 'featured', 'for-sale', 'for-rent'
+const activeTab = ref('featured'); // 'featured', 'FOR_SALE', 'FOR_RENT'
 const loading = ref(true);
 const error = ref(null);
 const route = useRoute();
@@ -55,13 +55,9 @@ const displayedDeals = computed(() => {
 
   // Apply tab-based filtering
   if (activeTab.value === 'featured') {
-    filtered = filtered.filter(deal => deal.category && deal.category.includes('featured'));
-  }
-  if (activeTab.value === 'for-sale') {
-    filtered = filtered.filter(deal => deal.status === 'For Sell');
-  }
-  if (activeTab.value === 'for-rent') {
-    filtered = filtered.filter(deal => deal.status === 'For Rent');
+    filtered = filtered.filter(deal => deal.isFeatured);
+  } else {
+    filtered = filtered.filter(deal => deal.type === activeTab.value);
   }
   return filtered;
 });
@@ -81,13 +77,13 @@ const displayedDeals = computed(() => {
                 <div class="col-lg-6 text-start text-lg-end">
                     <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'featured' }" @click.prevent="setActiveTab('featured')" href="#">{{ $t('dealsListing.tabs.featured', 'Featured') }}</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'featured' }" @click.prevent="setActiveTab('featured')" href="#">{{ $t('dealsListing.featured', 'Featured') }}</a>
                         </li>
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'for-sale' }" @click.prevent="setActiveTab('for-sale')" href="#">{{ $t('dealsListing.tabs.forSell', 'For Sell') }}</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'FOR_SALE' }" @click.prevent="setActiveTab('FOR_SALE')" href="#">{{ $t('dealsListing.forsale', 'For Sell') }}</a>
                         </li>
                         <li class="nav-item me-0">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'for-rent' }" @click.prevent="setActiveTab('for-rent')" href="#">{{ $t('dealsListing.tabs.forRent', 'For Rent') }}</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'FOR_RENT' }" @click.prevent="setActiveTab('FOR_RENT')" href="#">{{ $t('dealsListing.forrent', 'For Rent') }}</a>
                         </li>
                     </ul>
                 </div>
@@ -120,8 +116,8 @@ const displayedDeals = computed(() => {
                                 <router-link :to="{ name: 'DealDetail', params: { id: deal.id } }">
                                       <img class="img-fluid" :src="deal.image || '/img/deal.svg'" :alt="deal.title">
                                     </router-link>
-                                <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{ $t('dealsListing.status.' + deal.status.toLowerCase().replace(/\s+/g, ''), deal.status) }}</div>
-                                <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $t('dealsListing.types.' + deal.type.toLowerCase().replace(/\s+/g, ''), deal.type) }}</div>
+                                <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{ $t('dealsListing.' + deal.type?.toLowerCase().replace('_', ''), deal.type) }}</div>
+                                <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $t('dealsListing.types.' + deal.category[0], deal.category[0]) }}</div>
                             </div>
                             <div class="p-4 pb-0">
                                 <h5 class="text-primary mb-3">{{ deal.price }}</h5>
