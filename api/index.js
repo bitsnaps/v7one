@@ -511,7 +511,86 @@ app.post('/api/seeds', async (c) => {
       results.push({ seeder: 'general', status: 'failed', error: error.message });
       return c.json({ success: false, error: 'Failed to run seeders.', details: error.message, results }, 500);
     }
-  });
+});
+
+// Endpoint to drop all tables (in case needed)
+// curl -X POST http://localhost:3000/api/drop-tables
+app.post('/api/drop-tables', async (c) => {
+  // Only allow in debug mode
+  if (process.env.NODE_ENV === 'production') {
+    return c.json({ error: 'Drop tables endpoint is only available in debug mode' }, 403);
+  }
+
+  try {
+    // const tableStatus = {};
+    // const queryInterface = models.sequelize.getQueryInterface();
+
+    // Test connection
+    await models.sequelize.authenticate();
+
+    // Drop all tables if they exist
+    await models.sequelize.drop({});
+
+    // Check each model's table existence before attempting to drop
+    // const modelNames = Object.keys(models).filter(name => models[name].tableName && name !== 'sequelize' && name !== 'Sequelize');
+    
+    // Drop tables in reverse order of creation (important for foreign key constraints)
+    // This order might need to be manually adjusted based on dependencies
+    // For now, we'll iterate through a reversed list of models as a general approach.
+    // A more robust solution would involve analyzing dependencies or using a predefined order.
+    // const reversedModelNames = [...modelNames].reverse();     
+
+    /*for (const modelName of reversedModelNames) {
+      const model = models[modelName];
+      if (model.tableName) {
+        try {
+          await model.describe(); // Check if table exists
+          await queryInterface.dropTable(model.tableName);
+          tableStatus[model.tableName] = 'dropped';
+        } catch (err) {
+          // If describe fails, table likely doesn't exist, or another error occurred
+          if (err.message.includes('does not exist') || err.name === 'SequelizeDatabaseError') {
+            tableStatus[model.tableName] = 'missing_or_not_dropped';
+          } else {
+            tableStatus[model.tableName] = `error_dropping: ${err.message}`;
+            console.error(`Error dropping table ${model.tableName}:`, err);
+          }
+        }
+      }
+    }*/
+
+    /*/ Verify all tables are dropped
+    const finalStatus = {};
+    for (const modelName of modelNames) {
+      const model = models[modelName];
+      if (model.tableName) {
+        try {
+          await model.describe();
+          finalStatus[model.tableName] = 'exists_after_drop_attempt'; // Should not happen
+        } catch (err) {
+          finalStatus[model.tableName] = 'successfully_dropped_or_missing';
+        }
+      }
+    }*/
+
+    return c.json({
+      success: true,
+      message: 'Attempted to drop all tables.',
+      // details: {
+      //   dropAttempts: tableStatus,
+      //   verification: finalStatus
+      // }
+    });
+
+  } catch (error) {
+    console.error('Drop tables error:', error);
+    return c.json({
+      success: false,
+      error: error.message,
+      details: error.stack
+    }, 500);
+  }
+});
 
 app.post('/api/signup', async (c) => {
     try {
