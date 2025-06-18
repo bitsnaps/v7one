@@ -28,7 +28,7 @@ const searchDeals = async () => {
     queryParams.keyword = searchKeyword.value;
   }
   if (selectedDealType.value) {
-    queryParams.type = selectedDealType.value;
+    queryParams.category = selectedDealType.value;
   }
   if (selectedLocation.value) {
     queryParams.location = selectedLocation.value;
@@ -100,6 +100,7 @@ const resetSearch = () => {
                       <select v-model="selectedDealType" class="form-select border-0 py-3">
                         <option value="" selected>{{ $t('home.allDealTypes', 'All Deal Types') }}</option>
                         <option value="real_estate">{{ $t('home.realEstate', 'Real Estate') }}</option>
+                        <option value="apartments">{{ $t('dealsListing.types.apartment', 'Apartment') }}</option>
                         <option value="cars">{{ $t('home.cars', 'Cars') }}</option>
                         <option value="electronics">{{ $t('home.electronics', 'Electronics') }}</option>
                         <option value="services">{{ $t('home.services', 'Services') }}</option>
@@ -147,8 +148,8 @@ const resetSearch = () => {
                                     <router-link :to="{ name: 'DealDetail', params: { id: deal.id } }">
                                       <img class="img-fluid" :src="deal.image || '/img/deal.svg'" :alt="deal.title">
                                     </router-link>
-                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{ deal.status || $t('common.status.unknown', 'N/A') }}</div>
-                                    <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ deal.type || $t('common.type.unknown', 'N/A') }}</div>
+                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{ $t('dealsListing.' + deal.type?.toLowerCase().replace('_', ''), deal.type) }}</div>
+                                  <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $t('dealsListing.types.' + deal.category[0], deal.category[0]) }}</div>
                                 </div>
                                 <div class="p-4 pb-0">
                                     <h5 class="text-primary mb-3">{{ deal.price || $t('common.priceOnRequest', 'Price on request') }}</h5>

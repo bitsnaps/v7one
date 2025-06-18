@@ -6,7 +6,7 @@ const { rateLimiter } = require('./honoRateLimiter');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const models = require('./models');
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const path = require('path');
 const fs = require('node:fs');
 const MAX_TIMESTAMP_AGE_MS = 15 * 60 * 1000; // 15 minutes validity for timestamp/token
@@ -674,7 +674,7 @@ app.get('/api/deals/:id', async (c) => {
                 sqft: deal.sqft ? `${deal.sqft} Sqft` : 'N/A',
                 beds: deal.beds ? `${deal.beds} Bed` : 'N/A',
                 baths: deal.baths ? `${deal.baths} Bath` : 'N/A',
-                category: deal.category ? [deal.category.slug] : [],
+                category: deal.category ? [deal.category.name.toLowerCase()] : [],
                 description: deal.description,
                 // Add other fields as necessary
             };
@@ -697,7 +697,7 @@ app.get('/api/deals', async (c) => {
 
         const categorySlug = c.req.query('category_slug') || c.req.query('category'); // Support both for flexibility
         const statusQuery = c.req.query('status');
-        const typeQuery = c.req.query('type');
+        // const typeQuery = c.req.query('type');
         const locationQuery = c.req.query('location');
         const searchQuery = c.req.query('search') || c.req.query('keyword');
 
@@ -720,16 +720,16 @@ app.get('/api/deals', async (c) => {
         if (statusQuery) {
             whereClause.status = statusQuery;
         }
-        if (typeQuery) {
-            whereClause.type = typeQuery; 
-        }
+        // if (typeQuery) {
+        //     whereClause.listType = typeQuery; 
+        // }
         if (locationQuery) {
-            whereClause.location = { [models.Sequelize.Op.iLike]: `%${locationQuery}%` }; 
+            whereClause.location = { [Op.iLike]: `%${locationQuery}%` }; 
         }
         if (searchQuery) {
-            whereClause[models.Sequelize.Op.or] = [
-                { title: { [models.Sequelize.Op.iLike]: `%${searchQuery}%` } },
-                { description: { [models.Sequelize.Op.iLike]: `%${searchQuery}%` } },
+            whereClause[Op.or] = [
+                { title: { [Op.iLike]: `%${searchQuery}%` } },
+                { description: { [Op.iLike]: `%${searchQuery}%` } },
             ];
         }
 

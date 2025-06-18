@@ -254,12 +254,8 @@ onMounted(() => {
                 <router-link :to="{ name: 'DealDetail', params: { id: deal.id } }">
                   <img class="img-fluid" :src="deal.image || '/img/deal.svg'" :alt="deal.title">
                 </router-link>
-                <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">
-                  {{ t('dealsListing.' + (deal.status ? deal.status.toLowerCase().replace(/\s+/g, '') : 'unknown'), deal.status || 'N/A') }}
-                </div>
-                <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
-                  {{ t('dealsListing.types.' + (deal.type ? deal.type.toLowerCase().replace(/\s+/g, '') : 'unknown'), deal.type || 'N/A') }}
-                </div>
+                <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{ $t('dealsListing.' + deal.type?.toLowerCase().replace('_', ''), deal.type) }}</div>
+                <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $t('dealsListing.types.' + deal.category[0], deal.category[0]) }}</div>
               </div>
               <div class="p-4 pb-0">
                 <h5 class="text-primary mb-3">{{ deal.price }}</h5>

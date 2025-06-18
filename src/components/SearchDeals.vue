@@ -55,13 +55,9 @@ const displayedDeals = computed(() => {
 
   // Apply tab-based filtering
   if (activeTab.value === 'featured') {
-    filtered = filtered.filter(deal => deal.category && deal.category.includes('featured'));
-  }
-  if (activeTab.value === 'for-sale') {
-    filtered = filtered.filter(deal => deal.status === 'For Sell');
-  }
-  if (activeTab.value === 'for-rent') {
-    filtered = filtered.filter(deal => deal.status === 'For Rent');
+    filtered = filtered.filter(deal => deal.isFeatured);
+  } else {
+    filtered = filtered.filter(deal => deal.type === activeTab.value);
   }
   return filtered;
 });
@@ -89,8 +85,8 @@ const displayedDeals = computed(() => {
                                     <router-link :to="{ name: 'DealDetail', params: { id: deal.id } }">
                                       <img class="img-fluid" :src="deal.image || '/img/deal.svg'" :alt="deal.title">
                                     </router-link>
-                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{ deal.status || $t('common.status.unknown', 'N/A') }}</div>
-                                    <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ deal.type || $t('common.type.unknown', 'N/A') }}</div>
+                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{ $t('dealsListing.' + deal.type?.toLowerCase().replace('_', ''), deal.type) }}</div>
+                                    <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $t('dealsListing.types.' + deal.category[0], deal.category[0]) }}</div>
                                 </div>
                                 <div class="p-4 pb-0">
                                     <h5 class="text-primary mb-3">{{ deal.price || $t('common.priceOnRequest', 'Price on request') }}</h5>
