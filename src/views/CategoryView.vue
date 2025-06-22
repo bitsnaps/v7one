@@ -17,6 +17,50 @@ const categoryInfo = ref(null);
 const searchQuery = ref('');
 const activeFilters = ref({}); // To store active filters, e.g., { propertyType: 'apartment' }
 
+const attributeFilters = computed(() => {
+  const filters = {};
+  
+  deals.value.forEach(deal => {
+    if (deal.attributes) {
+      // deal.attributes looks like this: {sqft: '2500', baths: '3', beds: '4'}
+      // loop through each key/value attribute
+      /*deal.attributes.forEach(attr => {
+        // Simple check to avoid adding complex objects or arrays as filters
+        if (typeof attr.value === 'string' || typeof attr.value === 'number') {
+          if (!filters[attr.name]) {
+            filters[attr.name] = {
+              id: attr.name,
+              label: attr.name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()), // Prettify label
+              options: new Set(['all']) // Use a Set to store unique values
+            };
+          }
+          filters[attr.name].options.add(attr.value);
+        }
+      });*/
+      // replace the above code with a loop like so: Object.entries(deal.attributes).forEach
+      Object.entries(deal.attributes).forEach(([key, value]) => {
+        if (!filters[key]) {
+          filters[key] = {
+            id: key,
+            label: key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()), // Prettify label
+            options: new Set(['all']) // Use a Set to store unique values
+          };
+        }
+        filters[key].options.add(value);
+      });
+    }
+  });
+
+  // Convert sets to arrays of objects for the template
+  return Object.values(filters).map(filter => ({
+    ...filter,
+    options: Array.from(filter.options).map(value => ({
+      value: value,
+      text: value === 'all' ? t('filters.all', 'All') : value
+    }))
+  }));
+});
+
 // Mock filter options based on category - this would ideally come from an API or be more dynamic
 const categoryFilterOptions = computed(() => {
   if (categorySlug.value === 'real-estate') {
@@ -93,25 +137,35 @@ const filteredDeals = computed(() => {
     );
   }
 
-  // Apply active dynamic filters
-  for (const filterKey in activeFilters.value) {
-    const filterValue = activeFilters.value[filterKey];
-    if (filterValue && filterValue !== 'all') { // 'all' means no filter for this criteria
-      items = items.filter(deal => {
-        // This is a simplified example. Real-world scenarios might need more complex logic
-        // depending on how filterable attributes are stored in the deal object.
-        // Assuming deal.attributes is an object like { propertyType: 'apartment', color: 'red' }
-        // Or deal.type for a primary type like in current mock data
+  const activeFilterKeys = Object.keys(activeFilters.value).filter(
+    key => activeFilters.value[key] && activeFilters.value[key] !== 'all'
+  );
+
+  if (activeFilterKeys.length > 0) {
+    items = items.filter(deal => {
+      return activeFilterKeys.every(filterKey => {
+        const filterValue = activeFilters.value[filterKey];
+        
+        // Handle predefined category type filters
         if (filterKey === 'propertyType' || filterKey === 'vehicleType') {
-          // Ensure deal.category is treated as a string for comparison
           const category = String(deal.category || '').toLowerCase().replace(/\s+/g, '');
           return category === filterValue;
         }
-        // Add more specific filter logic here based on filterKey
-        return true; // Fallback if filterKey isn't handled
+        
+        // Handle dynamic attribute filters
+        if (deal.attributes) {
+          // Error: TypeError: deal.attributes.some is not a function
+          // return deal.attributes.some(attr => attr.name === filterKey && String(attr.value) === String(filterValue));
+          if (typeof deal.attributes[filterKey] === 'string') {
+            return deal.attributes[filterKey] === filterValue;
+          }
+        }
+
+        return false;
       });
-    }
+    });
   }
+
   return items;
 });
 
@@ -201,6 +255,21 @@ onMounted(() => {
           </template>
         </div>
         <!-- Generic Filter End -->
+
+        <!-- Sidebar Dynamic Attribute Filters Begin -->
+        <div class="row g-3 mb-5 mt-2 justify-content-center align-items-end">
+          <template v-for="filterGroup in attributeFilters" :key="filterGroup.id">
+            <div class="col-md-6 col-lg-3">
+              <label :for="filterGroup.id" class="form-label">{{ filterGroup.label }}</label>
+              <select class="form-select" :id="filterGroup.id" v-model="activeFilters[filterGroup.id]">
+                <option v-for="option in filterGroup.options" :key="option.value" :value="option.value">
+                  {{ option.text }}
+                </option>
+              </select>
+            </div>
+          </template>
+        </div>
+        <!-- Sidebar Dynamic Attribute Filters End -->
 
         <!-- Category Info -->
         <!-- <div v-if="categoryInfo && !loading && !error" class="text-center mx-auto mb-5" style="max-width: 600px;">
