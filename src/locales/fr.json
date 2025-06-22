@@ -92,7 +92,10 @@
       "home": "Maison",
       "automobile": "Automobile",
       "luxuryitem": "Article de luxe",
-      "electronics": "Électronique"
+      "electronics": "Électronique",
+      "sedan": "Berline",
+      "suv": "SUV",
+      "truck": "Camion"
     },
     "noDealsFound": "Aucune offre trouvée pour cette catégorie."
   },
@@ -192,7 +195,6 @@
     "allCategories": "Toutes les Catégories",
     "allCategoriesDesc": "Parcourir toutes les offres disponibles",
     "categoryDesc": "Parcourir les offres de cette catégorie",
-    "loading": "Chargement...",
     "noDeals": "Aucune Offre Trouvée",
     "noDealsDesc": "Aucune offre ne correspond à vos critères actuels. Essayez d'ajuster votre recherche ou vos filtres.",
     "viewAllDeals": "Voir toutes les offres"

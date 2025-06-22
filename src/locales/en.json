@@ -81,7 +81,10 @@
       "home": "Home",
       "automobile": "Automobile",
       "luxuryitem": "Luxury Item",
-      "electronics": "Electronics"
+      "electronics": "Electronics",
+      "sedan": "Sedan",
+      "suv": "Suv",
+      "truck": "Truck"
     },
     "noDealsFound": "No deals found for this category."
   },
@@ -190,7 +193,6 @@
     "allCategories": "All Categories",
     "allCategoriesDesc": "Browse all available deals",
     "categoryDesc": "Browse deals in this category",
-    "loading": "Loading...",
     "noDeals": "No Deals Found",
     "noDealsDesc": "No deals match your current criteria. Try adjusting your search or filters.",
     "viewAllDeals": "View All Deals"

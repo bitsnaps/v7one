@@ -97,7 +97,10 @@
       "home": "منزل",
       "automobile": "سيارة",
       "luxuryitem": "سلعة فاخرة",
-      "electronics": "إلكترونيات"
+      "electronics": "إلكترونيات",
+      "sedan": "سيدان",
+      "suv": "دفع رباعي",
+      "truck": "شاحنة"
     },
     "noDealsFound": "لم يتم العثور على صفقات لهذه الفئة."
   },
@@ -206,29 +209,28 @@
     "allCategories": "جميع الفئات",
     "allCategoriesDesc": "تصفح جميع الصفقات المتاحة",
     "categoryDesc": "تصفح الصفقات في هذه الفئة",
-    "loading": "جار التحميل...",
     "noDeals": "لم يتم العثور على صفقات",
     "noDealsDesc": "لا توجد صفقات تطابق معاييرك الحالية. حاول تعديل بحثك أو عوامل التصفية.",
-    "viewAllDeals": "عرض جميع الصفقات",
-    "filters": {
-      "searchLabel": "البحث بالاسم",
-      "searchPlaceholder": "أدخل اسم الصفقة...",
-      "propertyType": "نوع العقار",
-      "allTypes": "جميع الأنواع",
-      "apartment": "شقة",
-      "villa": "فيلا",
-      "house": "منزل",
-      "office": "مكتب",
-      "building": "مبنى",
-      "townhouse": "منزل مستقل",
-      "shop": "متجر",
-      "garage": "مرآب",
-      "vehicleType": "نوع المركبة",
-      "carSedan": "سيدان",
-      "carSuv": "دفع رباعي",
-      "carTruck": "شاحنة"
-    }
+    "viewAllDeals": "عرض جميع الصفقات"
   },
+  "filters": {
+    "searchLabel": "البحث بالاسم",
+    "searchPlaceholder": "أدخل اسم الصفقة...",
+    "propertyType": "نوع العقار",
+    "allTypes": "جميع الأنواع",
+    "apartment": "شقة",
+    "villa": "فيلا",
+    "house": "منزل",
+    "office": "مكتب",
+    "building": "مبنى",
+    "townhouse": "منزل مستقل",
+    "shop": "متجر",
+    "garage": "مرآب",
+    "vehicleType": "نوع المركبة",
+    "carSedan": "سيدان",
+    "carSuv": "دفع رباعي",
+    "carTruck": "شاحنة"
+  },  
   "footer": {
     "getInTouch": "تواصل معنا",
     "address": "25 شارع قاسي عمار سطاوالي، الجزائر العاصمة، الجزائر",

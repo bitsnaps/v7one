@@ -23,31 +23,31 @@ const categoryFilterOptions = computed(() => {
     return [
       {
         id: 'propertyType',
-        label: t('categoryView.filters.propertyType', 'Property Type'),
+        label: t('filters.propertyType', 'Property Type'),
         options: [
-          { value: 'all', text: t('categoryView.filters.allTypes', 'All Types') },
-          { value: 'apartment', text: t('categoryView.filters.apartment', 'Apartment') },
-          { value: 'villa', text: t('categoryView.filters.villa', 'Villa') },
-          { value: 'house', text: t('categoryView.filters.house', 'House') },
-          { value: 'office', text: t('categoryView.filters.office', 'Office') },
-          { value: 'building', text: t('categoryView.filters.building', 'Building') },
-          { value: 'townhouse', text: t('categoryView.filters.townhouse', 'Townhouse') },
-          { value: 'shop', text: t('categoryView.filters.shop', 'Shop') },
-          { value: 'garage', text: t('categoryView.filters.garage', 'Garage') },
+          { value: 'all', text: t('filters.allTypes', 'All Types') },
+          { value: 'apartment', text: t('filters.apartment', 'Apartment') },
+          { value: 'villa', text: t('filters.villa', 'Villa') },
+          { value: 'house', text: t('filters.house', 'House') },
+          { value: 'office', text: t('filters.office', 'Office') },
+          { value: 'building', text: t('filters.building', 'Building') },
+          { value: 'townhouse', text: t('filters.townhouse', 'Townhouse') },
+          { value: 'shop', text: t('filters.shop', 'Shop') },
+          { value: 'garage', text: t('filters.garage', 'Garage') },
         ],
       },
       // Add more real-estate specific filters here, e.g., beds, baths
     ];
-  } else if (categorySlug.value === 'cars-bikes-boats') {
+  } else if (categorySlug.value === 'cars') {
     return [
       {
         id: 'vehicleType',
-        label: t('categoryView.filters.vehicleType', 'Vehicle Type'),
+        label: t('filters.vehicleType', 'Vehicle Type'),
         options: [
-          { value: 'all', text: t('categoryView.filters.allTypes', 'All Types') },
-          { value: 'car-sedan', text: t('categoryView.filters.carSedan', 'Sedan') },
-          { value: 'car-suv', text: t('categoryView.filters.carSuv', 'SUV') },
-          { value: 'car-truck', text: t('categoryView.filters.carTruck', 'Truck') },
+          { value: 'all', text: t('filters.allTypes', 'All Types') },
+          { value: 'sedan', text: t('filters.carSedan', 'Sedan') },
+          { value: 'suv', text: t('filters.carSuv', 'SUV') },
+          { value: 'truck', text: t('filters.carTruck', 'Truck') },
           // Add more vehicle types
         ],
       },
@@ -184,8 +184,8 @@ onMounted(() => {
         <div class="row g-3 mb-5 mt-2 justify-content-center align-items-end">
           <!-- Search Bar -->
           <div class="col-md-6 col-lg-5">
-            <label for="searchQueryInput" class="form-label">{{ t('categoryView.filters.searchLabel', 'Search by Name') }}</label>
-            <input type="text" class="form-control" id="searchQueryInput" :placeholder="t('categoryView.filters.searchPlaceholder', 'Enter deal name...')" v-model="searchQuery">
+            <label for="searchQueryInput" class="form-label">{{ t('filters.searchLabel', 'Search by Name') }}</label>
+            <input type="text" class="form-control" id="searchQueryInput" :placeholder="t('filters.searchPlaceholder', 'Enter deal name...')" v-model="searchQuery">
           </div>
 
           <!-- Dynamic Filters -->
