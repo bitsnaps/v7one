@@ -84,7 +84,7 @@ module.exports = {
         isFeatured: true,
         viewCount: 200,
         userId: userRows[0].id, // Assuming the first user
-        categoryId: categoryRows.length > 2 ? categoryRows[2].id : categoryRows[0].id, // Assuming the third category or first if not enough
+        categoryId: categoryRows.length > 7 ? categoryRows[8].id : categoryRows[0].id,
         createdAt: new Date(),
         updatedAt: new Date(),
         expiresAt: null // Does not expire

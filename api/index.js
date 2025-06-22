@@ -54,262 +54,6 @@ transporter = nodemailer.createTransport({
   });
 }
 
-/*/ deals and categories data
-const dealsData = [
-    {
-        "id": 1,
-        "title": "Luxury Villa with Ocean View",
-        "image": "/img/deals/property-1.jpg",
-        "price": "$2,500,000",
-        "status": "For Sell",
-        "type": "Villa",
-        "location": "123 Ocean Drive, Miami, FL",
-        "sqft": "5000 Sqft",
-        "beds": "5 Bed",
-        "baths": "6 Bath",
-        "category": ["featured", "for-sale"]
-      },
-      {
-        "id": 2,
-        "title": "Modern Downtown Apartment",
-        "image": "/img/deals/property-2.jpg",
-        "price": "$3,500/month",
-        "status": "For Rent",
-        "type": "Apartment",
-        "location": "456 Main Street, New York, NY",
-        "sqft": "1200 Sqft",
-        "beds": "2 Bed",
-        "baths": "2 Bath",
-        "category": ["featured", "for-rent"]
-      },
-      {
-        "id": 3,
-        "title": "Spacious Family House",
-        "image": "/img/deals/property-3.jpg",
-        "price": "$750,000",
-        "status": "For Sell",
-        "type": "House",
-        "location": "789 Suburb Lane, Chicago, IL",
-        "sqft": "2500 Sqft",
-        "beds": "4 Bed",
-        "baths": "3 Bath",
-        "category": ["for-sale"]
-      },
-      {
-        "id": 4,
-        "title": "Cozy Studio for Rent",
-        "image": "/img/deals/property-4.jpg",
-        "price": "$1,800/month",
-        "status": "For Rent",
-        "type": "Studio",
-        "location": "101 City Center, San Francisco, CA",
-        "sqft": "600 Sqft",
-        "beds": "1 Bed",
-        "baths": "1 Bath",
-        "category": ["for-rent"]
-      },
-      {
-        "id": 5,
-        "title": "Commercial Office Space",
-        "image": "/img/deals/office-1.jpg",
-        "price": "$1,200,000",
-        "status": "For Sell",
-        "type": "Office",
-        "location": "202 Business Park, Austin, TX",
-        "sqft": "10000 Sqft",
-        "beds": "N/A",
-        "baths": "4 Bath",
-        "category": ["featured", "for-sale"]
-      },
-      {
-        "id": 6,
-        "title": "Charming Suburban Home for Rent",
-        "image": "/img/deals/property-5.jpg",
-        "price": "$4,000/month",
-        "status": "For Rent",
-        "type": "Home",
-        "location": "303 Quiet Street, Seattle, WA",
-        "sqft": "1800 Sqft",
-        "beds": "3 Bed",
-        "baths": "2.5 Bath",
-        "category": ["for-rent"]
-      },
-      {
-        "id": 7,
-        "title": "Sleek Sports Car",
-        "image": "/img/deals/car-1.jpg",
-        "price": "$85,000",
-        "status": "For Sell",
-        "type": "Automobile",
-        "location": "Prestige Motors, LA",
-        "sqft": "N/A",
-        "beds": "N/A",
-        "baths": "N/A",
-        "category": ["featured", "for-sale"]
-      },
-      {
-        "id": 8,
-        "title": "Vintage Collector Watch",
-        "image": "/img/deals/watch-1.jpg",
-        "price": "$22,000",
-        "status": "For Sell",
-        "type": "Luxury Item",
-        "location": "Timeless Pieces Boutique",
-        "sqft": "N/A",
-        "beds": "N/A",
-        "baths": "N/A",
-        "category": ["for-sale"]
-      },
-      {
-        "id": 9,
-        "title": "High-End Gaming Laptop Rental",
-        "image": "/img/deals/laptop-1.jpg",
-        "price": "$200/week",
-        "status": "For Rent",
-        "type": "Electronics",
-        "location": "Tech Rentals Co.",
-        "sqft": "N/A",
-        "beds": "N/A",
-        "baths": "N/A",
-        "category": ["featured", "for-rent"]
-      }
-];
-*/
-
-/*
-const categoriesData = [
-    // Real Estate Categories
-    {
-      id: 1,
-      name: "Apartment",
-      slug: "apartments",
-      iconUrl: "/img/icon-apartment.svg",
-      description: "Modern apartments and condos",
-      count: 123,
-      type: "real-estate"
-    },
-    {
-      id: 2,
-      name: "Villa",
-      slug: "villas",
-      iconUrl: "/img/icon-villa.svg",
-      description: "Luxury villas and estates",
-      count: 89,
-      type: "real-estate"
-    },
-    {
-      id: 3,
-      name: "Home",
-      slug: "homes",
-      iconUrl: "/img/icon-house.svg",
-      description: "Family homes and houses",
-      count: 156,
-      type: "real-estate"
-    },
-    {
-      id: 4,
-      name: "Office",
-      slug: "offices",
-      iconUrl: "/img/icon-office.svg",
-      description: "Commercial office spaces",
-      count: 45,
-      type: "real-estate"
-    },
-    {
-      id: 5,
-      name: "Building",
-      slug: "buildings",
-      iconUrl: "/img/icon-building.svg",
-      description: "Commercial buildings",
-      count: 30,
-      type: "real-estate"
-    },
-    {
-      id: 6,
-      name: "Townhouse",
-      slug: "townhouses",
-      iconUrl: "/img/icon-townhouse.svg",
-      description: "Modern townhouses",
-      count: 67,
-      type: "real-estate"
-    },
-    {
-      id: 7,
-      name: "Shop",
-      slug: "shops",
-      iconUrl: "/img/icon-shop.svg",
-      description: "Retail shops and stores",
-      count: 88,
-      type: "real-estate"
-    },
-    {
-      id: 8,
-      name: "Garage",
-      slug: "garages",
-      iconUrl: "/img/icon-garage.svg",
-      description: "Parking spaces and garages",
-      count: 20,
-      type: "real-estate"
-    },
-    // Car Categories
-    {
-      id: 9,
-      name: "Sedan",
-      slug: "cars-sedan",
-      iconUrl: "/img/icon-car-sedan.svg",
-      description: "Comfortable sedans",
-      count: 210,
-      type: "cars"
-    },
-    {
-      id: 10,
-      name: "SUV",
-      slug: "cars-suv",
-      iconUrl: "/img/icon-car-suv.svg",
-      description: "Spacious SUVs",
-      count: 150,
-      type: "cars"
-    },
-    {
-      id: 11,
-      name: "Truck",
-      slug: "cars-truck",
-      iconUrl: "/img/icon-car-truck.svg",
-      description: "Powerful trucks",
-      count: 75,
-      type: "cars"
-    },
-    // Other Categories
-    {
-      id: 12,
-      name: "Electronics",
-      slug: "electronics",
-      iconUrl: "/img/icon-electronics.svg",
-      description: "Gadgets and electronics",
-      count: 300,
-      type: "other"
-    },
-    {
-      id: 13,
-      name: "Services",
-      slug: "services",
-      iconUrl: "/img/icon-services.svg",
-      description: "Various services",
-      count: 95,
-      type: "other"
-    },
-    {
-      id: 14,
-      name: "Other Deals",
-      slug: "other-deals",
-      iconUrl: "/img/icon-deal.svg",
-      description: "Miscellaneous deals",
-      count: 50,
-      type: "other"
-    }
-];
-*/
-
 const app = new Hono();
 
 // Add CORS middleware (for Dev)
@@ -491,7 +235,8 @@ app.post('/api/seeds', async (c) => {
       //'20250603153301-admin-user.js', // call /api/create-admin to create the admin user
       '20250603153302-categories-deals.js',
       '20250603153332-initial-plans.js', // Plans can be seeded before or after users/categories, but before deals if deals depend on plans (not the case here)
-      '20250603153313-initial-deals.js' // Deals depend on users and categories
+      '20250603153313-initial-deals.js', // Deals depend on users and categories
+      '20250603153314-initial-listing-attributes.js', // ListingAttributes depend on listings
     ];
   
     try {
@@ -675,6 +420,7 @@ app.get('/api/deals/:id', async (c) => {
                 beds: deal.beds ? `${deal.beds} Bed` : 'N/A',
                 baths: deal.baths ? `${deal.baths} Bath` : 'N/A',
                 category: deal.category ? [deal.category.name.toLowerCase()] : [],
+                categoryType: deal.category ? deal.category.type : null,
                 description: deal.description,
                 // Add other fields as necessary
             };
@@ -704,7 +450,8 @@ app.get('/api/deals', async (c) => {
         const whereClause = {};
         const includeClause = [
             { model: models.User, as: 'seller', attributes: ['id', 'email'] }, 
-            { model: models.Category, as: 'category', attributes: ['id', 'name', 'slug'] }
+            { model: models.Category, as: 'category', attributes: ['id', 'name', 'slug', 'type'] },
+            { model: models.ListingAttribute, as: 'attributes' }
         ];
 
         if (categorySlug) {
@@ -743,21 +490,29 @@ app.get('/api/deals', async (c) => {
             subQuery: false // May be needed depending on complexity, test with and without
         });
 
-        const formattedDeals = rows.map(deal => ({
-            id: deal.id,
-            title: deal.title,
-            image: deal.imageUrl,
-            price: deal.price,
-            status: deal.status,
-            type: deal.listType,
-            location: `${deal.locationRegion}, ${deal.locationCity}`,
-            isFeatured: deal.isFeatured,
-            sqft: deal.sqft ? `${deal.sqft} ` : 'N/A',
-            beds: deal.beds ? `${deal.beds} Bed` : 'N/A',
-            baths: deal.baths ? `${deal.baths} Bath` : 'N/A',
-            category: deal.category ? [deal.category.name.toLowerCase()] : [],
-            description: deal.description
-        }));
+        const formattedDeals = rows.map(deal => {
+            const attributes = {};
+            if (deal.attributes) {
+                for (const attr of deal.attributes) {
+                    attributes[attr.attributeName.toLowerCase()] = attr.attributeValue;
+                }
+            }
+
+            return {
+                id: deal.id,
+                title: deal.title,
+                image: deal.imageUrl,
+                price: deal.price,
+                status: deal.status,
+                type: deal.listType,
+                location: `${deal.locationRegion}, ${deal.locationCity}`,
+                isFeatured: deal.isFeatured,
+                category: deal.category ? [deal.category.name.toLowerCase()] : [],
+                categoryType: deal.category ? deal.category.type: null,
+                description: deal.description,
+                attributes: attributes
+            };
+        });
 
         return c.json({
             success: true,
