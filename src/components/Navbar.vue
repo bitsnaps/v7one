@@ -59,7 +59,7 @@ const currentFlag = computed(() => {
             </template>
             <BDropdownItem to="/category/real-estate" link-class="custom-dropdown-item" @click="isNavCollapsed = true">{{ $t('app.real-estate', 'Real Estate') }}</BDropdownItem>
             <BDropdownItem to="/category/cars" link-class="custom-dropdown-item" @click="isNavCollapsed = true">{{ $t('app.cars', 'Cars') }}</BDropdownItem>
-            <BDropdownItem to="/category/other-deals" link-class="custom-dropdown-item" @click="isNavCollapsed = true">{{ $t('app.other-deals', 'Other Deals') }}</BDropdownItem>
+            <BDropdownItem to="/category/other" link-class="custom-dropdown-item" @click="isNavCollapsed = true">{{ $t('app.other-deals', 'Other Deals') }}</BDropdownItem>
           </BNavItemDropdown>
 
           <router-link to="/contact" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.contact', 'Contact') }}</router-link>

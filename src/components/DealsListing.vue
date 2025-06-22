@@ -106,7 +106,7 @@ const displayedDeals = computed(() => {
                     </div>
                 </div>
                 <div class="col-12 text-center mt-4" v-if="displayedDeals.length > 0">
-                    <a class="btn btn-primary py-3 px-5" href="#">{{ $t('dealsListing.browseMoreDeals', 'Browse More Deals') }}</a>
+                    <RouterLink class="btn btn-primary py-3 px-5" to="/category/all">{{ $t('dealsListing.browseMoreDeals', 'Browse More Deals') }}</RouterLink>
                 </div>
             </div>
         </div>

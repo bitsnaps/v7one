@@ -10,6 +10,8 @@ const { t } = useI18n();
 const deals = ref([]);
 const loading = ref(true);
 const error = ref(null);
+const currentPage = ref(1);
+const totalPages = ref(0);
 const categorySlug = computed(() => route.params.slug);
 const categoryInfo = ref(null);
 const searchQuery = ref('');
@@ -55,34 +57,27 @@ const categoryFilterOptions = computed(() => {
   return []; // Default to no specific filters
 });
 
-const fetchDeals = async () => {
+const fetchDeals = async (page = 1) => {
   loading.value = true;
   error.value = null;
-  deals.value = [];
-  
+
   try {
-    const response = await DealService.getDeals(); // Pass params if your service/API supports it for pre-filtering
+    const params = {
+      page: page,
+      limit: 9, // Or your desired limit
+      category_slug: categorySlug.value !== 'all' ? categorySlug.value : undefined
+    };
+    const response = await DealService.getDeals(params);
     if (response.data && response.data.success) {
-      let fetchedDeals = response.data.data;
-      // Initial category filtering (pre-search/dynamic filters)
-      if (categorySlug.value && categorySlug.value !== 'all') {
-        deals.value = fetchedDeals.filter(deal => {
-          return deal.category && deal.category.some(cat => 
-            cat === categorySlug.value || 
-            cat.includes(categorySlug.value) ||
-            (categorySlug.value === 'real-estate' && ['featured', 'for-sale', 'for-rent'].some(c => deal.category.includes(c)))
-          );
-        });
-      } else {
-        deals.value = fetchedDeals;
-      }
+      deals.value = response.data.data;
+      totalPages.value = response.data.totalPages;
+      currentPage.value = page;
     } else {
-      throw new Error(response.data.message || 'Failed to fetch deals: Invalid data format');
+      throw new Error(response.data.message || 'Failed to fetch deals');
     }
   } catch (e) {
     console.error('Failed to fetch deals:', e);
     error.value = e.message || t('common.error');
-    deals.value = [];
   } finally {
     loading.value = false;
   }
@@ -108,7 +103,9 @@ const filteredDeals = computed(() => {
         // Assuming deal.attributes is an object like { propertyType: 'apartment', color: 'red' }
         // Or deal.type for a primary type like in current mock data
         if (filterKey === 'propertyType' || filterKey === 'vehicleType') {
-          return deal.type && deal.type.toLowerCase().replace(/\s+/g, '') === filterValue;
+          // Ensure deal.category is treated as a string for comparison
+          const category = String(deal.category || '').toLowerCase().replace(/\s+/g, '');
+          return category === filterValue;
         }
         // Add more specific filter logic here based on filterKey
         return true; // Fallback if filterKey isn't handled
@@ -159,10 +156,10 @@ const retryFetch = () => {
 };
 
 // Watch for route changes
-watch(() => route.params.slug, () => {
+watch(() => route.params.slug, (newSlug) => {
   searchQuery.value = ''; // Reset search query on category change
   fetchCategoryInfo(); // This will also reset activeFilters
-  fetchDeals();
+  fetchDeals(1); // Fetch first page for new category
 }, { immediate: true });
 
 onMounted(() => {
@@ -255,21 +252,19 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- Pagination (Placeholder - to be implemented) -->
-        <div v-if="filteredDeals.length > 0" class="row mt-5">
+        <!-- Pagination -->
+        <div v-if="totalPages > 1" class="row mt-5">
           <div class="col-12 text-center">
             <nav aria-label="Deals pagination">
               <ul class="pagination justify-content-center">
-                <li class="page-item disabled">
-                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">{{ t('common.previous') }}</a>
+                <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                  <a class="page-link" href="#" @click.prevent="fetchDeals(currentPage - 1)">{{ t('common.previous') }}</a>
                 </li>
-                <li class="page-item active" aria-current="page">
-                  <a class="page-link" href="#">1</a>
+                <li v-for="page in totalPages" :key="page" class="page-item" :class="{ active: currentPage === page }">
+                  <a class="page-link" href="#" @click.prevent="fetchDeals(page)">{{ page }}</a>
                 </li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                  <a class="page-link" href="#">{{ t('common.next') }}</a>
+                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+                  <a class="page-link" href="#" @click.prevent="fetchDeals(currentPage + 1)">{{ t('common.next') }}</a>
                 </li>
               </ul>
             </nav>

@@ -457,11 +457,21 @@ app.get('/api/deals', async (c) => {
         if (categorySlug) {
             // Ensure the include for Categories has a 'where' clause added or modified
             let categoryInclude = includeClause.find(inc => inc.as === 'category');
-            if (categoryInclude) {
-                categoryInclude.where = { slug: categorySlug };
+            // Should search using "type" field
+            if (categorySlug === 'all') {
+              // Filter where "type" is not null
+                categoryInclude.where = {
+                  type: {
+                    [Op.not]: null
+                  }
+                };
             } else {
-                // This case should ideally not happen if 'category' is always included
-                includeClause.push({ model: models.Category, as: 'category', where: { slug: categorySlug }, attributes: ['id', 'name', 'slug'] });
+                if (categoryInclude) {
+                    categoryInclude.where = { type: categorySlug };
+                } else {
+                    // This case should ideally not happen if 'category' is always included
+                    includeClause.push({ model: models.Category, as: 'category', where: { slug: categorySlug }, attributes: ['id', 'name', 'slug'] });
+                }
             }
         }
         if (statusQuery) {
