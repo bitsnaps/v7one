@@ -17,7 +17,7 @@ const fetchDeals = async (queryParams = {}) => {
   error.value = null;
   deals.value = []; // Clear previous deals
   try {
-    const response = await DealService.getDeals(queryParams);
+    const response = await DealService.getDeals(route.query.type, queryParams);
     if (response.data && response.data.success) {
       deals.value = response.data.data;
     } else {

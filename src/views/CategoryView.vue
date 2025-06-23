@@ -8,6 +8,7 @@ const route = useRoute();
 const { t } = useI18n();
 
 const deals = ref([]);
+const allCategories = ref([]);
 const loading = ref(true);
 const error = ref(null);
 const currentPage = ref(1);
@@ -63,36 +64,20 @@ const attributeFilters = computed(() => {
 
 // Mock filter options based on category - this would ideally come from an API or be more dynamic
 const categoryFilterOptions = computed(() => {
-  if (categorySlug.value === 'real-estate') {
+  if (!categorySlug.value || !allCategories.value.length) {
+    return [];
+  }
+  
+  // Find sub-categories that match the current category slug (which is the parent's type)
+  const subCategories = allCategories.value.filter(cat => cat.type === categorySlug.value);
+  if (subCategories.length > 0) {
     return [
       {
         id: 'propertyType',
         label: t('filters.propertyType', 'Property Type'),
         options: [
           { value: 'all', text: t('filters.allTypes', 'All Types') },
-          { value: 'apartment', text: t('filters.apartment', 'Apartment') },
-          { value: 'villa', text: t('filters.villa', 'Villa') },
-          { value: 'house', text: t('filters.house', 'House') },
-          { value: 'office', text: t('filters.office', 'Office') },
-          { value: 'building', text: t('filters.building', 'Building') },
-          { value: 'townhouse', text: t('filters.townhouse', 'Townhouse') },
-          { value: 'shop', text: t('filters.shop', 'Shop') },
-          { value: 'garage', text: t('filters.garage', 'Garage') },
-        ],
-      },
-      // Add more real-estate specific filters here, e.g., beds, baths
-    ];
-  } else if (categorySlug.value === 'cars') {
-    return [
-      {
-        id: 'vehicleType',
-        label: t('filters.vehicleType', 'Vehicle Type'),
-        options: [
-          { value: 'all', text: t('filters.allTypes', 'All Types') },
-          { value: 'sedan', text: t('filters.carSedan', 'Sedan') },
-          { value: 'suv', text: t('filters.carSuv', 'SUV') },
-          { value: 'truck', text: t('filters.carTruck', 'Truck') },
-          // Add more vehicle types
+          ...subCategories.map(cat => ({ value: cat.slug, text: t(`filters.${cat.name.toLowerCase()}`, cat.name) }))
         ],
       },
     ];
@@ -108,10 +93,16 @@ const fetchDeals = async (page = 1) => {
   try {
     const params = {
       page: page,
-      limit: 9, // Or your desired limit
-      category_slug: categorySlug.value !== 'all' ? categorySlug.value : undefined
+      limit: 9,
     };
-    const response = await DealService.getDeals(params);
+
+    // Add specific category filter if one is selected
+    const activeCategoryFilter = activeFilters.value.propertyType || 'all';
+    if (activeCategoryFilter && activeCategoryFilter !== 'all') {
+      params.category = activeCategoryFilter;
+    }
+
+    const response = await DealService.getDeals(categorySlug.value, params);
     if (response.data && response.data.success) {
       deals.value = response.data.data;
       totalPages.value = response.data.totalPages;
@@ -146,19 +137,17 @@ const filteredDeals = computed(() => {
       return activeFilterKeys.every(filterKey => {
         const filterValue = activeFilters.value[filterKey];
         
-        // Handle predefined category type filters
-        if (filterKey === 'propertyType' || filterKey === 'vehicleType') {
-          const category = String(deal.category || '').toLowerCase().replace(/\s+/g, '');
-          return category === filterValue;
+        // Client-side filtering for attributes, as the main category filtering is now server-side
+        if (deal.attributes && deal.attributes.hasOwnProperty(filterKey)) {
+          return String(deal.attributes[filterKey]) === String(filterValue);
         }
-        
-        // Handle dynamic attribute filters
-        if (deal.attributes) {
-          // Error: TypeError: deal.attributes.some is not a function
-          // return deal.attributes.some(attr => attr.name === filterKey && String(attr.value) === String(filterValue));
-          if (typeof deal.attributes[filterKey] === 'string') {
-            return deal.attributes[filterKey] === filterValue;
-          }
+
+        // This part is tricky. The main category filter is now on the backend.
+        // We might need to adjust how we think about client-side filtering.
+        // For now, let's assume attribute filters are the only ones applied client-side.
+        // The 'propertyType' is are now handled by the backend via the 'category' param.
+        if (filterKey === 'propertyType') {
+          return true; // Assume backend has already filtered this
         }
 
         return false;
@@ -183,6 +172,7 @@ const fetchCategoryInfo = async () => {
   try {
     const response = await DealService.getCategories();
     if (response.data && response.data.success) {
+      allCategories.value = response.data.data;
       const category = response.data.data.find(cat => cat.slug === categorySlug.value);
       if (category) {
         categoryInfo.value = category;
@@ -209,12 +199,19 @@ const retryFetch = () => {
   fetchCategoryInfo();
 };
 
-// Watch for route changes
-watch(() => route.params.slug, (newSlug) => {
-  searchQuery.value = ''; // Reset search query on category change
-  fetchCategoryInfo(); // This will also reset activeFilters
-  fetchDeals(1); // Fetch first page for new category
-}, { immediate: true });
+// Watch for route changes and filter changes
+watch([() => route.params.slug, activeFilters], ([newSlug, newFilters], [oldSlug, oldFilters]) => {
+  // Reset search and filters when the main category slug changes
+  if (newSlug !== oldSlug) {
+    searchQuery.value = '';
+    activeFilters.value = {};
+    fetchCategoryInfo();
+    fetchDeals(1);
+  } else {
+    // Otherwise, just refetch deals for the current page when filters change
+    fetchDeals(currentPage.value);
+  }
+}, { deep: true, immediate: true });
 
 onMounted(() => {
   // Initial fetch is handled by the watcher with immediate: true
@@ -246,6 +243,7 @@ onMounted(() => {
           <template v-for="filterGroup in categoryFilterOptions" :key="filterGroup.id">
             <div class="col-md-6 col-lg-3">
               <label :for="filterGroup.id" class="form-label">{{ filterGroup.label }}</label>
+              <!-- <select class="form-select" :id="filterGroup.id" v-model="activeFilters[filterGroup.id]" @change="fetchDeals(1)"> -->
               <select class="form-select" :id="filterGroup.id" v-model="activeFilters[filterGroup.id]">
                 <option v-for="option in filterGroup.options" :key="option.value" :value="option.value">
                   {{ option.text }}

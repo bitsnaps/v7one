@@ -71,8 +71,9 @@ app.use('/*', serveStatic({ root: './static' }));
 // Apply the rate limiting middleware to all requests.
 app.use(
     rateLimiter({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    limit: 100, // Limit each IP to 100 requests per `windowMs` (here, per 15 minutes).
+      // Increase limit on dev mode
+    windowMs: process.env.NODE_ENV === 'production' ? 15 * 60 * 1000 : 60 * 1000, // 15 minutes on prod, 1 minute on dev
+    limit: 100, // Limit each IP to 100 requests per `windowMs` (here, per 15 minutes on prod, 1 minute on dev).
     // standardHeaders: "draft-6", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
     keyGenerator: (c) => c.req.header('x-forwarded-for') || c.req.ip || 'unknown',
     message: 'Too many requests from this IP, please try again after a minute'
@@ -393,7 +394,7 @@ app.post('/api/login', async (c) => {
 });
 
 // API endpoint for a single deal by ID
-app.get('/api/deals/:id', async (c) => {
+app.get('/api/deal/:id', async (c) => {
     try {
         const dealId = c.req.param('id');
         if (!isValidUUID(dealId)) {
@@ -435,15 +436,15 @@ app.get('/api/deals/:id', async (c) => {
 });
 
 // API endpoint for all deals with optional category filter, pagination, and search
-app.get('/api/deals', async (c) => {
+app.get('/api/deals/:type?', async (c) => {
     try {
         const page = parseInt(c.req.query('page')) || 1;
         const limit = parseInt(c.req.query('limit')) || 10; 
         const offset = (page - 1) * limit;
 
-        const categorySlug = c.req.query('category_slug') || c.req.query('category'); // Support both for flexibility
+        const type = c.req.param('type');
+        const category = c.req.query('category'); // Deals category
         const statusQuery = c.req.query('status');
-        // const typeQuery = c.req.query('type');
         const locationQuery = c.req.query('location');
         const searchQuery = c.req.query('search') || c.req.query('keyword');
 
@@ -454,24 +455,32 @@ app.get('/api/deals', async (c) => {
             { model: models.ListingAttribute, as: 'attributes' }
         ];
 
-        if (categorySlug) {
-            // Ensure the include for Categories has a 'where' clause added or modified
+        if (type) {
             let categoryInclude = includeClause.find(inc => inc.as === 'category');
-            // Should search using "type" field
-            if (categorySlug === 'all') {
-              // Filter where "type" is not null
-                categoryInclude.where = {
-                  type: {
-                    [Op.not]: null
-                  }
-                };
+            if (type === 'all') {
+                if (categoryInclude) {
+                    categoryInclude.where = { type: { [Op.not]: null } };
+                }
             } else {
                 if (categoryInclude) {
-                    categoryInclude.where = { type: categorySlug };
+                    categoryInclude.where = { type: type };
                 } else {
-                    // This case should ideally not happen if 'category' is always included
-                    includeClause.push({ model: models.Category, as: 'category', where: { slug: categorySlug }, attributes: ['id', 'name', 'slug'] });
+                    includeClause.push({ model: models.Category, as: 'category', where: { type: type } });
                 }
+            }
+        }
+
+        if (category) {
+            let categoryInclude = includeClause.find(inc => inc.as === 'category');
+            if (categoryInclude) {
+                // If a where clause already exists (from categoryType), add to it
+                if (categoryInclude.where) {
+                    categoryInclude.where.slug = category;
+                } else {
+                    categoryInclude.where = { slug: category };
+                }
+            } else {
+                includeClause.push({ model: models.Category, as: 'category', where: { slug: category } });
             }
         }
         if (statusQuery) {

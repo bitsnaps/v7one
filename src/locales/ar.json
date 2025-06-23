@@ -216,7 +216,7 @@
   "filters": {
     "searchLabel": "البحث بالاسم",
     "searchPlaceholder": "أدخل اسم الصفقة...",
-    "propertyType": "نوع العقار",
+    "propertyType": "نوع الممتلك",
     "allTypes": "جميع الأنواع",
     "apartment": "شقة",
     "villa": "فيلا",
@@ -226,7 +226,6 @@
     "townhouse": "منزل مستقل",
     "shop": "متجر",
     "garage": "مرآب",
-    "vehicleType": "نوع المركبة",
     "carSedan": "سيدان",
     "carSuv": "دفع رباعي",
     "carTruck": "شاحنة"

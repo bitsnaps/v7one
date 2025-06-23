@@ -28,8 +28,8 @@ module.exports = {
       },
       {
         id: crypto.randomUUID(),
-        name: "Home",
-        slug: "homes",
+        name: "House",
+        slug: "houses",
         type: "real-estate",
         iconUrl: "/img/icon-house.svg",
         description: "Family homes and houses",

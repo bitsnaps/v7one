@@ -113,7 +113,7 @@ onMounted(() => {
           </div>
           <div v-else class="row g-4">
             <div v-for="category in realEstateCategories" :key="category.id" class="col-lg-3 col-sm-6">
-              <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="`/category/${category.slug}`">
+              <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="`/category/${category.type}`">
                 <div class="rounded p-4">
                   <div class="icon mb-3">
                     <img class="img-fluid" :src="category.iconUrl" :alt="category.name + ' Icon'">
@@ -132,7 +132,7 @@ onMounted(() => {
           </div>
           <div v-else class="row g-4">
             <div v-for="category in carCategories" :key="category.id" class="col-lg-4 col-sm-6">
-              <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="`/category/${category.slug}`">
+              <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="`/category/${category.type}`">
                 <div class="rounded p-4">
                   <div class="icon mb-3">
                     <img class="img-fluid" :src="category.iconUrl" :alt="category.name + ' Icon'">
@@ -151,7 +151,7 @@ onMounted(() => {
           </div>
           <div v-else class="row g-4">
             <div v-for="category in otherCategories" :key="category.id" class="col-lg-4 col-sm-6">
-              <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="`/category/${category.slug}`">
+              <router-link class="cat-item d-block bg-light text-center rounded p-3" :to="`/category/${category.slug}?category=${category.name}`">
                 <div class="rounded p-4">
                   <div class="icon mb-3">
                     <img class="img-fluid" :src="category.iconUrl" :alt="category.name + ' Icon'">
