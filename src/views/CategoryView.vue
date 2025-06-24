@@ -13,32 +13,16 @@ const loading = ref(true);
 const error = ref(null);
 const currentPage = ref(1);
 const totalPages = ref(0);
-const categorySlug = computed(() => route.params.slug);
+const dealType = computed(() => route.params.type);
+const dealCategory = computed(() => route.query.category);
 const categoryInfo = ref(null);
 const searchQuery = ref('');
 const activeFilters = ref({}); // To store active filters, e.g., { propertyType: 'apartment' }
 
 const attributeFilters = computed(() => {
   const filters = {};
-  
   deals.value.forEach(deal => {
     if (deal.attributes) {
-      // deal.attributes looks like this: {sqft: '2500', baths: '3', beds: '4'}
-      // loop through each key/value attribute
-      /*deal.attributes.forEach(attr => {
-        // Simple check to avoid adding complex objects or arrays as filters
-        if (typeof attr.value === 'string' || typeof attr.value === 'number') {
-          if (!filters[attr.name]) {
-            filters[attr.name] = {
-              id: attr.name,
-              label: attr.name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()), // Prettify label
-              options: new Set(['all']) // Use a Set to store unique values
-            };
-          }
-          filters[attr.name].options.add(attr.value);
-        }
-      });*/
-      // replace the above code with a loop like so: Object.entries(deal.attributes).forEach
       Object.entries(deal.attributes).forEach(([key, value]) => {
         if (!filters[key]) {
           filters[key] = {
@@ -64,13 +48,13 @@ const attributeFilters = computed(() => {
 
 // Mock filter options based on category - this would ideally come from an API or be more dynamic
 const categoryFilterOptions = computed(() => {
-  if (!categorySlug.value || !allCategories.value.length) {
+  if (!dealType.value || !allCategories.value.length) {
     return [];
   }
-  
-  // Find sub-categories that match the current category slug (which is the parent's type)
-  const subCategories = allCategories.value.filter(cat => cat.type === categorySlug.value);
-  if (subCategories.length > 0) {
+
+  // Find sub-categories that match the current category type
+  const subCategories = allCategories.value.filter(cat => cat.type === dealType.value);
+  if (subCategories.length) {    
     return [
       {
         id: 'propertyType',
@@ -82,8 +66,7 @@ const categoryFilterOptions = computed(() => {
       },
     ];
   }
-  // Add other categories and their specific filters
-  return []; // Default to no specific filters
+  return [];
 });
 
 const fetchDeals = async (page = 1) => {
@@ -97,12 +80,13 @@ const fetchDeals = async (page = 1) => {
     };
 
     // Add specific category filter if one is selected
-    const activeCategoryFilter = activeFilters.value.propertyType || 'all';
+    const activeCategoryFilter = activeFilters.value.propertyType || dealCategory
+  .value || 'all';
     if (activeCategoryFilter && activeCategoryFilter !== 'all') {
       params.category = activeCategoryFilter;
     }
 
-    const response = await DealService.getDeals(categorySlug.value, params);
+    const response = await DealService.getDeals(dealType.value, params);
     if (response.data && response.data.success) {
       deals.value = response.data.data;
       totalPages.value = response.data.totalPages;
@@ -159,13 +143,15 @@ const filteredDeals = computed(() => {
 });
 
 const fetchCategoryInfo = async () => {
-  if (!categorySlug.value || categorySlug.value === 'all') {
+  const type = dealType.value;
+  // if (!type || type == 'all' || dealCategory
+  //.value == 'all') {
+  if (!type || type == 'all') {
     categoryInfo.value = {
       name: t('categoryView.allCategories', 'All Categories'),
       description: t('categoryView.allCategoriesDesc', 'Browse all available deals')
     };
-    // Reset filters when viewing all categories or if no specific category
-    activeFilters.value = {}; 
+    activeFilters.value = {};
     return;
   }
 
@@ -173,12 +159,15 @@ const fetchCategoryInfo = async () => {
     const response = await DealService.getCategories();
     if (response.data && response.data.success) {
       allCategories.value = response.data.data;
-      const category = response.data.data.find(cat => cat.slug === categorySlug.value);
+      const category = response.data.data.find(cat => cat.type === type);
       if (category) {
-        categoryInfo.value = category;
+        categoryInfo.value = {
+          name: category.name,
+          description: category.description || t('categoryView.categoryDesc', 'Browse deals in this category')
+        };
       } else {
         categoryInfo.value = {
-          name: categorySlug.value.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+          name: type.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
           description: t('categoryView.categoryDesc', 'Browse deals in this category')
         };
       }
@@ -186,35 +175,33 @@ const fetchCategoryInfo = async () => {
   } catch (e) {
     console.error('Failed to fetch category info:', e);
     categoryInfo.value = {
-      name: categorySlug.value.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      name: type.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
       description: t('categoryView.categoryDesc', 'Browse deals in this category')
     };
   }
-  // Reset filters when category changes
-  activeFilters.value = {}; 
+  activeFilters.value = { propertyType: dealCategory
+  .value || 'all' };
 };
 
 const retryFetch = () => {
-  fetchDeals();
   fetchCategoryInfo();
+  fetchDeals();
 };
 
 // Watch for route changes and filter changes
-watch([() => route.params.slug, activeFilters], ([newSlug, newFilters], [oldSlug, oldFilters]) => {
-  // Reset search and filters when the main category slug changes
-  if (newSlug !== oldSlug) {
+watch([() => route.params.type, () => route.query.category, activeFilters], ([newType, newCategory, newFilters], [oldType, oldCategory, oldFilters]) => {
+  if (newType !== oldType || newCategory !== oldCategory) {
     searchQuery.value = '';
-    activeFilters.value = {};
     fetchCategoryInfo();
     fetchDeals(1);
   } else {
-    // Otherwise, just refetch deals for the current page when filters change
     fetchDeals(currentPage.value);
   }
 }, { deep: true, immediate: true });
 
 onMounted(() => {
-  // Initial fetch is handled by the watcher with immediate: true
+  // The watcher with immediate: true handles the initial fetch.
+  retryFetch();
 });
 </script>
 
@@ -239,7 +226,7 @@ onMounted(() => {
             <input type="text" class="form-control" id="searchQueryInput" :placeholder="t('filters.searchPlaceholder', 'Enter deal name...')" v-model="searchQuery">
           </div>
 
-          <!-- Dynamic Filters -->
+          <!-- Dynamic Category Filters -->
           <template v-for="filterGroup in categoryFilterOptions" :key="filterGroup.id">
             <div class="col-md-6 col-lg-3">
               <label :for="filterGroup.id" class="form-label">{{ filterGroup.label }}</label>
@@ -254,7 +241,7 @@ onMounted(() => {
         </div>
         <!-- Generic Filter End -->
 
-        <!-- Sidebar Dynamic Attribute Filters Begin -->
+        <!-- Dynamic Attribute Filters Begin -->
         <div class="row g-3 mb-5 mt-2 justify-content-center align-items-end">
           <template v-for="filterGroup in attributeFilters" :key="filterGroup.id">
             <div class="col-md-6 col-lg-3">
@@ -267,7 +254,7 @@ onMounted(() => {
             </div>
           </template>
         </div>
-        <!-- Sidebar Dynamic Attribute Filters End -->
+        <!-- Dynamic Attribute Filters End -->
 
         <!-- Category Info -->
         <!-- <div v-if="categoryInfo && !loading && !error" class="text-center mx-auto mb-5" style="max-width: 600px;">
@@ -301,7 +288,8 @@ onMounted(() => {
             <h4 class="alert-heading">{{ t('categoryView.noDeals', 'No Deals Found') }}</h4>
             <p>{{ t('categoryView.noDealsDesc', 'No deals match your current criteria. Try adjusting your search or filters.') }}</p>
             <hr>
-            <router-link v-if="categorySlug !== 'all'" :to="{ name: 'CategoryView', params: { slug: 'all' } }" class="btn btn-primary me-2">
+            <router-link v-if="dealCategory
+           !== 'all'" :to="{ name: 'CategoryView', params: { slug: 'all' } }" class="btn btn-primary me-2">
               {{ t('categoryView.viewAllDeals', 'View All Deals') }}
             </router-link>
             <!-- <router-link to="/" class="btn btn-outline-secondary">

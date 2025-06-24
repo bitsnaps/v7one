@@ -41,7 +41,7 @@ const routes = [
     component: () => import('@/views/SignUp.vue'),
   },
   {
-    path: '/category/:slug',
+    path: '/category/:type',
     name: 'CategoryView',
     component: CategoryView,
     props: true,
