@@ -3,8 +3,10 @@ const { Hono } = require('hono');
 const { serveStatic } = require('@hono/node-server/serve-static');
 const { cors } = require('hono/cors');
 const { rateLimiter } = require('./honoRateLimiter');
+const admin = require('./admin');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 const models = require('./models');
 const { Sequelize, Op } = require('sequelize');
 const path = require('path');
@@ -380,13 +382,15 @@ app.post('/api/login', async (c) => {
           return c.json({ success: false, message: 'Invalid username or password' }, 401);
       }
 
-      if (!verifyPassword(password, user.password)) {
+            if (!verifyPassword(password, user.password)) {
           return c.json({ success: false, message: 'Invalid username or password' }, 401);
       }
+
+      // Generate JWT
+      const token = jwt.sign({ id: user.id, email: user.email, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '1h' });
       
       console.log('User logged in:', username);
-      // In a real application, you would generate and return a JWT or session token here
-      return c.json({ success: true, message: 'Login successful' });
+      return c.json({ success: true, message: 'Login successful', token: token });
   } catch (error) {
       console.error('Login error:', error);
       return c.json({ success: false, message: 'An error occurred during login' }, 500);
@@ -394,6 +398,8 @@ app.post('/api/login', async (c) => {
 });
 
 // API endpoint for a single deal by ID
+app.route('/api/admin', admin);
+
 app.get('/api/deal/:id', async (c) => {
     try {
         const dealId = c.req.param('id');
