@@ -7,8 +7,7 @@ import { useI18n } from 'vue-i18n';
 import { computed, ref, onMounted, onUnmounted, watchEffect } from 'vue';
 
 const route = useRoute();
-const showNavbar = computed(() => !['/signup', '/signin'].includes(route.path));
-// const showNavbar = computed(() => true);
+const showNavbar = computed(() => !['/signup', '/signin'].includes(route.path) && !route.path.startsWith('/admin'));
 
 const { locale } = useI18n();
 
