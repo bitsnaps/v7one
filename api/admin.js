@@ -327,12 +327,61 @@ admin.get('/dashboard/stats', async (c) => {
     ]);
 
     return c.json({
-      users: { total: userCount },
-      listings: { total: listingCount, pending: pendingListings },
-      categories: { total: categoryCount },
+      totalUsers: userCount,
+      totalListings: listingCount,
+      totalCategories: categoryCount,
+      pendingListings: pendingListings,
     });
   } catch (error) {
     return c.json({ error: 'Failed to fetch dashboard stats', details: error.message }, 500);
+  }
+});
+
+// Get recent listings for dashboard
+admin.get('/dashboard/recent-listings', async (c) => {
+  try {
+    const listings = await models.Listing.findAll({
+      limit: 5,
+      order: [['createdAt', 'DESC']],
+      include: [
+        { model: models.User, attributes: ['displayName'] },
+        { model: models.Category, attributes: ['name'] },
+      ],
+    });
+
+    const formattedListings = listings.map(listing => ({
+      id: listing.id,
+      title: listing.title,
+      category: listing.Category ? listing.Category.name : 'N/A',
+      user: listing.User ? listing.User.displayName : 'N/A',
+      status: listing.status,
+      date: listing.createdAt.toISOString().split('T')[0],
+    }));
+
+    return c.json(formattedListings);
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch recent listings', details: error.message }, 500);
+  }
+});
+
+// Get recent users for dashboard
+admin.get('/dashboard/recent-users', async (c) => {
+  try {
+    const users = await models.User.findAll({
+      limit: 5,
+      order: [['createdAt', 'DESC']],
+      attributes: ['id', 'displayName', 'email'],
+    });
+
+    const formattedUsers = users.map(user => ({
+      id: user.id,
+      name: user.displayName,
+      email: user.email,
+    }));
+
+    return c.json(formattedUsers);
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch recent users', details: error.message }, 500);
   }
 });
 
