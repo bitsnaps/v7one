@@ -96,9 +96,6 @@ app.get('/csrf', async (c) => {
     });
 });
 
-// In-memory user store (for demonstration purposes)
-const users = {};
-
 // In-memory offer store (for demonstration purposes)
 const offers = [];
 
@@ -356,13 +353,19 @@ app.post('/api/signup', async (c) => {
             return c.json({ success: false, message: 'Username and password are required' }, 400);
         }
 
-        if (users[username]) {
+        const existingUser = await models.User.findOne({ where: { email: username } });
+        if (existingUser) {
             return c.json({ success: false, message: 'User already exists' }, 409);
         }
 
-        users[username] = { password: hashPassword(password) };
+        const newUser = await models.User.create({
+            email: username,
+            passwordHash: hashPassword(password),
+            isAdmin: false,
+            isVerified: false // Registered users must validate their email
+        });
         console.log('User signed up:', username);
-        return c.json({ success: true, message: 'Signup successful' });
+        return c.json({ success: true, message: 'Signup successful', userId: newUser.id });
     } catch (error) {
         console.error('Signup error:', error);
         return c.json({ success: false, message: 'An error occurred during signup' }, 500);
@@ -377,12 +380,13 @@ app.post('/api/login', async (c) => {
           return c.json({ success: false, message: 'Username and password are required' }, 400);
       }
 
-      const user = users[username];
+      const user = await models.User.findOne({ where: { email: username } });
+
       if (!user) {
           return c.json({ success: false, message: 'Invalid username or password' }, 401);
       }
 
-            if (!verifyPassword(password, user.password)) {
+      if (!verifyPassword(password, user.passwordHash)) {
           return c.json({ success: false, message: 'Invalid username or password' }, 401);
       }
 
@@ -390,7 +394,7 @@ app.post('/api/login', async (c) => {
       const token = jwt.sign({ id: user.id, email: user.email, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '1h' });
       
       console.log('User logged in:', username);
-      return c.json({ success: true, message: 'Login successful', token: token });
+      return c.json({ success: true, message: 'Login successful', token: token, user: { id: user.id, email: user.email, isAdmin: user.isAdmin } });
   } catch (error) {
       console.error('Login error:', error);
       return c.json({ success: false, message: 'An error occurred during login' }, 500);

@@ -145,7 +145,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import AdminService from '../../services/AdminService';
 
 const stats = ref({
   totalUsers: 0,
@@ -159,7 +159,7 @@ const recentUsers = ref([]);
 
 const fetchStats = async () => {
   try {
-    const response = await axios.get('/api/admin/dashboard/stats');
+    const response = await AdminService.getDashboardStats();
     stats.value = response.data;
   } catch (error) {
     console.error('Error fetching dashboard stats:', error);
@@ -168,10 +168,10 @@ const fetchStats = async () => {
 
 const fetchRecentData = async () => {
   try {
-    const listingsResponse = await axios.get('/api/admin/dashboard/recent-listings');
+    const listingsResponse = await AdminService.getRecentListings();
     recentListings.value = listingsResponse.data;
 
-    const usersResponse = await axios.get('/api/admin/dashboard/recent-users');
+    const usersResponse = await AdminService.getRecentUsers();
     recentUsers.value = usersResponse.data;
   } catch (error) {
     console.error('Error fetching recent data:', error);

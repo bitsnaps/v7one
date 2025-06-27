@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-// import axios from 'axios';
+import DealService from '../services/DealService';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
@@ -20,18 +20,7 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true;
       this.error = null;
       try {
-        // const response = await axios.post(`${API_URL}/login`, credentials);
-        // Simulating API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = { 
-          data: { 
-            success: true, 
-            message: 'Login successful', 
-            // Assuming the backend returns user info and a token
-            user: { username: credentials.username, name: 'Test User' }, 
-            token: 'fake-jwt-token' 
-          }
-        };
+        const response = await DealService.login(credentials);
 
         if (response.data.success) {
           this.user = response.data.user;
@@ -79,14 +68,14 @@ export const useAuthStore = defineStore('auth', {
         this.loading = false;
       }
     },
-    logout() {
+    async logout() {
       this.user = null;
       this.token = null;
       this.error = null;
       localStorage.removeItem('user');
       localStorage.removeItem('token');
-      // Optionally, redirect to login page or home page
-      // router.push('/login'); 
+      // redirect to home page (will be done at component level)
+      // router.push('/signin');
     },
     clearError() {
       this.error = null;

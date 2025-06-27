@@ -42,7 +42,7 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  isVerified: { // For phone/ID verification in the future
+  isVerified: { // For email verification to reduce spams
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },

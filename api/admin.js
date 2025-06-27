@@ -323,7 +323,7 @@ admin.get('/dashboard/stats', async (c) => {
       models.User.count(),
       models.Listing.count(),
       models.Category.count({ where: { parentId: null } }), // Count only top-level categories
-      models.Listing.count({ where: { status: 'pending' } }),
+      models.Listing.count({ where: { status: 'PENDING_APPROVAL' } }),
     ]);
 
     return c.json({
@@ -344,8 +344,8 @@ admin.get('/dashboard/recent-listings', async (c) => {
       limit: 5,
       order: [['createdAt', 'DESC']],
       include: [
-        { model: models.User, attributes: ['displayName'] },
-        { model: models.Category, attributes: ['name'] },
+        { model: models.User, as: 'seller', attributes: ['displayName'] },
+        { model: models.Category, as: 'category', attributes: ['name'] },
       ],
     });
 
