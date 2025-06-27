@@ -163,8 +163,8 @@ const Listing = sequelize.define('Listing', {
     allowNull: true,
   },
   status: {
-    type: DataTypes.ENUM('ACTIVE', 'PENDING_APPROVAL', 'SOLD', 'EXPIRED', 'REMOVED_BY_ADMIN', 'DRAFT'),
-    defaultValue: 'ACTIVE', // Or 'PENDING_APPROVAL' if moderation is default
+    type: DataTypes.ENUM('ACTIVE', 'PENDING', 'SOLD', 'EXPIRED', 'REMOVED_BY_ADMIN', 'DRAFT'),
+    defaultValue: 'ACTIVE', // Or 'PENDING' if moderation is default
   },
   isFeatured: { // For promoted listings
     type: DataTypes.BOOLEAN,

@@ -323,7 +323,7 @@ admin.get('/dashboard/stats', async (c) => {
       models.User.count(),
       models.Listing.count(),
       models.Category.count({ where: { parentId: null } }), // Count only top-level categories
-      models.Listing.count({ where: { status: 'PENDING_APPROVAL' } }),
+      models.Listing.count({ where: { status: 'PENDING' } }),
     ]);
 
     return c.json({
