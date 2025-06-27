@@ -35,3 +35,5 @@ docs/
 **/*.pyw
 **/__pycache__/
 
+.kilocode/*
+
