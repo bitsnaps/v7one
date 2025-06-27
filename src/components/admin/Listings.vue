@@ -27,14 +27,19 @@
             </thead>
             <tbody>
               <tr v-for="listing in listings" :key="listing.id">
-                <td>{{ listing.id }}</td>
+                <td>{{ listing.id.slice(1,8) }}</td>
                 <td>{{ listing.title }}</td>
                 <td>{{ listing.category.name }}</td>
                 <td>{{ listing.status }}</td>
                 <td>
-                  <button class="btn btn-sm btn-success" @click="updateStatus(listing.id, 'active')" :disabled="listing.status === 'active'">Approve</button>
-                  <button class="btn btn-sm btn-warning" @click="updateStatus(listing.id, 'pending')" :disabled="listing.status === 'pending'">Pend</button>
-                  <button class="btn btn-sm btn-danger" @click="updateStatus(listing.id, 'rejected')" :disabled="listing.status === 'rejected'">Reject</button>
+                  <button class="btn btn-sm btn-success me-1" @click="updateStatus(listing.id, 'ACTIVE')" :disabled="listing.status === 'ACTIVE'">Approve</button>
+                  <button class="btn btn-sm btn-danger me-1" @click="updateStatus(listing.id, 'REMOVED_BY_ADMIN')" :disabled="listing.status === 'REMOVED_BY_ADMIN'">Remove</button>
+                  <BDropdown text="More Actions" size="sm" variant="outline-primary">
+                    <BDropdownItem @click="updateStatus(listing.id, 'PENDING')" :disabled="listing.status === 'PENDING'">Pend</BDropdownItem>
+                    <BDropdownItem @click="updateStatus(listing.id, 'SOLD')" :disabled="listing.status === 'SOLD'">Mark Sold</BDropdownItem>
+                    <BDropdownItem @click="updateStatus(listing.id, 'EXPIRED')" :disabled="listing.status === 'EXPIRED'">Mark Expired</BDropdownItem>
+                    <BDropdownItem @click="updateStatus(listing.id, 'DRAFT')" :disabled="listing.status === 'DRAFT'">Mark Draft</BDropdownItem>
+                  </BDropdown>
                 </td>
               </tr>
             </tbody>
@@ -60,17 +65,24 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import AdminService from '@/services/AdminService';
+import { BDropdown, BDropdownItem } from 'bootstrap-vue-next';
 
 const listings = ref([]);
 const pagination = ref({});
 const searchQuery = ref('');
 
-const fetchListings = async (url = `/api/admin/listings?search=${searchQuery.value}`) => {
+const fetchListings = async (page = 1) => {
   try {
-    const response = await axios.get(url);
-    listings.value = response.data.data;
-    pagination.value = response.data.meta;
+    const response = await AdminService.getListings(page, searchQuery.value);
+    listings.value = response.data.listings;
+    pagination.value = {
+      current_page: response.data.currentPage,
+      last_page: response.data.pages,
+      prev_page_url: response.data.currentPage > 1 ? `?page=${response.data.currentPage - 1}` : null,
+      next_page_url: response.data.currentPage < response.data.pages ? `?page=${response.data.currentPage + 1}` : null,
+      path: '/api/admin/listings',
+    };
   } catch (error) {
     console.error('Error fetching listings:', error);
   }
@@ -78,8 +90,8 @@ const fetchListings = async (url = `/api/admin/listings?search=${searchQuery.val
 
 const updateStatus = async (id, status) => {
   try {
-    await axios.patch(`/api/admin/listings/${id}/status`, { status });
-    fetchListings();
+    await AdminService.updateListingStatus(id, status.toUpperCase());
+    fetchListings(pagination.value.current_page);
   } catch (error) {
     console.error('Error updating listing status:', error);
   }

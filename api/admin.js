@@ -212,7 +212,9 @@ admin.get('/listings', async (c) => {
   const offset = (page - 1) * limit;
 
   const whereClause = {};
-  if (status) whereClause.status = status;
+  if (status) {
+    whereClause.status = status;
+  }
   if (search) {
     whereClause.title = { [models.Sequelize.Op.iLike]: `%${search}%` };
   }
@@ -222,7 +224,10 @@ admin.get('/listings', async (c) => {
       where: whereClause,
       limit: parseInt(limit),
       offset: parseInt(offset),
-      include: [{ model: models.User, attributes: ['id', 'displayName'] }],
+      include: [
+        { model: models.User, as: 'seller', attributes: ['id', 'displayName'] },
+        { model: models.Category, as: 'category', attributes: ['id', 'name'] },
+      ],
       order: [['createdAt', 'DESC']],
     });
 
@@ -279,7 +284,7 @@ admin.patch('/listings/:id/status', async (c) => {
   const { id } = c.req.param();
   const { status } = await c.req.json();
 
-  if (!['active', 'pending', 'expired', 'rejected'].includes(status)) {
+  if (!['ACTIVE', 'PENDING', 'SOLD', 'EXPIRED', 'REMOVED_BY_ADMIN', 'DRAFT'].includes(status)) {
     return c.json({ error: 'Invalid status value' }, 400);
   }
 

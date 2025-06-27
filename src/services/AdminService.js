@@ -25,4 +25,15 @@ createCategory(data) {
   deleteCategory(id) {
     return apiClient.delete(`/api/admin/categories/${id}`);
   },
+getListings(page = 1, search = '') {
+    const params = new URLSearchParams({ page });
+    if (search) {
+      params.append('search', search);
+    }
+    return apiClient.get(`/api/admin/listings?${params.toString()}`);
+  },
+
+  updateListingStatus(id, status) {
+    return apiClient.patch(`/api/admin/listings/${id}/status`, { status });
+  },
 };

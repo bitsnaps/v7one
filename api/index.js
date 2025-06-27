@@ -61,7 +61,7 @@ const app = new Hono();
 // Add CORS middleware (for Dev)
 app.use('/*', cors({
   origin: ['https://www.v7one.com','http://localhost:5173', 'http://127.0.0.1:5173'],
-  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
   // This means the browser will expose these headers when it makes requests to your API
   credentials: true
