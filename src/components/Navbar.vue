@@ -64,7 +64,7 @@ const currentFlag = computed(() => {
 
           <router-link to="/contact" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.contact', 'Contact') }}</router-link>
           <router-link to="/pricing" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.pricing', 'Pricing') }}</router-link>
-          <router-link to="/signin" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.sign-in', 'Sign In') }}</router-link>
+          <router-link to="/signin" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.signin', 'Sign In') }}</router-link>
 
           <BNavItemDropdown class="language-dropdown" menu-class="rounded-0 m-0 dropdown-menu-end" toggle-class="nav-link-style">
             <template #button-content>

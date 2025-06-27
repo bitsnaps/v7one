@@ -1,43 +1,26 @@
 <script setup>
 import { ref } from 'vue';
-import DealService from '@/services/DealService'; // Corrected path
-// import { useRouter } from 'vue-router'; // Uncomment if you use vue-router
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 
 const usernameOrEmail = ref('');
 const password = ref('');
-const errorMessage = ref('');
-// const router = useRouter(); // Uncomment if you use vue-router
+const authStore = useAuthStore();
+const router = useRouter();
 
 const handleSignIn = async () => {
-  errorMessage.value = ''; // Clear previous error messages
-  console.log('Attempting to sign in with:', usernameOrEmail.value, password.value);
-
-  // Basic validation (can be expanded)
   if (!usernameOrEmail.value || !password.value) {
-    errorMessage.value = 'Please enter both username/email and password.';
+    authStore.error = 'Please enter both username/email and password.';
     return;
   }
 
-  try {
-    const response = await DealService.login({
-      username: usernameOrEmail.value,
-      password: password.value,
-    });
+  const success = await authStore.login({
+    username: usernameOrEmail.value,
+    password: password.value,
+  });
 
-    // Assuming DealService.login returns a response compatible with the previous fetch structure
-    // Or adjust based on actual DealService.login response
-    if (response.data && response.data.success) { // Adjust based on actual response structure
-      console.log('Sign in successful:', response.data.message);
-      // Handle successful sign-in (e.g., store token, redirect)
-      // Example: router.push('/dashboard'); // Uncomment if using vue-router
-      alert('Sign in successful!'); // Placeholder
-    } else {
-      errorMessage.value = response.data.message || 'Sign in failed. Please check your credentials.';
-      console.error('Sign in failed:', response.data.message);
-    }
-  } catch (error) {
-    console.error('An error occurred during sign in:', error);
-    errorMessage.value = 'An unexpected error occurred. Please try again later.';
+  if (success) {
+    router.push('/admin/dashboard');
   }
 };
 
@@ -81,8 +64,8 @@ const handleFacebookSignIn = () => {
             :placeholder="$t('signIn.passwordPlaceholder', 'Enter your password')"
           />
         </div>
-        <div v-if="errorMessage" class="alert alert-danger" role="alert">
-          {{ errorMessage }}
+        <div v-if="authStore.authError" class="alert alert-danger" role="alert">
+          {{ authStore.authError }}
         </div>
         <div class="d-grid">
           <button type="submit" class="btn btn-primary w-100">{{ $t('signIn.signInButton', 'Sign In') }}</button>

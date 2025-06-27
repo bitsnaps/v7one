@@ -11,7 +11,8 @@
     "cars": "Voitures",
     "other-deals": "Autres Offres",
     "contact": "Contact",
-    "sign-in": "Se Connecter",
+    "signin": "Se Connecter",
+    "logout": "Déconnexion",
     "post-deal": "Publier une Offre"
   },
   "home": {
