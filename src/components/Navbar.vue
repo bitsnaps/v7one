@@ -1,10 +1,13 @@
 <script setup>
 import { ref, computed } from 'vue'; // Added computed for dynamic flag path
 import { useI18n } from 'vue-i18n';
+// import auth store
+import { useAuthStore } from '@/stores/auth'
 
 const isNavCollapsed = ref(false);
 
 const { locale, availableLocales, t } = useI18n();
+const authStore = useAuthStore();
 
 const switchLanguage = (newLocale) => {
   locale.value = newLocale;
@@ -33,6 +36,8 @@ const languageOptions = {
 const currentFlag = computed(() => {
   return languageOptions[locale.value]?.flag || `/img/flags/${locale.value}.svg`; // Fallback if not in options
 });
+
+const isLoggedIn = computed(() => authStore.isLoggedIn );
 </script>
 
 <template>
@@ -64,7 +69,8 @@ const currentFlag = computed(() => {
 
           <router-link to="/contact" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.contact', 'Contact') }}</router-link>
           <router-link to="/pricing" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.pricing', 'Pricing') }}</router-link>
-          <router-link to="/signin" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.signin', 'Sign In') }}</router-link>
+          <router-link v-if="isLoggedIn" to="/" class="nav-item nav-link" @click="authStore.logout(); isNavCollapsed = true;">{{ $t('app.logout', 'Logout') }}</router-link>
+          <router-link v-else to="/signin" class="nav-item nav-link" @click="isNavCollapsed = true">{{ $t('app.signin', 'Sign In') }}</router-link>
 
           <BNavItemDropdown class="language-dropdown" menu-class="rounded-0 m-0 dropdown-menu-end" toggle-class="nav-link-style">
             <template #button-content>
@@ -82,7 +88,8 @@ const currentFlag = computed(() => {
           </BNavItemDropdown>
 
         </div>
-        <router-link to="/post-deal" class="btn btn-primary px-3 d-none d-lg-flex" @click="isNavCollapsed = true">{{ $t('app.post-deal', 'Post a Deal') }}</router-link>
+        <router-link v-if="isLoggedIn" to="/admin/dashboard" class="btn btn-success px-3 d-none d-lg-flex mb-2">{{ $t('app.dashboard', 'Dashboard') }}</router-link>
+        <router-link v-else to="/post-deal" class="btn btn-primary px-3 d-lg-flex mb-2">{{ $t('app.post-deal', 'Post a Deal') }}</router-link>
       </BCollapse>
 
     </nav>

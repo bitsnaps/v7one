@@ -173,10 +173,10 @@ const logout = async () => {
                 
                 <!-- Languages -->
                 <li class="nav-item dropdown">
-							<a class="nav-flag dropdown-toggle show" href="#" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="true">
+							<a class="nav-flag dropdown-toggle" href="#" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="true">
 								<img src="https://flagcdn.com/us.svg" alt="English">
 							</a>
-							<div class="dropdown-menu dropdown-menu-end show" aria-labelledby="languageDropdown" data-bs-popper="static">
+							<div class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown" data-bs-popper="static">
 								<a class="dropdown-item" href="#">
 									<img src="https://flagcdn.com/us.svg" alt="English" width="20" class="align-middle me-1">
 									<span class="align-middle">English</span>
