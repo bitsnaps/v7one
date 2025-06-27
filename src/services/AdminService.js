@@ -10,4 +10,7 @@ export default {
   getRecentUsers() {
     return apiClient.get('/api/admin/dashboard/recent-users');
   },
+  getUsers(page = 1, search = '') {
+    return apiClient.get(`/api/admin/users?page=${page}&search=${search}`);
+  },
 };
