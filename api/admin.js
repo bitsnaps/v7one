@@ -153,7 +153,7 @@ admin.delete('/users/:id', async (c) => {
 admin.get('/categories', async (c) => {
   try {
     const categories = await models.Category.findAll({
-      include: [{ model: models.Category, as: 'subCategories' }],
+      // include: [{ model: models.Category, as: 'subCategories' }],
       order: [['name', 'ASC']],
     });
     return c.json(categories);

@@ -34,86 +34,78 @@
     </div>
   </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="categoryModalLabel">{{ editMode ? 'Edit' : 'Add' }} Category</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form @submit.prevent="editMode ? updateCategory() : createCategory()">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" class="form-control" id="name" v-model="form.name">
-            </div>
-            <button type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create' }}</button>
-          </form>
-        </div>
+  <b-modal v-model="showModal" :title="modalTitle" @hidden="resetForm" hide-footer>
+    <form @submit.prevent="saveCategory">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" v-model="form.name" required>
       </div>
-    </div>
-  </div>
+      <div class="d-flex justify-content-end mt-3">
+        <button type="button" class="btn btn-secondary me-2" @click="showModal = false">Cancel</button>
+        <button type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create' }}</button>
+      </div>
+    </form>
+  </b-modal>
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from 'vue';
-import axios from 'axios';
+import { ref, onMounted, reactive, computed } from 'vue';
+import AdminService from '../../services/AdminService';
 
 const categories = ref([]);
 const editMode = ref(false);
+const showModal = ref(false);
 const form = reactive({
   id: null,
   name: '',
 });
 
+const modalTitle = computed(() => (editMode.value ? 'Edit Category' : 'Add Category'));
+
 const fetchCategories = async () => {
   try {
-    const response = await axios.get('/api/admin/categories');
+    const response = await AdminService.getCategories();
     categories.value = response.data;
   } catch (error) {
     console.error('Error fetching categories:', error);
   }
 };
 
+const resetForm = () => {
+  form.id = null;
+  form.name = '';
+  editMode.value = false;
+};
+
 const openModal = (category = null) => {
-  editMode.value = !!category;
   if (category) {
+    editMode.value = true;
     form.id = category.id;
     form.name = category.name;
   } else {
-    form.id = null;
-    form.name = '';
+    resetForm();
   }
-  $('#categoryModal').modal('show');
+  showModal.value = true;
 };
 
-const createCategory = async () => {
+const saveCategory = async () => {
   try {
-    await axios.post('/api/admin/categories', form);
+    if (editMode.value) {
+      await AdminService.updateCategory(form.id, form);
+    } else {
+      await AdminService.createCategory(form);
+    }
     fetchCategories();
-    $('#categoryModal').modal('hide');
+    showModal.value = false;
   } catch (error) {
-    console.error('Error creating category:', error);
-  }
-};
-
-const updateCategory = async () => {
-  try {
-    await axios.put(`/api/admin/categories/${form.id}`, form);
-    fetchCategories();
-    $('#categoryModal').modal('hide');
-  } catch (error) {
-    console.error('Error updating category:', error);
+    console.error(`Error ${editMode.value ? 'updating' : 'creating'} category:`, error);
   }
 };
 
 const deleteCategory = async (id) => {
   if (confirm('Are you sure you want to delete this category?')) {
     try {
-      await axios.delete(`/api/admin/categories/${id}`);
+      await AdminService.deleteCategory(id);
       fetchCategories();
     } catch (error) {
       console.error('Error deleting category:', error);

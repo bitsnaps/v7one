@@ -13,4 +13,16 @@ export default {
   getUsers(page = 1, search = '') {
     return apiClient.get(`/api/admin/users?page=${page}&search=${search}`);
   },
+getCategories() {
+    return apiClient.get('/api/admin/categories');
+  },
+createCategory(data) {
+    return apiClient.post('/api/admin/categories', data);
+  },
+  updateCategory(id, data) {
+    return apiClient.put(`/api/admin/categories/${id}`, data);
+  },
+  deleteCategory(id) {
+    return apiClient.delete(`/api/admin/categories/${id}`);
+  },
 };
