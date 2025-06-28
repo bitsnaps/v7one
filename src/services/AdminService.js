@@ -36,6 +36,10 @@ getListings(page = 1, search = '') {
   updateListingStatus(id, status) {
     return apiClient.patch(`/api/admin/listings/${id}/status`, { status });
   },
+
+  createListing(data) {
+    return apiClient.post('/api/admin/listings', data);
+  },
   getConversations() {
     return apiClient.get('/api/admin/messages');
   },

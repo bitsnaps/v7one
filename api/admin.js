@@ -153,10 +153,30 @@ admin.delete('/users/:id', async (c) => {
 admin.get('/categories', async (c) => {
   try {
     const categories = await models.Category.findAll({
-      include: [{ model: models.Category, as: 'subCategories' }],
       order: [['name', 'ASC']],
     });
-    return c.json(categories);
+
+    const buildHierarchy = (items) => {
+      const itemMap = {};
+      const tree = [];
+
+      items.forEach(item => {
+        itemMap[item.id] = { ...item.get({ plain: true }), children: [] };
+      });
+
+      items.forEach(item => {
+        if (item.parentId && itemMap[item.parentId]) {
+          itemMap[item.parentId].children.push(itemMap[item.id]);
+        } else {
+          tree.push(itemMap[item.id]);
+        }
+      });
+
+      return tree;
+    };
+
+    const hierarchicalCategories = buildHierarchy(categories);
+    return c.json(hierarchicalCategories);
   } catch (error) {
     return c.json({ error: 'Failed to fetch categories', details: error.message }, 500);
   }
@@ -258,6 +278,21 @@ admin.get('/listings/:id', async (c) => {
     return c.json(listing);
   } catch (error) {
     return c.json({ error: 'Failed to fetch listing', details: error.message }, 500);
+  }
+});
+
+// Create a new listing
+admin.post('/listings', async (c) => {
+  const data = await c.req.json();
+  // Ensure the seller is assigned, either from the request or the logged-in admin
+  if (!data.userId) {
+    data.userId = c.get('user').id;
+  }
+  try {
+    const listing = await models.Listing.create(data);
+    return c.json(listing, 201);
+  } catch (error) {
+    return c.json({ error: 'Failed to create listing', details: error.message }, 500);
   }
 });
 

@@ -5,7 +5,8 @@
       <div class="card">
         <div class="card-header">
           <h5 class="card-title">Listings</h5>
-          <div class="card-tools">
+          <div class="card-tools d-flex">
+             <button class="btn btn-sm btn-primary me-2" @click="openModal()">Add New</button>
             <div class="input-group input-group-sm" style="width: 250px;">
               <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="searchQuery" @keyup.enter="fetchListings">
               <div class="input-group-append">
@@ -61,16 +62,60 @@
       </div>
     </div>
   </div>
+
+  <b-modal v-model="showModal" title="Create New Listing" @hidden="resetForm" hide-footer>
+    <form @submit.prevent="saveListing">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" v-model="form.title" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" v-model="form.description" required></textarea>
+      </div>
+       <div class="form-group">
+        <label for="price">Price</label>
+        <input type="number" class="form-control" id="price" v-model="form.price" required>
+      </div>
+      <div class="form-group">
+        <label for="categoryId">Category</label>
+        <select class="form-control" id="categoryId" v-model="form.categoryId" required>
+          <option v-for="cat in flatCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+        </select>
+      </div>
+       <div class="form-group">
+        <label for="userId">Seller</label>
+        <select class="form-control" id="userId" v-model="form.userId" required>
+          <option v-for="user in users" :key="user.id" :value="user.id">{{ user.displayName || user.email }}</option>
+        </select>
+      </div>
+      <div class="d-flex justify-content-end mt-3">
+        <button type="button" class="btn btn-secondary me-2" @click="showModal = false">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create</button>
+      </div>
+    </form>
+  </b-modal>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, reactive } from 'vue';
 import AdminService from '@/services/AdminService';
-import { BDropdown, BDropdownItem } from 'bootstrap-vue-next';
+import { BDropdown, BDropdownItem, BModal } from 'bootstrap-vue-next';
 
 const listings = ref([]);
 const pagination = ref({});
 const searchQuery = ref('');
+const showModal = ref(false);
+const categories = ref([]);
+const flatCategories = ref([]);
+const users = ref([]);
+const form = reactive({
+  title: '',
+  description: '',
+  price: 0,
+  categoryId: null,
+  userId: null,
+});
 
 const fetchListings = async (page = 1) => {
   try {
@@ -94,6 +139,51 @@ const updateStatus = async (id, status) => {
     fetchListings(pagination.value.current_page);
   } catch (error) {
     console.error('Error updating listing status:', error);
+  }
+};
+
+const resetForm = () => {
+  form.title = '';
+  form.description = '';
+  form.price = 0;
+  form.categoryId = null;
+  form.userId = null;
+};
+
+const flattenCategories = (categories, prefix = '') => {
+  let result = [];
+  for (const category of categories) {
+    result.push({ id: category.id, name: `${prefix}${category.name}` });
+    if (category.children) {
+      result = result.concat(flattenCategories(category.children, `${prefix}-`));
+    }
+  }
+  return result;
+};
+
+const openModal = async () => {
+  resetForm();
+  try {
+    const [catResponse, userResponse] = await Promise.all([
+      AdminService.getCategories(),
+      AdminService.getUsers(),
+    ]);
+    categories.value = catResponse.data;
+    flatCategories.value = flattenCategories(catResponse.data);
+    users.value = userResponse.data.users;
+    showModal.value = true;
+  } catch (error) {
+    console.error('Error fetching categories or users:', error);
+  }
+};
+
+const saveListing = async () => {
+  try {
+    await AdminService.createListing(form);
+    fetchListings();
+    showModal.value = false;
+  } catch (error) {
+    console.error('Error creating listing:', error);
   }
 };
 

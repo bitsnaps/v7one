@@ -34,5 +34,4 @@ apiClient.interceptors.request.use(
   }
 );
 
-// export helper function
 export { getApiBaseUrl, apiClient };
