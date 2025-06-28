@@ -37,8 +37,8 @@
                     </router-link>
                 </li>
                  <li class="sidebar-item">
-                     <router-link to="/admin/content" class="sidebar-link">
-                        <i class="align-middle" data-feather="file-text"></i> <span class="align-middle">Content</span>
+                     <router-link to="/admin/messages" class="sidebar-link">
+                        <i class="align-middle" data-feather="message-square"></i> <span class="align-middle">Messages</span>
                     </router-link>
                 </li>
 

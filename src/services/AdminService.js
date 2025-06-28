@@ -36,4 +36,23 @@ getListings(page = 1, search = '') {
   updateListingStatus(id, status) {
     return apiClient.patch(`/api/admin/listings/${id}/status`, { status });
   },
+  getConversations() {
+    return apiClient.get('/api/admin/messages');
+  },
+
+  getConversationDetails(id) {
+    return apiClient.get(`/api/admin/messages/${id}`);
+  },
+
+  deleteConversation(id) {
+    return apiClient.delete(`/api/admin/messages/${id}`);
+  },
+
+  replyToConversation(id, content) {
+    return apiClient.post(`/api/admin/messages/${id}/reply`, { content });
+  },
+
+  createConversation(data) {
+    return apiClient.post('/api/admin/messages', data);
+  },
 };

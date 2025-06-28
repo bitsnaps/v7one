@@ -14,7 +14,7 @@ import AdminDashboard from '@/components/admin/Dashboard.vue';
 import AdminUsers from '@/components/admin/Users.vue';
 import AdminCategories from '@/components/admin/Categories.vue';
 import AdminListings from '@/components/admin/Listings.vue';
-import AdminContent from '@/components/admin/Content.vue';
+import AdminMessages from '@/components/admin/Messages.vue';
 
 const routes = [
   {
@@ -100,9 +100,9 @@ const routes = [
         component: AdminListings,
       },
       {
-        path: 'content',
-        name: 'AdminContent',
-        component: AdminContent,
+        path: 'messages',
+        name: 'AdminMessages',
+        component: AdminMessages,
       },
     ],
   },

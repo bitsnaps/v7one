@@ -153,7 +153,7 @@ admin.delete('/users/:id', async (c) => {
 admin.get('/categories', async (c) => {
   try {
     const categories = await models.Category.findAll({
-      // include: [{ model: models.Category, as: 'subCategories' }],
+      include: [{ model: models.Category, as: 'subCategories' }],
       order: [['name', 'ASC']],
     });
     return c.json(categories);
@@ -391,71 +391,123 @@ admin.get('/dashboard/recent-users', async (c) => {
 });
 
 
-// Content Management Routes
+// Message Management Routes
 
-// Get all content pages
-admin.get('/content', async (c) => {
+// Get all conversations
+admin.get('/messages', async (c) => {
   try {
-    const content = await models.Content.findAll({ order: [['title', 'ASC']] });
-    return c.json(content);
+    const conversations = await models.Conversation.findAll({
+      include: [
+        { model: models.User, as: 'userOne', attributes: ['displayName'] },
+        { model: models.User, as: 'userTwo', attributes: ['displayName'] },
+        { model: models.Listing, attributes: ['title'] },
+      ],
+      order: [['lastMessageAt', 'DESC']],
+    });
+    return c.json(conversations);
   } catch (error) {
-    return c.json({ error: 'Failed to fetch content', details: error.message }, 500);
+    return c.json({ error: 'Failed to fetch conversations', details: error.message }, 500);
   }
 });
 
-// Create a new content page
-admin.post('/content', async (c) => {
-  const { title, slug, body, status } = await c.req.json();
-  try {
-    const content = await models.Content.create({ title, slug, body, status });
-    return c.json(content, 201);
-  } catch (error) {
-    return c.json({ error: 'Failed to create content', details: error.message }, 500);
-  }
-});
-
-// Get a single content page by ID
-admin.get('/content/:id', async (c) => {
+// Get a single conversation with its messages
+admin.get('/messages/:id', async (c) => {
   const { id } = c.req.param();
   try {
-    const content = await models.Content.findByPk(id);
-    if (!content) {
-      return c.json({ error: 'Content not found' }, 404);
+    const conversation = await models.Conversation.findByPk(id, {
+      include: [
+        {
+          model: models.Message,
+          as: 'messages',
+          include: [{ model: models.User, as: 'sender', attributes: ['displayName'] }],
+        },
+      ],
+      order: [[{ model: models.Message, as: 'messages' }, 'createdAt', 'ASC']],
+    });
+    if (!conversation) {
+      return c.json({ error: 'Conversation not found' }, 404);
     }
-    return c.json(content);
+    return c.json(conversation);
   } catch (error) {
-    return c.json({ error: 'Failed to fetch content', details: error.message }, 500);
+    return c.json({ error: 'Failed to fetch conversation', details: error.message }, 500);
   }
 });
 
-// Update a content page
-admin.put('/content/:id', async (c) => {
+// Delete a conversation and its messages
+admin.delete('/messages/:id', async (c) => {
   const { id } = c.req.param();
-  const { title, slug, body, status } = await c.req.json();
   try {
-    const content = await models.Content.findByPk(id);
-    if (!content) {
-      return c.json({ error: 'Content not found' }, 404);
+    const conversation = await models.Conversation.findByPk(id);
+    if (!conversation) {
+      return c.json({ error: 'Conversation not found' }, 404);
     }
-    await content.update({ title, slug, body, status });
-    return c.json(content);
+    await conversation.destroy(); // This will also delete associated messages due to onDelete: 'CASCADE'
+    return c.json({ success: true, message: 'Conversation deleted successfully' });
   } catch (error) {
-    return c.json({ error: 'Failed to update content', details: error.message }, 500);
+    return c.json({ error: 'Failed to delete conversation', details: error.message }, 500);
   }
 });
 
-// Delete a content page
-admin.delete('/content/:id', async (c) => {
+// Admin reply to a conversation
+admin.post('/messages/:id/reply', async (c) => {
   const { id } = c.req.param();
+  const { content } = await c.req.json();
+  const adminUserId = c.get('user').id;
+
+  if (!content) {
+    return c.json({ error: 'Message content cannot be empty' }, 400);
+  }
+
   try {
-    const content = await models.Content.findByPk(id);
-    if (!content) {
-      return c.json({ error: 'Content not found' }, 404);
+    const conversation = await models.Conversation.findByPk(id);
+    if (!conversation) {
+      return c.json({ error: 'Conversation not found' }, 404);
     }
-    await content.destroy();
-    return c.json({ success: true, message: 'Content deleted successfully' });
+
+    const message = await models.Message.create({
+      content,
+      conversationId: id,
+      senderId: adminUserId,
+      isRead: true, // Messages from admin are read by default
+    });
+
+    // Update the last message timestamp
+    conversation.lastMessageAt = new Date();
+    await conversation.save();
+
+    return c.json(message, 201);
   } catch (error) {
-    return c.json({ error: 'Failed to delete content', details: error.message }, 500);
+    return c.json({ error: 'Failed to send message', details: error.message }, 500);
+  }
+});
+
+// Create a new conversation
+admin.post('/messages', async (c) => {
+  const { userOneId, userTwoId, listingId, content } = await c.req.json();
+  const adminUserId = c.get('user').id;
+
+  if (!content || !userOneId || !userTwoId) {
+    return c.json({ error: 'Missing required fields: content, userOneId, userTwoId' }, 400);
+  }
+
+  try {
+    const conversation = await models.Conversation.create({
+      userOneId,
+      userTwoId,
+      listingId,
+      lastMessageAt: new Date(),
+    });
+
+    const message = await models.Message.create({
+      content,
+      conversationId: conversation.id,
+      senderId: adminUserId,
+      isRead: true,
+    });
+
+    return c.json({ conversation, message }, 201);
+  } catch (error) {
+    return c.json({ error: 'Failed to create conversation', details: error.message }, 500);
   }
 });
 
