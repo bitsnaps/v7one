@@ -392,8 +392,8 @@ admin.get('/dashboard/recent-listings', async (c) => {
     const formattedListings = listings.map(listing => ({
       id: listing.id,
       title: listing.title,
-      category: listing.Category ? listing.Category.name : 'N/A',
-      user: listing.User ? listing.User.displayName : 'N/A',
+      category: listing.category ? listing.category.name : 'N/A',
+      user: listing.seller ? listing.seller.displayName : 'N/A',
       status: listing.status,
       date: listing.createdAt.toISOString().split('T')[0],
     }));

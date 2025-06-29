@@ -1,3 +1,49 @@
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import AdminService from '../../services/AdminService';
+
+const stats = ref({
+  totalUsers: 0,
+  totalListings: 0,
+  totalCategories: 0,
+  pendingListings: 0,
+});
+
+const recentListings = ref([]);
+const recentUsers = ref([]);
+
+const fetchStats = async () => {
+  try {
+    const response = await AdminService.getDashboardStats();
+    stats.value = response.data;
+  } catch (error) {
+    console.error('Error fetching dashboard stats:', error);
+  }
+};
+
+const fetchRecentData = async () => {
+  try {
+    const listingsResponse = await AdminService.getRecentListings();
+    recentListings.value = listingsResponse.data;
+
+    const usersResponse = await AdminService.getRecentUsers();
+    recentUsers.value = usersResponse.data;
+  } catch (error) {
+    console.error('Error fetching recent data:', error);
+  }
+};
+
+onMounted(() => {
+  fetchStats();
+  fetchRecentData();
+  // We need to manually trigger feather icons replacement
+  if (window.feather) {
+    window.feather.replace();
+  }
+});
+</script>
+
 <template>
   <main class="content">
     <div class="container-fluid p-0">
@@ -106,7 +152,7 @@
                   <td>{{ listing.title }}</td>
                   <td class="d-none d-xl-table-cell">{{ listing.category }}</td>
                   <td class="d-none d-xl-table-cell">{{ listing.user }}</td>
-                  <td><span :class="['badge', {'bg-success': listing.status === 'approved', 'bg-warning': listing.status === 'pending', 'bg-danger': listing.status === 'rejected'}]">{{ listing.status }}</span></td>
+                  <td><span :class="['badge', {'bg-success': listing.status === 'ACTIVE', 'bg-warning': listing.status === 'SOLD', 'bg-danger': listing.status === 'REMOVED'}]">{{ listing.status }}</span></td>
                   <td class="d-none d-md-table-cell">{{ listing.date }}</td>
                 </tr>
               </tbody>
@@ -142,51 +188,6 @@
     </div>
   </main>
 </template>
-
-<script setup>
-import { ref, onMounted } from 'vue';
-import AdminService from '../../services/AdminService';
-
-const stats = ref({
-  totalUsers: 0,
-  totalListings: 0,
-  totalCategories: 0,
-  pendingListings: 0,
-});
-
-const recentListings = ref([]);
-const recentUsers = ref([]);
-
-const fetchStats = async () => {
-  try {
-    const response = await AdminService.getDashboardStats();
-    stats.value = response.data;
-  } catch (error) {
-    console.error('Error fetching dashboard stats:', error);
-  }
-};
-
-const fetchRecentData = async () => {
-  try {
-    const listingsResponse = await AdminService.getRecentListings();
-    recentListings.value = listingsResponse.data;
-
-    const usersResponse = await AdminService.getRecentUsers();
-    recentUsers.value = usersResponse.data;
-  } catch (error) {
-    console.error('Error fetching recent data:', error);
-  }
-};
-
-onMounted(() => {
-  fetchStats();
-  fetchRecentData();
-  // We need to manually trigger feather icons replacement
-  if (window.feather) {
-    window.feather.replace();
-  }
-});
-</script>
 
 <style scoped>
 /* Add your styles here */
