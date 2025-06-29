@@ -15,6 +15,7 @@ import AdminUsers from '@/components/admin/Users.vue';
 import AdminCategories from '@/components/admin/Categories.vue';
 import AdminListings from '@/components/admin/Listings.vue';
 import AdminMessages from '@/components/admin/Messages.vue';
+import AdminProfile from '@/components/admin/Profile.vue';
 
 const routes = [
   {
@@ -103,6 +104,11 @@ const routes = [
         path: 'messages',
         name: 'AdminMessages',
         component: AdminMessages,
+      },
+      {
+        path: 'profile',
+        name: 'AdminProfile',
+        component: AdminProfile,
       },
     ],
   },
