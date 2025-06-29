@@ -55,3 +55,10 @@ onUnmounted(() => {
         <!-- Back to Top -->
         <a v-if="showBackToTop" @click.prevent="scrollToTop" href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-arrow-up"></i></a>
 </template>
+
+<style>
+.logo {
+  width: 48px;
+  height: 48px;
+}
+</style>

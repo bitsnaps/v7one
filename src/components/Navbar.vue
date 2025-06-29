@@ -230,11 +230,6 @@ const isLoggedIn = computed(() => authStore.isLoggedIn );
     font-weight: 500;
 }
 
-.navbar .logo {
-  width: 48px;
-  height: 48px;
-}
-
 @media (min-width: 992px) {
     .navbar .nav-item .dropdown-menu {
         display: block;

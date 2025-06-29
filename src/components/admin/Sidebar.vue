@@ -3,7 +3,7 @@
         <div class="sidebar-content js-simplebar">
             <a class='sidebar-brand' href='/'>
                 <span class="sidebar-brand-text align-middle">
-                    Dashboard
+                    <img class="img-fluid logo" src="/logo.png" alt="Icon"> Dashboard
                 </span>
             </a>
 

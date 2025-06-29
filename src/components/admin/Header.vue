@@ -15,11 +15,21 @@ const logout = async () => {
     // Optionally, inform the user that logout failed.
   }
 };
+
+const toggleSidebar = () => {
+  const sidebar = document.querySelector('.js-sidebar');
+  if (sidebar) {
+    sidebar.classList.toggle('collapsed');
+  }
+  setTimeout(() => {
+    window.dispatchEvent(new Event('resize'));
+  }, 300);
+};
 </script>
 
 <template>
     <nav class="navbar navbar-expand navbar-light navbar-bg">
-        <a class="sidebar-toggle js-sidebar-toggle">
+        <a class="sidebar-toggle js-sidebar-toggle" @click="toggleSidebar">
             <i class="hamburger align-self-center"></i>
         </a>
 
