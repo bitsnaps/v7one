@@ -10,7 +10,9 @@
             <div class="input-group input-group-sm" style="width: 250px;">
               <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="searchQuery" @keyup.enter="fetchListings">
               <div class="input-group-append">
-                <button type="submit" class="btn btn-default" @click="fetchListings"><i class="fas fa-search"></i></button>
+                <form @submit.prevent="fetchListings">
+                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+              </form>
               </div>
             </div>
           </div>
@@ -117,9 +119,9 @@ const form = reactive({
   userId: null,
 });
 
-const fetchListings = async (page = 1) => {
+const fetchListings = async (currentPage = 1) => {
   try {
-    const response = await AdminService.getListings(page, searchQuery.value);
+    const response = await AdminService.getListings(currentPage, searchQuery.value);
     listings.value = response.data.listings;
     pagination.value = {
       current_page: response.data.currentPage,

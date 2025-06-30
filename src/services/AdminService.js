@@ -46,8 +46,11 @@ getAttributes() {
   deleteAttribute(id) {
     return apiClient.delete(`/api/admin/attributes/${id}`);
   },
-getListings(page = 1, search = '') {
-    const params = new URLSearchParams({ page });
+  getListings(page = 1, search = '') {
+    const params = new URLSearchParams();
+    if (typeof(page)=='number'){
+      params.append('page', page);
+    }
     if (search) {
       params.append('search', search);
     }
