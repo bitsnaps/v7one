@@ -13,6 +13,12 @@ export default {
   getUsers(page = 1, search = '') {
     return apiClient.get(`/api/admin/users?page=${page}&search=${search}`);
   },
+updateUser(id, data) {
+    return apiClient.put(`/api/admin/users/${id}`, data);
+  },
+deleteUser(id) {
+    return apiClient.delete(`/api/admin/users/${id}`);
+  },
 getCategories() {
     return apiClient.get('/api/admin/categories');
   },

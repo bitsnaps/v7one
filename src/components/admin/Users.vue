@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue';
-import axios from 'axios';
 import * as bootstrap from 'bootstrap';
 import AdminService from '@/services/AdminService';
 
@@ -43,7 +42,7 @@ const editUser = (user) => {
 
 const saveUser = async () => {
   try {
-    await axios.put(`/api/admin/users/${editingUser.id}`, editingUser);
+    await AdminService.updateUser(editingUser.id, editingUser);
     userModal.hide();
     fetchUsers(); // Refresh the user list
   } catch (error) {
@@ -54,7 +53,7 @@ const saveUser = async () => {
 const deleteUser = async (id) => {
   if (confirm('Are you sure you want to delete this user?')) {
     try {
-      await axios.delete(`/api/admin/users/${id}`);
+      await AdminService.deleteUser(id);
       fetchUsers(); // Refresh the user list after deletion
     } catch (error) {
       console.error('Error deleting user:', error);
@@ -98,9 +97,9 @@ onMounted(() => {
             <tbody>
               <tr v-for="(user, index) in users" :key="user.id">
                 <td>{{ index+1 }}</td>
-                <td>{{ user.name }}</td>
+                <td>{{ user.displayName }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.role }}</td>
+                <td>{{ user.isAdmin?'admin':user.role }}</td>
                 <td>
                   <button class="btn btn-sm btn-primary" @click="editUser(user)">Edit</button>
                   <button class="btn btn-sm btn-danger" @click="deleteUser(user.id)">Delete</button>
