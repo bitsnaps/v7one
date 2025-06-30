@@ -1,6 +1,7 @@
 const { Hono } = require('hono');
 const models = require('./models');
 const jwt = require('jsonwebtoken');
+const { hashPassword } = require('./utils/index');
 
 const admin = new Hono();
 
@@ -76,6 +77,24 @@ admin.get('/users/:id', async (c) => {
     return c.json(user);
   } catch (error) {
     return c.json({ error: 'Failed to fetch user', details: error.message }, 500);
+  }
+});
+
+// Create a new user
+admin.post('/users', async (c) => {
+  const newUser = await c.req.json();
+  if (!newUser.email || !newUser.password || !newUser.displayName) {
+    return c.json({ error: 'Missing required fields' }, 400);
+  }
+  try {
+    newUser.passwordHash = hashPassword(newUser.password);
+    const user = await models.User.create({
+      ...newUser,
+      isVerified: true
+    });
+    return c.json(user);
+  } catch (error) {
+    return c.json({ error: 'Failed to create user', details: error.message }, 500);
   }
 });
 

@@ -13,7 +13,10 @@ export default {
   getUsers(page = 1, search = '') {
     return apiClient.get(`/api/admin/users?page=${page}&search=${search}`);
   },
-updateUser(id, data) {
+  createUser(newUser){
+    return apiClient.post(`/api/admin/users`, newUser);
+  },
+  updateUser(id, data) {
     return apiClient.put(`/api/admin/users/${id}`, data);
   },
 deleteUser(id) {

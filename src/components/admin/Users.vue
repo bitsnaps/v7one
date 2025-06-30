@@ -7,13 +7,21 @@ const users = ref([]);
 const pagination = ref({});
 const searchQuery = ref('');
 const editingUser = reactive({
-  id: null,
-  displayName: '',
-  email: '',
-  isAdmin: false,
-  isActive: false,
+ id: null,
+ displayName: '',
+ email: '',
+ isAdmin: false,
+ isActive: false,
+});
+const newUser = reactive({
+ displayName: '',
+ email: '',
+ password: '',
+ isAdmin: false,
+ isActive: true,
 });
 let userModal = null;
+let createUserModal = null;
 
 const fetchUsers = async (page = 1) => {
   try {
@@ -40,6 +48,28 @@ const editUser = (user) => {
   userModal.show();
 };
 
+const openCreateUserModal = () => {
+  // Reset newUser object
+  Object.assign(newUser, {
+    displayName: '',
+    email: '',
+    password: '',
+    isAdmin: false,
+    isActive: true,
+  });
+  createUserModal.show();
+};
+
+const createUser = async () => {
+  try {
+    await AdminService.createUser(newUser);
+    createUserModal.hide();
+    fetchUsers(); // Refresh the user list
+  } catch (error) {
+    console.error('Error creating user:', error);
+  }
+};
+
 const saveUser = async () => {
   try {
     await AdminService.updateUser(editingUser.id, editingUser);
@@ -64,6 +94,7 @@ const deleteUser = async (id) => {
 onMounted(() => {
   fetchUsers();
   userModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+  createUserModal = new bootstrap.Modal(document.getElementById('createUserModal'));
 });
 </script>
 
@@ -74,8 +105,9 @@ onMounted(() => {
       <div class="card">
         <div class="card-header">
           <h5 class="card-title">Users</h5>
-          <div class="card-tools">
-            <div class="input-group input-group-sm" style="width: 250px;">
+          <div class="card-tools d-flex align-items-center">
+            <button class="btn btn-primary" @click="openCreateUserModal">Create New User</button>
+            <div class="input-group input-group-sm" style="width: 250px; margin-left: 1rem;">
               <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="searchQuery" @keyup.enter="fetchUsers(1)">
               <div class="input-group-append">
                 <button type="submit" class="btn btn-default" @click="fetchUsers(1)"><i class="fas fa-search"></i></button>
@@ -99,7 +131,7 @@ onMounted(() => {
                 <td>{{ index+1 }}</td>
                 <td>{{ user.displayName }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.isAdmin?'admin':user.role }}</td>
+                <td>{{ user.isAdmin?'admin':(user.role || 'user') }}</td>
                 <td>
                   <button class="btn btn-sm btn-primary" @click="editUser(user)">Edit</button>
                   <button class="btn btn-sm btn-danger" @click="deleteUser(user.id)">Delete</button>
@@ -152,6 +184,43 @@ onMounted(() => {
               <label class="form-check-label" for="isActive">Is Active</label>
             </div>
             <button type="submit" class="btn btn-primary">Save changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create User Modal -->
+  <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createUserModalLabel">Create User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form @submit.prevent="createUser">
+            <div class="mb-3">
+              <label for="newDisplayName" class="form-label">Display Name</label>
+              <input type="text" class="form-control" id="newDisplayName" v-model="newUser.displayName" required>
+            </div>
+            <div class="mb-3">
+              <label for="newEmail" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="newEmail" v-model="newUser.email" required>
+            </div>
+            <div class="mb-3">
+              <label for="newPassword" class="form-label">Password</label>
+              <input type="password" class="form-control" id="newPassword" v-model="newUser.password" required>
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="newIsAdmin" v-model="newUser.isAdmin">
+              <label class="form-check-label" for="newIsAdmin">Is Admin</label>
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="newIsActive" v-model="newUser.isActive">
+              <label class="form-check-label" for="newIsActive">Is Active</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Create User</button>
           </form>
         </div>
       </div>
