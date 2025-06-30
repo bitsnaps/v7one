@@ -1,5 +1,6 @@
 const { Hono } = require('hono');
 const models = require('./models');
+const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const { hashPassword } = require('./utils/index');
 
@@ -38,9 +39,9 @@ admin.get('/users', async (c) => {
   if (status) whereClause.isActive = status === 'active';
   if (role) whereClause.isAdmin = role === 'admin';
   if (search) {
-    whereClause[models.Sequelize.Op.or] = [
-      { email: { [models.Sequelize.Op.iLike]: `%${search}%` } },
-      { displayName: { [models.Sequelize.Op.iLike]: `%${search}%` } },
+    whereClause[Op.or] = [
+      { email: { [Op.iLike]: `%${search}%` } },
+      { displayName: { [Op.iLike]: `%${search}%` } },
     ];
   }
 
@@ -304,7 +305,7 @@ admin.get('/listings', async (c) => {
     whereClause.status = status;
   }
   if (search) {
-    whereClause.title = { [models.Sequelize.Op.iLike]: `%${search}%` };
+    whereClause.title = { [Op.iLike]: `%${search}%` };
   }
 
   try {
