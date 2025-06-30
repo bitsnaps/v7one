@@ -7,8 +7,6 @@
                 </span>
             </a>
 
-            
-
             <ul class="sidebar-nav">
                 <li class="sidebar-header">
                     Pages

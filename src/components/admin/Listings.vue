@@ -27,8 +27,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="listing in listings" :key="listing.id">
-                <td>{{ listing.id.slice(1,8) }}</td>
+              <tr v-for="(listing, index) in listings" :key="listing.id">
+                <td>{{ index+1 }}</td>
                 <td>{{ listing.title }}</td>
                 <td>{{ listing.category.name }}</td>
                 <td>{{ listing.status }}</td>

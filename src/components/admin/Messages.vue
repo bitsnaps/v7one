@@ -133,8 +133,8 @@ onMounted(() => {
         <li v-for="message in selectedConversation.messages" :key="message.id" class="media mb-2">
           <div class="media-body">
             <div class="d-flex justify-content-between">
-              <strong>{{ message.sender.displayName }}</strong>
-              <small>{{ new Date(message.createdAt).toLocaleString() }}</small>
+              <strong>{{ message.sender.displayName || message.sender.email }}</strong>
+              <small>{{ message.createdAt?new Date(message.createdAt).toLocaleString():'N/A' }}</small>
             </div>
             <p>{{ message.content }}</p>
           </div>
