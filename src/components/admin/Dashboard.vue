@@ -1,7 +1,8 @@
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 import AdminService from '../../services/AdminService';
+import feather from 'feather-icons';
 
 const stats = ref({
   totalUsers: 0,
@@ -37,10 +38,10 @@ const fetchRecentData = async () => {
 onMounted(() => {
   fetchStats();
   fetchRecentData();
-  // We need to manually trigger feather icons replacement
-  if (window.feather) {
-    window.feather.replace();
-  }
+  // We need to manually trigger feather icons replacement after DOM updates
+  nextTick(() => {
+    feather.replace();
+  });
 });
 </script>
 
@@ -140,11 +141,11 @@ onMounted(() => {
             <table class="table table-hover my-0">
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th class="d-none d-xl-table-cell">Category</th>
-                  <th class="d-none d-xl-table-cell">User</th>
-                  <th>Status</th>
-                  <th class="d-none d-md-table-cell">Date</th>
+                  <th>Title <i class="align-middle" data-feather="file-text"></i></th>
+                  <th class="d-none d-xl-table-cell">Category <i class="align-middle" data-feather="tag"></i></th>
+                  <th class="d-none d-xl-table-cell">User <i class="align-middle" data-feather="user"></i></th>
+                  <th>Status <i class="align-middle" data-feather="check-circle"></i></th>
+                  <th class="d-none d-md-table-cell">Date <i class="align-middle" data-feather="calendar"></i></th>
                 </tr>
               </thead>
               <tbody>
@@ -169,8 +170,8 @@ onMounted(() => {
                 <table class="table table-hover my-0">
                   <thead>
                     <tr>
-                      <th>Name</th>
-                      <th>Email</th>
+                      <th>Name <i class="align-middle" data-feather="user"></i></th>
+                      <th>Email <i class="align-middle" data-feather="mail"></i></th>
                     </tr>
                   </thead>
                   <tbody>
