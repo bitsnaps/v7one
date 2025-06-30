@@ -29,6 +29,12 @@
                     </router-link>
                 </li>
 
+                 <li class="sidebar-item">
+                     <router-link to="/admin/attributes" class="sidebar-link">
+                        <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Attributes</span>
+                    </router-link>
+                </li>
+
                 <li class="sidebar-item">
                      <router-link to="/admin/listings" class="sidebar-link">
                         <i class="align-middle" data-feather="list"></i> <span class="align-middle">Listings</span>

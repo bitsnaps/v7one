@@ -224,6 +224,56 @@ admin.delete('/categories/:id', async (c) => {
   }
 });
 
+// Attribute Management Routes
+admin.get('/attributes', async (c) => {
+  try {
+    const attributes = await models.ListingAttribute.findAll({
+      order: [['attributeName', 'ASC']],
+    });
+    return c.json(attributes);
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch attributes', details: error.message }, 500);
+  }
+});
+
+admin.post('/attributes', async (c) => {
+  const { attributeName, attributeValue } = await c.req.json();
+  try {
+    const attribute = await models.ListingAttribute.create({ attributeName, attributeValue });
+    return c.json(attribute, 201);
+  } catch (error) {
+    return c.json({ error: 'Failed to create attribute', details: error.message }, 500);
+  }
+});
+
+admin.put('/attributes/:id', async (c) => {
+  const { id } = c.req.param();
+  const { attributeName, attributeValue } = await c.req.json();
+  try {
+    const attribute = await models.ListingAttribute.findByPk(id);
+    if (!attribute) {
+      return c.json({ error: 'Attribute not found' }, 404);
+    }
+    await attribute.update({ attributeName, attributeValue });
+    return c.json(attribute);
+  } catch (error) {
+    return c.json({ error: 'Failed to update attribute', details: error.message }, 500);
+  }
+});
+
+admin.delete('/attributes/:id', async (c) => {
+  const { id } = c.req.param();
+  try {
+    const attribute = await models.ListingAttribute.findByPk(id);
+    if (!attribute) {
+      return c.json({ error: 'Attribute not found' }, 404);
+    }
+    await attribute.destroy();
+    return c.json({ success: true, message: 'Attribute deleted successfully' });
+  } catch (error) {
+    return c.json({ error: 'Failed to delete attribute', details: error.message }, 500);
+  }
+});
 // Listing Management Routes
 
 // Get all listings with filtering and pagination

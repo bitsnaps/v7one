@@ -25,6 +25,18 @@ createCategory(data) {
   deleteCategory(id) {
     return apiClient.delete(`/api/admin/categories/${id}`);
   },
+getAttributes() {
+    return apiClient.get('/api/admin/attributes');
+  },
+  createAttribute(data) {
+    return apiClient.post('/api/admin/attributes', data);
+  },
+  updateAttribute(id, data) {
+    return apiClient.put(`/api/admin/attributes/${id}`, data);
+  },
+  deleteAttribute(id) {
+    return apiClient.delete(`/api/admin/attributes/${id}`);
+  },
 getListings(page = 1, search = '') {
     const params = new URLSearchParams({ page });
     if (search) {
