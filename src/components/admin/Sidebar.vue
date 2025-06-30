@@ -11,36 +11,36 @@
                 <li class="sidebar-header">
                     Pages
                 </li>
-                <li class="sidebar-item active">
+                <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/dashboard' }">
                     <router-link to="/admin/dashboard" class="sidebar-link">
                         <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
                     </router-link>
                 </li>
 
-                <li class="sidebar-item">
+                <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/users' }">
                      <router-link to="/admin/users" class="sidebar-link">
                         <i class="align-middle" data-feather="users"></i> <span class="align-middle">Users</span>
                     </router-link>
                 </li>
 
-                 <li class="sidebar-item">
+                 <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/categories' }">
                      <router-link to="/admin/categories" class="sidebar-link">
                         <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Categories</span>
                     </router-link>
                 </li>
 
-                 <li class="sidebar-item">
+                 <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/attributes' }">
                      <router-link to="/admin/attributes" class="sidebar-link">
                         <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Attributes</span>
                     </router-link>
                 </li>
 
-                <li class="sidebar-item">
+                <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/listings' }">
                      <router-link to="/admin/listings" class="sidebar-link">
                         <i class="align-middle" data-feather="list"></i> <span class="align-middle">Listings</span>
                     </router-link>
                 </li>
-                 <li class="sidebar-item">
+                 <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/messages' }">
                      <router-link to="/admin/messages" class="sidebar-link">
                         <i class="align-middle" data-feather="message-square"></i> <span class="align-middle">Messages</span>
                     </router-link>
