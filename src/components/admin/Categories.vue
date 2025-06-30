@@ -102,7 +102,7 @@ onMounted(() => {
         <div class="card-header">
           <h5 class="card-title">Category Tree</h5>
           <div class="card-tools">
-            <button class="btn btn-sm btn-primary" @click="openModal()">Add New</button>
+            <BButton variant="primary" size="sm" @click="openModal()">Add New</BButton>
           </div>
         </div>
         <div class="card-body">

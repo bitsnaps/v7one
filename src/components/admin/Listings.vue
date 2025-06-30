@@ -6,7 +6,7 @@
         <div class="card-header">
           <h5 class="card-title">Listings</h5>
           <div class="card-tools d-flex">
-             <button class="btn btn-sm btn-primary me-2" @click="openModal()">Add New</button>
+             <BButton variant="primary" size="sm" class="me-2" @click="openModal()">Add New</BButton>
             <div class="input-group input-group-sm" style="width: 250px;">
               <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="searchQuery" @keyup.enter="fetchListings">
               <div class="input-group-append">
@@ -24,7 +24,12 @@
                 <th>ID</th>
                 <th>Title</th>
                 <th>Category</th>
+                <th>Price</th>
+                <th>Type</th>
+                <th>City</th>
+                <th>Region</th>
                 <th>Status</th>
+                <th>Featured</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -33,7 +38,16 @@
                 <td>{{ index+1 }}</td>
                 <td>{{ listing.title }}</td>
                 <td>{{ listing.category.name }}</td>
+                <td>{{ listing.price }}</td>
+                <td>{{ listing.listType }}</td>
+                <td>{{ listing.locationCity }}</td>
+                <td>{{ listing.locationRegion }}</td>
                 <td>{{ listing.status }}</td>
+                <td>
+                  <BBadge :variant="listing.isFeatured ? 'success' : 'danger'">
+                    {{ listing.isFeatured ? 'Yes' : 'No' }}
+                  </BBadge>
+                </td>
                 <td>
                   <button class="btn btn-sm btn-success me-1" @click="updateStatus(listing.id, 'ACTIVE')" :disabled="listing.status === 'ACTIVE'">Approve</button>
                   <button class="btn btn-sm btn-danger me-1" @click="updateStatus(listing.id, 'REMOVED_BY_ADMIN')" :disabled="listing.status === 'REMOVED_BY_ADMIN'">Remove</button>
@@ -80,6 +94,48 @@
         <input type="number" class="form-control" id="price" v-model="form.price" required>
       </div>
       <div class="form-group">
+        <label for="listType">Listing Type</label>
+        <select class="form-control" id="listType" v-model="form.listType" required>
+          <option>FOR_SALE</option>
+          <option>FOR_RENT</option>
+          <option>FOR_EXCHANGE</option>
+          <option>SERVICE</option>
+          <option>COMMUNITY</option>
+        </select>
+      </div>
+       <div class="form-group">
+        <label for="priceType">Price Type</label>
+        <select class="form-control" id="priceType" v-model="form.priceType">
+          <option>FIXED</option>
+          <option>NEGOTIABLE</option>
+          <option>CONTACT_FOR_PRICE</option>
+          <option>FREE</option>
+        </select>
+      </div>
+       <div class="form-group">
+        <label for="condition">Condition</label>
+        <select class="form-control" id="condition" v-model="form.condition">
+          <option>NEW</option>
+          <option>USED_LIKE_NEW</option>
+          <option>USED_GOOD</option>
+          <option>USED_FAIR</option>
+          <option>REFURBISHED</option>
+          <option>FOR_PARTS</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="locationCity">City</label>
+        <input type="text" class="form-control" id="locationCity" v-model="form.locationCity">
+      </div>
+      <div class="form-group">
+        <label for="locationRegion">Region</label>
+        <input type="text" class="form-control" id="locationRegion" v-model="form.locationRegion">
+      </div>
+       <div class="form-check mb-2">
+        <input type="checkbox" class="form-check-input" id="isFeatured" v-model="form.isFeatured">
+        <label class="form-check-label" for="isFeatured">Featured</label>
+      </div>
+       <div class="form-group">
         <label for="categoryId">Category</label>
         <select class="form-control" id="categoryId" v-model="form.categoryId" required>
           <option v-for="cat in flatCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
@@ -102,7 +158,7 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue';
 import AdminService from '@/services/AdminService';
-import { BDropdown, BDropdownItem, BModal } from 'bootstrap-vue-next';
+import { BDropdown, BDropdownItem, BModal, BBadge } from 'bootstrap-vue-next';
 
 const listings = ref([]);
 const pagination = ref({});
@@ -115,6 +171,12 @@ const form = reactive({
   title: '',
   description: '',
   price: 0,
+  listType: 'FOR_SALE',
+  priceType: 'FIXED',
+  condition: 'NEW',
+  locationCity: '',
+  locationRegion: '',
+  isFeatured: false,
   categoryId: null,
   userId: null,
 });
@@ -148,6 +210,12 @@ const resetForm = () => {
   form.title = '';
   form.description = '';
   form.price = 0;
+  form.listType = 'FOR_SALE';
+  form.priceType = 'FIXED';
+  form.condition = 'NEW';
+  form.locationCity = '';
+  form.locationRegion = '';
+  form.isFeatured = false;
   form.categoryId = null;
   form.userId = null;
 };

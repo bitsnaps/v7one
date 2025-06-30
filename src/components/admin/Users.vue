@@ -106,7 +106,7 @@ onMounted(() => {
         <div class="card-header">
           <h5 class="card-title">Users</h5>
           <div class="card-tools d-flex align-items-center">
-            <button class="btn btn-primary" @click="openCreateUserModal">Create New User</button>
+            <BButton variant="primary" size="sm" @click="openCreateUserModal">Add New</BButton>
             <div class="input-group input-group-sm" style="width: 250px; margin-left: 1rem;">
               <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="searchQuery" @keyup.enter="fetchUsers(1)">
               <div class="input-group-append">
