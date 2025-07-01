@@ -2,9 +2,25 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
+import { onMounted, ref } from 'vue';
+import AdminService from '@/services/AdminService';
 
 const authStore = useAuthStore();
 const router = useRouter();
+const messages = ref([]);
+
+const fetchMessages = async () => {
+  try {
+    const response = await AdminService.getRecentMessages();
+    messages.value = response.data;
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+  }
+};
+
+onMounted(() => {
+  fetchMessages();
+});
 
 const logout = async () => {
   try {
@@ -46,7 +62,7 @@ const toggleSidebar = () => {
         <div class="navbar-collapse collapse">
             <ul class="navbar-nav navbar-align">
                 <!-- Notifications -->
-                <li class="nav-item dropdown">
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
                         <div class="position-relative">
                             <i class="align-middle" data-feather="bell"></i>
@@ -110,73 +126,38 @@ const toggleSidebar = () => {
                             <a href="#" class="text-muted">Show all notifications</a>
                         </div>
                     </div>
-                </li>
+                </li> -->
 
                 <!-- Messages -->
                 <li class="nav-item dropdown">
                     <a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-bs-toggle="dropdown">
                         <div class="position-relative">
-                            <i class="align-middle" data-feather="message-square"></i>
+                            <i class="align-middle far fa-comment-alt"></i>
+                            <span v-if="messages.length > 0" class="indicator">{{ messages.length }}</span>
                         </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" aria-labelledby="messagesDropdown">
                         <div class="dropdown-menu-header">
                             <div class="position-relative">
-                                4 New Messages
+                                {{ messages.length }} New Messages
                             </div>
                         </div>
                         <div class="list-group">
-                            <a href="#" class="list-group-item">
+                            <a v-for="message in messages" :key="message.id" href="#" class="list-group-item">
                                 <div class="row g-0 align-items-center">
                                     <div class="col-2">
-                                        <img src="/adminkit/img/avatars/avatar-5.jpg" class="avatar img-fluid rounded-circle" alt="Vanessa Tucker">
+                                        <img :src="message.avatar" class="avatar img-fluid rounded-circle" :alt="message.sender">
                                     </div>
                                     <div class="col-10 ps-2">
-                                        <div class="text-dark">Vanessa Tucker</div>
-                                        <div class="text-muted small mt-1">Nam pretium turpis et arcu. Duis arcu tortor.</div>
-                                        <div class="text-muted small mt-1">15m ago</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item">
-                                <div class="row g-0 align-items-center">
-                                    <div class="col-2">
-                                        <img src="/adminkit/img/avatars/avatar-2.jpg" class="avatar img-fluid rounded-circle" alt="William Harris">
-                                    </div>
-                                    <div class="col-10 ps-2">
-                                        <div class="text-dark">William Harris</div>
-                                        <div class="text-muted small mt-1">Curabitur ligula sapien euismod vitae.</div>
-                                        <div class="text-muted small mt-1">2h ago</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item">
-                                <div class="row g-0 align-items-center">
-                                    <div class="col-2">
-                                        <img src="/adminkit/img/avatars/avatar-4.jpg" class="avatar img-fluid rounded-circle" alt="Christina Mason">
-                                    </div>
-                                    <div class="col-10 ps-2">
-                                        <div class="text-dark">Christina Mason</div>
-                                        <div class="text-muted small mt-1">Pellentesque auctor neque nec urna.</div>
-                                        <div class="text-muted small mt-1">4h ago</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item">
-                                <div class="row g-0 align-items-center">
-                                    <div class="col-2">
-                                        <img src="/adminkit/img/avatars/avatar-3.jpg" class="avatar img-fluid rounded-circle" alt="Sharon Lessman">
-                                    </div>
-                                    <div class="col-10 ps-2">
-                                        <div class="text-dark">Sharon Lessman</div>
-                                        <div class="text-muted small mt-1">Aenean tellus metus, bibendum sed, posuere ac, mattis non.</div>
-                                        <div class="text-muted small mt-1">5h ago</div>
+                                        <div class="text-dark">{{ message.sender }}</div>
+                                        <div class="text-muted small mt-1">{{ message.content }}</div>
+                                        <div class="text-muted small mt-1">{{ new Date(message.time).toLocaleString() }}</div>
                                     </div>
                                 </div>
                             </a>
                         </div>
                         <div class="dropdown-menu-footer">
-                            <a href="#" class="text-muted">Show all messages</a>
+                            <router-link to="/admin/messages" class="text-muted">Show all messages</router-link>
                         </div>
                     </div>
                 </li>

@@ -494,6 +494,32 @@ admin.get('/dashboard/recent-users', async (c) => {
   }
 });
 
+// Get recent messages for dashboard
+admin.get('/dashboard/recent-messages', async (c) => {
+  try {
+    const messages = await models.Message.findAll({
+      where: { isRead: false },
+      limit: 5,
+      order: [['createdAt', 'DESC']],
+      include: [
+        { model: models.User, as: 'sender', attributes: ['displayName'] },
+      ],
+    });
+
+    const formattedMessages = messages.map(message => ({
+      id: message.id,
+      content: message.content,
+      sender: message.sender ? message.sender.displayName : 'N/A',
+      avatar: '/adminkit/img/avatars/avatar.jpg',
+      time: message.createdAt,
+    }));
+
+    return c.json(formattedMessages);
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch recent messages', details: error.message }, 500);
+  }
+});
+
 
 // Message Management Routes
 
