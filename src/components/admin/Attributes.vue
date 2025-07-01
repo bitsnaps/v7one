@@ -86,66 +86,70 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1 class="h3 mb-3">Attributes</h1>
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="card-title">Attributes</h5>
-          <div class="card-tools">
-            <button class="btn btn-sm btn-primary" @click="openModal()">Add New</button>
+  <main class="content">
+    <div class="container-fluid p-0">
+      <h1 class="h3 mb-3">Attributes</h1>
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">Attributes</h5>
+              <div class="card-tools">
+                <button class="btn btn-sm btn-primary" @click="openModal()">Add New</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Value</th>
+                    <th>Deal</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="attribute in attributes" :key="attribute.id">
+                    <td>{{ attribute.attributeName }}</td>
+                    <td>{{ attribute.attributeValue }}</td>
+                    <td>{{ attribute.Listing ? attribute.Listing.title : 'N/A' }}</td>
+                    <td>
+                      <button class="btn btn-sm btn-secondary me-2" @click="openModal(attribute)">Edit</button>
+                      <button class="btn btn-sm btn-danger" @click="deleteAttribute(attribute.id)">Delete</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-        <div class="card-body">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Value</th>
-                <th>Deal</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="attribute in attributes" :key="attribute.id">
-                <td>{{ attribute.attributeName }}</td>
-                <td>{{ attribute.attributeValue }}</td>
-                <td>{{ attribute.Listing ? attribute.Listing.title : 'N/A' }}</td>
-                <td>
-                  <button class="btn btn-sm btn-secondary me-2" @click="openModal(attribute)">Edit</button>
-                  <button class="btn btn-sm btn-danger" @click="deleteAttribute(attribute.id)">Delete</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </div>
-    </div>
-  </div>
 
-  <b-modal v-model="showModal" :title="modalTitle" @hidden="resetForm" no-footer no-close-on-backdro no-close-on-backdrop>
-    <form @submit.prevent="saveAttribute">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" v-model="form.attributeName" required>
-      </div>
-      <div class="form-group">
-        <label for="value">Value</label>
-        <input type="text" class="form-control" id="value" v-model="form.attributeValue" required>
-      </div>
-      <div class="form-group">
-        <label for="listing">Deal</label>
-        <select class="form-control" id="listing" v-model="form.listingId">
-          <option :value="null">-- Select a deal --</option>
-          <option v-for="listing in listings" :key="listing.id" :value="listing.id">{{ listing.title }}</option>
-        </select>
-      </div>
-      <div class="d-flex justify-content-end mt-3">
-        <button type="button" class="btn btn-secondary me-2" @click="showModal = false">Cancel</button>
-        <button type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create' }}</button>
-      </div>
-    </form>
-  </b-modal>
+      <b-modal v-model="showModal" :title="modalTitle" @hidden="resetForm" no-footer no-close-on-backdro no-close-on-backdrop>
+        <form @submit.prevent="saveAttribute">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" v-model="form.attributeName" required>
+          </div>
+          <div class="form-group">
+            <label for="value">Value</label>
+            <input type="text" class="form-control" id="value" v-model="form.attributeValue" required>
+          </div>
+          <div class="form-group">
+            <label for="listing">Deal</label>
+            <select class="form-control" id="listing" v-model="form.listingId">
+              <option :value="null">-- Select a deal --</option>
+              <option v-for="listing in listings" :key="listing.id" :value="listing.id">{{ listing.title }}</option>
+            </select>
+          </div>
+          <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-secondary me-2" @click="showModal = false">Cancel</button>
+            <button type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create' }}</button>
+          </div>
+        </form>
+      </b-modal>
+    </div>
+  </main>
 </template>
 
 <style scoped>

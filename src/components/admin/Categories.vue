@@ -95,52 +95,57 @@ onMounted(() => {
 
 
 <template>
-  <h1 class="h3 mb-3">Categories</h1>
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="card-title">Category Tree</h5>
-          <div class="card-tools">
-            <BButton variant="primary" size="sm" @click="openModal()">Add New</BButton>
+  <main class="content">
+    <div class="container-fluid p-0">
+
+      <h1 class="h3 mb-3">Categories</h1>
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">Category Tree</h5>
+              <div class="card-tools">
+                <BButton variant="primary" size="sm" @click="openModal()">Add New</BButton>
+              </div>
+            </div>
+            <div class="card-body">
+              <CategoryTree :categories="categories" @edit="openModal" @delete="deleteCategory" />
+            </div>
           </div>
         </div>
-        <div class="card-body">
-          <CategoryTree :categories="categories" @edit="openModal" @delete="deleteCategory" />
-        </div>
       </div>
-    </div>
-  </div>
 
-  <b-modal v-model="showModal" :title="modalTitle" @hidden="resetForm" no-footer no-close-on-backdro>
-    <form @submit.prevent="saveCategory">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" v-model="form.name" required>
-      </div>
-       <div class="form-group">
-        <label for="slug">Slug</label>
-        <input type="text" class="form-control" id="slug" v-model="form.slug" required>
-      </div>
-      <div class="form-group">
-        <label for="type">Type</label>
-        <select class="form-control" id="type" v-model="form.type" required>
-          <option v-for="type in CATEGORY_TYPES" :key="type" :value="type">{{ type.toLocaleUpperCase() }}</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="parentId">Parent Category</label>
-        <select class="form-control" id="parentId" v-model="form.parentId">
-          <option :value="null">None</option>
-          <option v-for="cat in flatCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
-        </select>
-      </div>
-      <div class="d-flex justify-content-end mt-3">
-        <button type="button" class="btn btn-secondary me-2" @click="showModal = false">Cancel</button>
-        <button type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create' }}</button>
-      </div>
-    </form>
-  </b-modal>
+      <b-modal v-model="showModal" :title="modalTitle" @hidden="resetForm" no-footer no-close-on-backdro>
+        <form @submit.prevent="saveCategory">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" v-model="form.name" required>
+          </div>
+          <div class="form-group">
+            <label for="slug">Slug</label>
+            <input type="text" class="form-control" id="slug" v-model="form.slug" required>
+          </div>
+          <div class="form-group">
+            <label for="type">Type</label>
+            <select class="form-control" id="type" v-model="form.type" required>
+              <option v-for="type in CATEGORY_TYPES" :key="type" :value="type">{{ type.toLocaleUpperCase() }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="parentId">Parent Category</label>
+            <select class="form-control" id="parentId" v-model="form.parentId">
+              <option :value="null">None</option>
+              <option v-for="cat in flatCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+            </select>
+          </div>
+          <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-secondary me-2" @click="showModal = false">Cancel</button>
+            <button type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create' }}</button>
+          </div>
+        </form>
+      </b-modal>
+  </div>
+  </main>
 </template>
 
 <style scoped>

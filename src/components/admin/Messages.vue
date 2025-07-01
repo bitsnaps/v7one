@@ -89,96 +89,101 @@ onMounted(() => {
 });
 </script>
 <template>
-  <h1 class="h3 mb-3">Message Management</h1>
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="card-title">Conversations</h5>
-          <div class="card-tools">
-            <BButton variant="primary" size="sm" @click="openConversationModal()">Create Message</BButton>
-          </div>
-        </div>
-        <div class="card-body table-responsive p-0">
-          <table class="table table-hover text-nowrap">
-            <thead>
-              <tr>
-                <th>Deal</th>
-                <th>Participants</th>
-                <th>Last Message</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="convo in conversations" :key="convo.id">
-                <td>{{ convo.listing ? convo.listing.title : 'N/A' }}</td>
-                <td>{{ convo.userOne.displayName }} &harr; {{ convo.userTwo.displayName }}</td>
-                <td>{{ new Date(convo.lastMessageAt).toLocaleString() }}</td>
-                <td>
-                  <BButton variant="info" size="sm" @click="viewConversation(convo)">View</BButton>
-                  <BButton variant="danger" size="sm" @click="deleteConversation(convo.id)">Delete</BButton>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Conversation Modal -->
-  <BModal ref="conversationModal" title="Conversation Details" size="lg" no-footer no-close-on-backdro>
-    <div v-if="selectedConversation">
-      <ul class="list-unstyled">
-        <li v-for="message in selectedConversation.messages" :key="message.id" class="media mb-2">
-          <div class="media-body">
-            <div class="d-flex justify-content-between">
-              <strong>{{ message.sender.displayName || message.sender.email }}</strong>
-              <small>{{ message.createdAt?new Date(message.createdAt).toLocaleString():'N/A' }}</small>
+  <main class="content">
+    <div class="container-fluid p-0">
+      
+      <h1 class="h3 mb-3">Message Management</h1>
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">Conversations</h5>
+              <div class="card-tools">
+                <BButton variant="primary" size="sm" @click="openConversationModal()">Create Message</BButton>
+              </div>
             </div>
-            <p>{{ message.content }}</p>
+            <div class="card-body table-responsive p-0">
+              <table class="table table-hover text-nowrap">
+                <thead>
+                  <tr>
+                    <th>Deal</th>
+                    <th>Participants</th>
+                    <th>Last Message</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="convo in conversations" :key="convo.id">
+                    <td>{{ convo.listing ? convo.listing.title : 'N/A' }}</td>
+                    <td>{{ convo.userOne.displayName }} &harr; {{ convo.userTwo.displayName }}</td>
+                    <td>{{ new Date(convo.lastMessageAt).toLocaleString() }}</td>
+                    <td>
+                      <BButton variant="info" size="sm" @click="viewConversation(convo)">View</BButton>
+                      <BButton variant="danger" size="sm" @click="deleteConversation(convo.id)">Delete</BButton>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </li>
-      </ul>
-    </div>
-    <form @submit.prevent="sendReply" class="w-100 mt-3">
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Type a message" v-model="replyContent">
-        <div class="input-group-append">
-          <BButton variant="primary" type="submit">Send</BButton>
         </div>
       </div>
-    </form>
-  </BModal>
 
-  <!-- Create Conversation Modal -->
-  <BModal ref="createConversationModal" title="Create New Conversation" size="lg" @ok="createConversation">
-    <form>
-      <div class="form-group">
-        <label for="userOne">User One</label>
-        <select class="form-control" id="userOne" v-model="conversationForm.userOneId" required>
-          <option v-for="user in users" :key="user.id" :value="user.id">{{ user.displayName || user.email }}</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="userTwo">User Two</label>
-        <select class="form-control" id="userTwo" v-model="conversationForm.userTwoId" required>
-          <option v-for="user in users" :key="user.id" :value="user.id">{{ user.displayName || user.email  }}</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="listing">Deal (Optional)</label>
-        <select class="form-control" id="listing" v-model="conversationForm.listingId">
-          <option value="">None</option>
-          <option v-for="deal in listings" :key="deal.id" :value="deal.id">{{ deal.title }}</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="messageContent">Message</label>
-        <textarea class="form-control" id="messageContent" rows="5" v-model="conversationForm.content" required></textarea>
-      </div>
-    </form>
-  </BModal>
+      <!-- Conversation Modal -->
+      <BModal ref="conversationModal" title="Conversation Details" size="lg" no-footer no-close-on-backdro>
+        <div v-if="selectedConversation">
+          <ul class="list-unstyled">
+            <li v-for="message in selectedConversation.messages" :key="message.id" class="media mb-2">
+              <div class="media-body">
+                <div class="d-flex justify-content-between">
+                  <strong>{{ message.sender.displayName || message.sender.email }}</strong>
+                  <small>{{ message.createdAt?new Date(message.createdAt).toLocaleString():'N/A' }}</small>
+                </div>
+                <p>{{ message.content }}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <form @submit.prevent="sendReply" class="w-100 mt-3">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Type a message" v-model="replyContent">
+            <div class="input-group-append">
+              <BButton variant="primary" type="submit">Send</BButton>
+            </div>
+          </div>
+        </form>
+      </BModal>
+
+      <!-- Create Conversation Modal -->
+      <BModal ref="createConversationModal" title="Create New Conversation" size="lg" @ok="createConversation">
+        <form>
+          <div class="form-group">
+            <label for="userOne">User One</label>
+            <select class="form-control" id="userOne" v-model="conversationForm.userOneId" required>
+              <option v-for="user in users" :key="user.id" :value="user.id">{{ user.displayName || user.email }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="userTwo">User Two</label>
+            <select class="form-control" id="userTwo" v-model="conversationForm.userTwoId" required>
+              <option v-for="user in users" :key="user.id" :value="user.id">{{ user.displayName || user.email  }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="listing">Deal (Optional)</label>
+            <select class="form-control" id="listing" v-model="conversationForm.listingId">
+              <option value="">None</option>
+              <option v-for="deal in listings" :key="deal.id" :value="deal.id">{{ deal.title }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="messageContent">Message</label>
+            <textarea class="form-control" id="messageContent" rows="5" v-model="conversationForm.content" required></textarea>
+          </div>
+        </form>
+      </BModal>
+    </div>
+  </main>
 </template>
 <style scoped>
 </style>
