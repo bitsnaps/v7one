@@ -67,6 +67,9 @@ getAttributes() {
   createListing(data) {
     return apiClient.post('/api/admin/listings', data);
   },
+  updateListing(id, data) {
+    return apiClient.put(`/api/admin/listings/${id}`, data);
+  },
   getConversations() {
     return apiClient.get('/api/admin/messages');
   },

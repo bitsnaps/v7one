@@ -49,6 +49,7 @@
                   </BBadge>
                 </td>
                 <td>
+                  <button class="btn btn-sm btn-primary me-1" @click="openModal(listing)">Edit</button>
                   <button class="btn btn-sm btn-success me-1" @click="updateStatus(listing.id, 'ACTIVE')" :disabled="listing.status === 'ACTIVE'">Approve</button>
                   <button class="btn btn-sm btn-danger me-1" @click="updateStatus(listing.id, 'REMOVED_BY_ADMIN')" :disabled="listing.status === 'REMOVED_BY_ADMIN'">Remove</button>
                   <BDropdown text="More Actions" size="sm" variant="outline-primary">
@@ -79,7 +80,7 @@
     </div>
   </div>
 
-  <b-modal v-model="showModal" title="Create New Listing" @hidden="resetForm" no-footer no-close-on-backdro>
+  <b-modal v-model="showModal" :title="editMode ? 'Edit Listing' : 'Create New Listing'" @hidden="resetForm" no-footer no-close-on-backdrop>
     <form @submit.prevent="saveListing">
       <div class="form-group">
         <label for="title">Title</label>
@@ -149,7 +150,7 @@
       </div>
       <div class="d-flex justify-content-end mt-3">
         <button type="button" class="btn btn-secondary me-2" @click="showModal = false">Cancel</button>
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create' }}</button>
       </div>
     </form>
   </b-modal>
@@ -164,10 +165,12 @@ const listings = ref([]);
 const pagination = ref({});
 const searchQuery = ref('');
 const showModal = ref(false);
+const editMode = ref(false);
 const categories = ref([]);
 const flatCategories = ref([]);
 const users = ref([]);
 const form = reactive({
+  id: null,
   title: '',
   description: '',
   price: 0,
@@ -207,6 +210,7 @@ const updateStatus = async (id, status) => {
 };
 
 const resetForm = () => {
+  form.id = null;
   form.title = '';
   form.description = '';
   form.price = 0;
@@ -218,6 +222,7 @@ const resetForm = () => {
   form.isFeatured = false;
   form.categoryId = null;
   form.userId = null;
+  editMode.value = false;
 };
 
 const flattenCategories = (categories, prefix = '') => {
@@ -231,8 +236,25 @@ const flattenCategories = (categories, prefix = '') => {
   return result;
 };
 
-const openModal = async () => {
-  resetForm();
+const openModal = async (listing = null) => {
+  if (listing) {
+    editMode.value = true;
+    form.id = listing.id;
+    form.title = listing.title;
+    form.description = listing.description;
+    form.price = listing.price;
+    form.listType = listing.listType;
+    form.priceType = listing.priceType;
+    form.condition = listing.condition;
+    form.locationCity = listing.locationCity;
+    form.locationRegion = listing.locationRegion;
+    form.isFeatured = listing.isFeatured;
+    form.categoryId = listing.categoryId;
+    form.userId = listing.userId;
+  } else {
+    resetForm();
+  }
+
   try {
     const [catResponse, userResponse] = await Promise.all([
       AdminService.getCategories(),
@@ -249,11 +271,15 @@ const openModal = async () => {
 
 const saveListing = async () => {
   try {
-    await AdminService.createListing(form);
+    if (editMode.value) {
+      await AdminService.updateListing(form.id, form);
+    } else {
+      await AdminService.createListing(form);
+    }
     fetchListings();
     showModal.value = false;
   } catch (error) {
-    console.error('Error creating listing:', error);
+    console.error(`Error ${editMode.value ? 'updating' : 'creating'} listing:`, error);
   }
 };
 
