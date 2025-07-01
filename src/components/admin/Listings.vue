@@ -79,7 +79,7 @@
     </div>
   </div>
 
-  <b-modal v-model="showModal" title="Create New Listing" @hidden="resetForm" hide-footer>
+  <b-modal v-model="showModal" title="Create New Listing" @hidden="resetForm" no-footer no-close-on-backdro>
     <form @submit.prevent="saveListing">
       <div class="form-group">
         <label for="title">Title</label>

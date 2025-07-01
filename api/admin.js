@@ -26,10 +26,6 @@ admin.use('/*', async (c, next) => {
   }
 });
 
-admin.get('/', (c) => {
-  return c.text('Admin Section');
-});
-
 // User Management Routes
 admin.get('/users', async (c) => {
   const { page = 1, limit = 10, status, role, search } = c.req.query();
@@ -247,6 +243,11 @@ admin.delete('/categories/:id', async (c) => {
 admin.get('/attributes', async (c) => {
   try {
     const attributes = await models.ListingAttribute.findAll({
+      include: [{
+        model: models.Listing,
+        // as: 'listing',
+        attributes: ['id', 'title']
+      }],
       order: [['attributeName', 'ASC']],
     });
     return c.json(attributes);
@@ -256,9 +257,9 @@ admin.get('/attributes', async (c) => {
 });
 
 admin.post('/attributes', async (c) => {
-  const { attributeName, attributeValue } = await c.req.json();
+  const { attributeName, attributeValue, listingId } = await c.req.json();
   try {
-    const attribute = await models.ListingAttribute.create({ attributeName, attributeValue });
+    const attribute = await models.ListingAttribute.create({ attributeName, attributeValue, listingId });
     return c.json(attribute, 201);
   } catch (error) {
     return c.json({ error: 'Failed to create attribute', details: error.message }, 500);
@@ -267,13 +268,13 @@ admin.post('/attributes', async (c) => {
 
 admin.put('/attributes/:id', async (c) => {
   const { id } = c.req.param();
-  const { attributeName, attributeValue } = await c.req.json();
+  const { attributeName, attributeValue, listingId } = await c.req.json();
   try {
     const attribute = await models.ListingAttribute.findByPk(id);
     if (!attribute) {
       return c.json({ error: 'Attribute not found' }, 404);
     }
-    await attribute.update({ attributeName, attributeValue });
+    await attribute.update({ attributeName, attributeValue, listingId });
     return c.json(attribute);
   } catch (error) {
     return c.json({ error: 'Failed to update attribute', details: error.message }, 500);

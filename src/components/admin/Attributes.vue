@@ -5,13 +5,24 @@ import AdminService from '../../services/AdminService';
 const attributes = ref([]);
 const editMode = ref(false);
 const showModal = ref(false);
+const listings = ref([]);
 const form = reactive({
   id: null,
   attributeName: '',
   attributeValue: '',
+  listingId: null,
 });
 
 const modalTitle = computed(() => (editMode.value ? 'Edit Attribute' : 'Add Attribute'));
+
+const fetchListings = async () => {
+  try {
+    const response = await AdminService.getListings();
+    listings.value = response.data.listings;
+  } catch (error) {
+    console.error('Error fetching listings:', error);
+  }
+};
 
 const fetchAttributes = async () => {
   try {
@@ -26,6 +37,7 @@ const resetForm = () => {
   form.id = null;
   form.attributeName = '';
   form.attributeValue = '';
+  form.listingId = null;
   editMode.value = false;
 };
 
@@ -35,6 +47,7 @@ const openModal = (attribute = null) => {
     form.id = attribute.id;
     form.attributeName = attribute.attributeName;
     form.attributeValue = attribute.attributeValue;
+    form.listingId = attribute.listingId;
   } else {
     resetForm();
   }
@@ -68,6 +81,7 @@ const deleteAttribute = async (id) => {
 
 onMounted(() => {
   fetchAttributes();
+  fetchListings();
 });
 </script>
 
@@ -88,6 +102,7 @@ onMounted(() => {
               <tr>
                 <th>Name</th>
                 <th>Value</th>
+                <th>Listing</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -95,6 +110,7 @@ onMounted(() => {
               <tr v-for="attribute in attributes" :key="attribute.id">
                 <td>{{ attribute.attributeName }}</td>
                 <td>{{ attribute.attributeValue }}</td>
+                <td>{{ attribute.Listing ? attribute.Listing.title : 'N/A' }}</td>
                 <td>
                   <button class="btn btn-sm btn-secondary me-2" @click="openModal(attribute)">Edit</button>
                   <button class="btn btn-sm btn-danger" @click="deleteAttribute(attribute.id)">Delete</button>
@@ -107,7 +123,7 @@ onMounted(() => {
     </div>
   </div>
 
-  <b-modal v-model="showModal" :title="modalTitle" @hidden="resetForm" hide-footer>
+  <b-modal v-model="showModal" :title="modalTitle" @hidden="resetForm" no-footer no-close-on-backdro no-close-on-backdrop>
     <form @submit.prevent="saveAttribute">
       <div class="form-group">
         <label for="name">Name</label>
@@ -116,6 +132,13 @@ onMounted(() => {
       <div class="form-group">
         <label for="value">Value</label>
         <input type="text" class="form-control" id="value" v-model="form.attributeValue" required>
+      </div>
+      <div class="form-group">
+        <label for="listing">Listing</label>
+        <select class="form-control" id="listing" v-model="form.listingId">
+          <option :value="null">-- Select a listing --</option>
+          <option v-for="listing in listings" :key="listing.id" :value="listing.id">{{ listing.title }}</option>
+        </select>
       </div>
       <div class="d-flex justify-content-end mt-3">
         <button type="button" class="btn btn-secondary me-2" @click="showModal = false">Cancel</button>

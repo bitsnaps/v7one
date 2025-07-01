@@ -127,7 +127,7 @@ onMounted(() => {
   </div>
 
   <!-- Conversation Modal -->
-  <BModal ref="conversationModal" title="Conversation Details" size="lg" hide-footer>
+  <BModal ref="conversationModal" title="Conversation Details" size="lg" no-footer no-close-on-backdro>
     <div v-if="selectedConversation">
       <ul class="list-unstyled">
         <li v-for="message in selectedConversation.messages" :key="message.id" class="media mb-2">

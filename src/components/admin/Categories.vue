@@ -112,7 +112,7 @@ onMounted(() => {
     </div>
   </div>
 
-  <b-modal v-model="showModal" :title="modalTitle" @hidden="resetForm" hide-footer>
+  <b-modal v-model="showModal" :title="modalTitle" @hidden="resetForm" no-footer no-close-on-backdro>
     <form @submit.prevent="saveCategory">
       <div class="form-group">
         <label for="name">Name</label>
