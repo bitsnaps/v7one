@@ -58,20 +58,20 @@ const displayedDeals = computed(() => {
             <div class="row g-0 gx-5 align-items-end">
                 <div class="col-lg-6">
                     <div class="text-start mx-auto mb-5">
-                        <h1 class="mb-3">{{ $t('dealsListing.title', 'Deals Listing') }}</h1>
-                        <p>{{ $t('dealsListing.description', "Explore our diverse range of deals. Whether you're looking for a house, villa, apartment, or a commercial space, we've got you covered.") }}</p>
+                        <h1 class="mb-3">{{ $t('deals.title', 'Deals') }}</h1>
+                        <p>{{ $t('deals.description', "Explore our diverse range of deals. Whether you're looking for a house, villa, apartment, or a commercial space, we've got you covered.") }}</p>
                     </div>
                 </div>
                 <div class="col-lg-6 text-start text-lg-end">
                     <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'featured' }" @click.prevent="activeTab = 'featured'" href="#">{{ $t('dealsListing.featured', 'Featured') }}</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'featured' }" @click.prevent="activeTab = 'featured'" href="#">{{ $t('deals.featured', 'Featured') }}</a>
                         </li>
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'FOR_SALE' }" @click.prevent="activeTab = 'FOR_SALE'" href="#">{{ $t('dealsListing.forsale', 'For Sell') }}</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'FOR_SALE' }" @click.prevent="activeTab = 'FOR_SALE'" href="#">{{ $t('deals.forsale', 'For Sell') }}</a>
                         </li>
                         <li class="nav-item me-0">
-                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'FOR_RENT' }" @click.prevent="activeTab = 'FOR_RENT'" href="#">{{ $t('dealsListing.forrent', 'For Rent') }}</a>
+                            <a class="btn btn-outline-primary" :class="{ active: activeTab === 'FOR_RENT' }" @click.prevent="activeTab = 'FOR_RENT'" href="#">{{ $t('deals.forrent', 'For Rent') }}</a>
                         </li>
                     </ul>
                 </div>
@@ -93,7 +93,7 @@ const displayedDeals = computed(() => {
 
                 <!-- No Deals Found State -->
                 <div v-else-if="displayedDeals.length === 0" class="text-center py-5">
-                    <p>{{ $t('dealsListing.noDealsFound', 'No deals found for this category.') }}</p>
+                    <p>{{ $t('deals.noDealsFound', 'No deals found for this category.') }}</p>
                 </div>
 
                 <!-- Deals Display -->
@@ -106,7 +106,7 @@ const displayedDeals = computed(() => {
                     </div>
                 </div>
                 <div class="col-12 text-center mt-4" v-if="displayedDeals.length > 0">
-                    <RouterLink class="btn btn-primary py-3 px-5" to="/category/all">{{ $t('dealsListing.browseMoreDeals', 'Browse More Deals') }}</RouterLink>
+                    <RouterLink class="btn btn-primary py-3 px-5" to="/category/all">{{ $t('deals.browseMoreDeals', 'Browse More Deals') }}</RouterLink>
                 </div>
             </div>
         </div>

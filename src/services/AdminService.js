@@ -4,8 +4,8 @@ export default {
   getDashboardStats() {
     return apiClient.get('/api/admin/dashboard/stats');
   },
-  getRecentListings() {
-    return apiClient.get('/api/admin/dashboard/recent-listings');
+  getRecentDeals() {
+    return apiClient.get('/api/admin/dashboard/recent-deals');
   },
   getRecentUsers() {
     return apiClient.get('/api/admin/dashboard/recent-users');

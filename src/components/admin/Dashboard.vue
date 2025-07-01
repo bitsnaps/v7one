@@ -5,12 +5,12 @@ import AdminService from '../../services/AdminService';
 
 const stats = ref({
   totalUsers: 0,
-  totalListings: 0,
+  totalDeals: 0,
   totalCategories: 0,
-  pendingListings: 0,
+  pendingDeals: 0,
 });
 
-const recentListings = ref([]);
+const recentDeals = ref([]);
 const recentUsers = ref([]);
 
 const fetchStats = async () => {
@@ -24,8 +24,8 @@ const fetchStats = async () => {
 
 const fetchRecentData = async () => {
   try {
-    const listingsResponse = await AdminService.getRecentListings();
-    recentListings.value = listingsResponse.data;
+    const dealsResponse = await AdminService.getRecentDeals();
+    recentDeals.value = dealsResponse.data;
 
     const usersResponse = await AdminService.getRecentUsers();
     recentUsers.value = usersResponse.data;
@@ -73,7 +73,7 @@ onMounted(() => {
                   <div class="card-body">
                     <div class="row">
                       <div class="col mt-0">
-                        <h5 class="card-title">Listings</h5>
+                        <h5 class="card-title">Deals</h5>
                       </div>
 
                       <div class="col-auto">
@@ -82,7 +82,7 @@ onMounted(() => {
                         </div>
                       </div>
                     </div>
-                    <h1 class="mt-1 mb-3">{{ stats.totalListings }}</h1>
+                    <h1 class="mt-1 mb-3">{{ stats.totalDeals }}</h1>
                   </div>
                 </div>
               </div>
@@ -109,7 +109,7 @@ onMounted(() => {
                   <div class="card-body">
                     <div class="row">
                       <div class="col mt-0">
-                        <h5 class="card-title">Pending Listings</h5>
+                        <h5 class="card-title">Pending Deals</h5>
                       </div>
 
                       <div class="col-auto">
@@ -118,7 +118,7 @@ onMounted(() => {
                         </div>
                       </div>
                     </div>
-                    <h1 class="mt-1 mb-3">{{ stats.pendingListings }}</h1>
+                    <h1 class="mt-1 mb-3">{{ stats.pendingDeals }}</h1>
                   </div>
                 </div>
               </div>
@@ -131,7 +131,7 @@ onMounted(() => {
         <div class="col-12 col-lg-8 col-xxl-9 d-flex">
           <div class="card flex-fill">
             <div class="card-header">
-              <h5 class="card-title mb-0">Recent Listings</h5>
+              <h5 class="card-title mb-0">Recent Deals</h5>
             </div>
             <table class="table table-hover my-0">
               <thead>
@@ -144,12 +144,12 @@ onMounted(() => {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="listing in recentListings" :key="listing.id">
-                  <td>{{ listing.title }}</td>
-                  <td class="d-none d-xl-table-cell">{{ listing.category }}</td>
-                  <td class="d-none d-xl-table-cell">{{ listing.user }}</td>
-                  <td><span :class="['badge', {'bg-success': listing.status === 'ACTIVE', 'bg-warning': listing.status === 'SOLD', 'bg-danger': listing.status === 'REMOVED'}]">{{ listing.status }}</span></td>
-                  <td class="d-none d-md-table-cell">{{ listing.date }}</td>
+                <tr v-for="deal in recentDeals" :key="deal.id">
+                  <td>{{ deal.title }}</td>
+                  <td class="d-none d-xl-table-cell">{{ deal.category }}</td>
+                  <td class="d-none d-xl-table-cell">{{ deal.user }}</td>
+                  <td><span :class="['badge', {'bg-success': deal.status === 'ACTIVE', 'bg-warning': deal.status === 'SOLD', 'bg-danger': deal.status === 'REMOVED'}]">{{ deal.status }}</span></td>
+                  <td class="d-none d-md-table-cell">{{ deal.date }}</td>
                 </tr>
               </tbody>
             </table>

@@ -429,7 +429,7 @@ admin.delete('/listings/:id', async (c) => {
 // Get dashboard statistics
 admin.get('/dashboard/stats', async (c) => {
   try {
-    const [userCount, listingCount, categoryCount, pendingListings] = await Promise.all([
+    const [userCount, dealCount, categoryCount, pendingDeals] = await Promise.all([
       models.User.count(),
       models.Listing.count(),
       models.Category.count({ where: { parentId: null } }), // Count only top-level categories
@@ -438,19 +438,19 @@ admin.get('/dashboard/stats', async (c) => {
 
     return c.json({
       totalUsers: userCount,
-      totalListings: listingCount,
+      totalDeals: dealCount,
       totalCategories: categoryCount,
-      pendingListings: pendingListings,
+      pendingDeals: pendingDeals,
     });
   } catch (error) {
     return c.json({ error: 'Failed to fetch dashboard stats', details: error.message }, 500);
   }
 });
 
-// Get recent listings for dashboard
-admin.get('/dashboard/recent-listings', async (c) => {
+// Get recent deals for dashboard
+admin.get('/dashboard/recent-deals', async (c) => {
   try {
-    const listings = await models.Listing.findAll({
+    const deals = await models.Listing.findAll({
       limit: 5,
       order: [['createdAt', 'DESC']],
       include: [
@@ -459,18 +459,18 @@ admin.get('/dashboard/recent-listings', async (c) => {
       ],
     });
 
-    const formattedListings = listings.map(listing => ({
-      id: listing.id,
-      title: listing.title,
-      category: listing.category ? listing.category.name : 'N/A',
-      user: listing.seller ? listing.seller.displayName : 'N/A',
-      status: listing.status,
-      date: listing.createdAt.toISOString().split('T')[0],
+    const formattedDeals = deals.map(deal => ({
+      id: deal.id,
+      title: deal.title,
+      category: deal.category ? deal.category.name : 'N/A',
+      user: deal.seller ? deal.seller.displayName : 'N/A',
+      status: deal.status,
+      date: deal.createdAt.toISOString().split('T')[0],
     }));
 
-    return c.json(formattedListings);
+    return c.json(formattedDeals);
   } catch (error) {
-    return c.json({ error: 'Failed to fetch recent listings', details: error.message }, 500);
+    return c.json({ error: 'Failed to fetch recent deals', details: error.message }, 500);
   }
 });
 

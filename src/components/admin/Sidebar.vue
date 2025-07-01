@@ -37,7 +37,7 @@
 
                 <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/listings' }">
                      <router-link to="/admin/listings" class="sidebar-link">
-                        <i class="align-middle fas fa-list"></i> <span class="align-middle">Listings</span>
+                        <i class="align-middle fas fa-list"></i> <span class="align-middle">Deals</span>
                     </router-link>
                 </li>
                  <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/messages' }">

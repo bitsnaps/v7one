@@ -103,7 +103,7 @@ onMounted(() => {
           <table class="table table-hover text-nowrap">
             <thead>
               <tr>
-                <th>Listing</th>
+                <th>Deal</th>
                 <th>Participants</th>
                 <th>Last Message</th>
                 <th>Actions</th>
@@ -167,10 +167,10 @@ onMounted(() => {
         </select>
       </div>
       <div class="form-group">
-        <label for="listing">Listing (Optional)</label>
+        <label for="listing">Deal (Optional)</label>
         <select class="form-control" id="listing" v-model="conversationForm.listingId">
           <option value="">None</option>
-          <option v-for="listing in listings" :key="listing.id" :value="listing.id">{{ listing.title }}</option>
+          <option v-for="deal in listings" :key="deal.id" :value="deal.id">{{ deal.title }}</option>
         </select>
       </div>
       <div class="form-group">

@@ -102,7 +102,7 @@ onMounted(() => {
               <tr>
                 <th>Name</th>
                 <th>Value</th>
-                <th>Listing</th>
+                <th>Deal</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -134,9 +134,9 @@ onMounted(() => {
         <input type="text" class="form-control" id="value" v-model="form.attributeValue" required>
       </div>
       <div class="form-group">
-        <label for="listing">Listing</label>
+        <label for="listing">Deal</label>
         <select class="form-control" id="listing" v-model="form.listingId">
-          <option :value="null">-- Select a listing --</option>
+          <option :value="null">-- Select a deal --</option>
           <option v-for="listing in listings" :key="listing.id" :value="listing.id">{{ listing.title }}</option>
         </select>
       </div>

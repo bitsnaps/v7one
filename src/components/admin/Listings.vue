@@ -1,10 +1,10 @@
 <template>
-  <h1 class="h3 mb-3">Listings</h1>
+  <h1 class="h3 mb-3">Deals</h1>
   <div class="row">
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h5 class="card-title">Listings</h5>
+          <h5 class="card-title">Deals</h5>
           <div class="card-tools d-flex">
              <BButton variant="primary" size="sm" class="me-2" @click="openModal()">Add New</BButton>
             <div class="input-group input-group-sm" style="width: 250px;">
@@ -80,7 +80,7 @@
     </div>
   </div>
 
-  <b-modal v-model="showModal" :title="editMode ? 'Edit Listing' : 'Create New Listing'" @hidden="resetForm" no-footer no-close-on-backdrop>
+  <b-modal v-model="showModal" :title="editMode ? 'Edit Deal' : 'Create New Deal'" @hidden="resetForm" no-footer no-close-on-backdrop>
     <form @submit.prevent="saveListing">
       <div class="form-group">
         <label for="title">Title</label>
@@ -95,7 +95,7 @@
         <input type="number" class="form-control" id="price" v-model="form.price" required>
       </div>
       <div class="form-group">
-        <label for="listType">Listing Type</label>
+        <label for="listType">Deal Type</label>
         <select class="form-control" id="listType" v-model="form.listType" required>
           <option>FOR_SALE</option>
           <option>FOR_RENT</option>
@@ -196,7 +196,7 @@ const fetchListings = async (currentPage = 1) => {
       path: '/api/admin/listings',
     };
   } catch (error) {
-    console.error('Error fetching listings:', error);
+    console.error('Error fetching deals:', error);
   }
 };
 
@@ -205,7 +205,7 @@ const updateStatus = async (id, status) => {
     await AdminService.updateListingStatus(id, status.toUpperCase());
     fetchListings(pagination.value.current_page);
   } catch (error) {
-    console.error('Error updating listing status:', error);
+    console.error('Error updating deal status:', error);
   }
 };
 
@@ -279,7 +279,7 @@ const saveListing = async () => {
     fetchListings();
     showModal.value = false;
   } catch (error) {
-    console.error(`Error ${editMode.value ? 'updating' : 'creating'} listing:`, error);
+    console.error(`Error ${editMode.value ? 'updating' : 'creating'} deal:`, error);
   }
 };
 

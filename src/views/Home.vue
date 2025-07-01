@@ -100,7 +100,7 @@ const resetSearch = () => {
                       <select v-model="selectedDealType" class="form-select border-0 py-3">
                         <option value="" selected>{{ $t('home.allDealTypes', 'All Deal Types') }}</option>
                         <option value="real_estate">{{ $t('home.realEstate', 'Real Estate') }}</option>
-                        <option value="apartments">{{ $t('dealsListing.types.apartment', 'Apartment') }}</option>
+                        <option value="apartments">{{ $t('deals.types.apartment', 'Apartment') }}</option>
                         <option value="cars">{{ $t('home.cars', 'Cars') }}</option>
                         <option value="electronics">{{ $t('home.electronics', 'Electronics') }}</option>
                         <option value="services">{{ $t('home.services', 'Services') }}</option>
@@ -175,7 +175,7 @@ const resetSearch = () => {
                       <h1 class="mb-4">{{ $t('home.aboutTitle', '#1 Marketplace for Your Deals') }}</h1>
                       <p class="mb-4">{{ $t('home.aboutDescription', 'V7 Deals is your trusted platform for finding and making deals on real estate, cars, and much more. We connect buyers and sellers in a seamless and secure environment, focusing on quality and trust.') }}</p>
                       <p><i class="fa fa-check text-primary me-3"></i>{{ $t('home.aboutFeature1', 'Wide Range of Categories') }}</p>
-                      <p><i class="fa fa-check text-primary me-3"></i>{{ $t('home.aboutFeature2', 'Verified Listings & Sellers') }}</p>
+                      <p><i class="fa fa-check text-primary me-3"></i>{{ $t('home.aboutFeature2', 'Verified Deals & Sellers') }}</p>
                       <p><i class="fa fa-check text-primary me-3"></i>{{ $t('home.aboutFeature3', 'Secure Transaction Options') }}</p>
                       <router-link to="/about" class="btn btn-primary py-3 px-5 mt-3">{{ $t('home.readMore', 'Read More') }}</router-link>
                   </div>
