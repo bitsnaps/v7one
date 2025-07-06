@@ -122,7 +122,7 @@ const filteredDeals = computed(() => {
         const filterValue = activeFilters.value[filterKey];
         
         // Client-side filtering for attributes, as the main category filtering is now server-side
-        if (deal.attributes && deal.attributes.hasOwnProperty(filterKey)) {
+        if (deal.attributes && deal.attributes[filterKey] !== undefined) {
           return String(deal.attributes[filterKey]) === String(filterValue);
         }
 

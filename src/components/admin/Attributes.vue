@@ -3,26 +3,19 @@ import { ref, onMounted, reactive, computed } from 'vue';
 import AdminService from '../../services/AdminService';
 
 const attributes = ref([]);
+const categories = ref([]);
 const editMode = ref(false);
 const showModal = ref(false);
-const listings = ref([]);
+
 const form = reactive({
   id: null,
-  attributeName: '',
-  attributeValue: '',
-  listingId: null,
+  name: '',
+  type: 'TEXT',
+  isRequired: false,
+  categoryId: null,
 });
 
 const modalTitle = computed(() => (editMode.value ? 'Edit Attribute' : 'Add Attribute'));
-
-const fetchListings = async () => {
-  try {
-    const response = await AdminService.getListings();
-    listings.value = response.data.listings;
-  } catch (error) {
-    console.error('Error fetching listings:', error);
-  }
-};
 
 const fetchAttributes = async () => {
   try {
@@ -33,11 +26,21 @@ const fetchAttributes = async () => {
   }
 };
 
+const fetchCategories = async () => {
+  try {
+    const response = await AdminService.getCategories();
+    categories.value = response.data;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+  }
+};
+
 const resetForm = () => {
   form.id = null;
-  form.attributeName = '';
-  form.attributeValue = '';
-  form.listingId = null;
+  form.name = '';
+  form.type = 'TEXT';
+  form.isRequired = false;
+  form.categoryId = null;
   editMode.value = false;
 };
 
@@ -45,9 +48,10 @@ const openModal = (attribute = null) => {
   if (attribute) {
     editMode.value = true;
     form.id = attribute.id;
-    form.attributeName = attribute.attributeName;
-    form.attributeValue = attribute.attributeValue;
-    form.listingId = attribute.listingId;
+    form.name = attribute.name;
+    form.type = attribute.type;
+    form.isRequired = attribute.isRequired;
+    form.categoryId = attribute.categoryId;
   } else {
     resetForm();
   }
@@ -81,7 +85,7 @@ const deleteAttribute = async (id) => {
 
 onMounted(() => {
   fetchAttributes();
-  fetchListings();
+  fetchCategories();
 });
 </script>
 
@@ -103,16 +107,22 @@ onMounted(() => {
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Value</th>
-                    <th>Deal</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Is Required</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="attribute in attributes" :key="attribute.id">
-                    <td>{{ attribute.attributeName }}</td>
-                    <td>{{ attribute.attributeValue }}</td>
-                    <td>{{ attribute.Listing ? attribute.Listing.title : 'N/A' }}</td>
+                    <td>{{ attribute.name }}</td>
+                    <td>{{ attribute.type }}</td>
+                    <td>{{ attribute.category ? attribute.category.name : 'N/A' }}</td>
+                    <td>
+                      <span :class="['badge', attribute.isRequired ? 'bg-success' : 'bg-secondary']">
+                        {{ attribute.isRequired ? 'Yes' : 'No' }}
+                      </span>
+                    </td>
                     <td>
                       <button class="btn btn-sm btn-secondary me-2" @click="openModal(attribute)">Edit</button>
                       <button class="btn btn-sm btn-danger" @click="deleteAttribute(attribute.id)">Delete</button>
@@ -128,19 +138,30 @@ onMounted(() => {
       <b-modal v-model="showModal" :title="modalTitle" @hidden="resetForm" no-footer no-close-on-backdro no-close-on-backdrop>
         <form @submit.prevent="saveAttribute">
           <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" v-model="form.attributeName" required>
+            <label for="name">Attribute Name</label>
+            <input type="text" class="form-control" id="name" v-model="form.name" required>
           </div>
-          <div class="form-group">
-            <label for="value">Value</label>
-            <input type="text" class="form-control" id="value" v-model="form.attributeValue" required>
-          </div>
-          <div class="form-group">
-            <label for="listing">Deal</label>
-            <select class="form-control" id="listing" v-model="form.listingId">
-              <option :value="null">-- Select a deal --</option>
-              <option v-for="listing in listings" :key="listing.id" :value="listing.id">{{ listing.title }}</option>
+          <div class="form-group mt-2">
+            <label for="type">Attribute Type</label>
+            <select class="form-control" id="type" v-model="form.type">
+              <option value="TEXT">Text</option>
+              <option value="NUMBER">Number</option>
+              <option value="BOOLEAN">Yes/No</option>
+              <option value="DATE">Date</option>
             </select>
+          </div>
+          <div class="form-group mt-2">
+            <label for="category">Category</label>
+            <select class="form-control" id="category" v-model="form.categoryId" required>
+              <option :value="null">-- Select Category --</option>
+              <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+            </select>
+          </div>
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox" id="isRequired" v-model="form.isRequired">
+            <label class="form-check-label" for="isRequired">
+              Is Required?
+            </label>
           </div>
           <div class="d-flex justify-content-end mt-3">
             <button type="button" class="btn btn-secondary me-2" @click="showModal = false">Cancel</button>

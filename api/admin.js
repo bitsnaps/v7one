@@ -242,13 +242,13 @@ admin.delete('/categories/:id', async (c) => {
 // Attribute Management Routes
 admin.get('/attributes', async (c) => {
   try {
-    const attributes = await models.ListingAttribute.findAll({
+    const attributes = await models.Attribute.findAll({
       include: [{
-        model: models.Listing,
-        // as: 'listing',
-        attributes: ['id', 'title']
+        model: models.Category,
+        as: 'category',
+        attributes: ['id', 'name'] // Include category name for context
       }],
-      order: [['attributeName', 'ASC']],
+      order: [['name', 'ASC']],
     });
     return c.json(attributes);
   } catch (error) {
@@ -257,9 +257,14 @@ admin.get('/attributes', async (c) => {
 });
 
 admin.post('/attributes', async (c) => {
-  const { attributeName, attributeValue, listingId } = await c.req.json();
+  const { name, type, isRequired, categoryId } = await c.req.json();
   try {
-    const attribute = await models.ListingAttribute.create({ attributeName, attributeValue, listingId });
+    const attribute = await models.Attribute.create({
+      name,
+      type,
+      isRequired,
+      categoryId
+    });
     return c.json(attribute, 201);
   } catch (error) {
     return c.json({ error: 'Failed to create attribute', details: error.message }, 500);
@@ -268,13 +273,18 @@ admin.post('/attributes', async (c) => {
 
 admin.put('/attributes/:id', async (c) => {
   const { id } = c.req.param();
-  const { attributeName, attributeValue, listingId } = await c.req.json();
+  const { name, type, isRequired, categoryId } = await c.req.json();
   try {
-    const attribute = await models.ListingAttribute.findByPk(id);
+    const attribute = await models.Attribute.findByPk(id);
     if (!attribute) {
       return c.json({ error: 'Attribute not found' }, 404);
     }
-    await attribute.update({ attributeName, attributeValue, listingId });
+    await attribute.update({
+      name,
+      type,
+      isRequired,
+      categoryId
+    });
     return c.json(attribute);
   } catch (error) {
     return c.json({ error: 'Failed to update attribute', details: error.message }, 500);
@@ -284,7 +294,7 @@ admin.put('/attributes/:id', async (c) => {
 admin.delete('/attributes/:id', async (c) => {
   const { id } = c.req.param();
   try {
-    const attribute = await models.ListingAttribute.findByPk(id);
+    const attribute = await models.Attribute.findByPk(id);
     if (!attribute) {
       return c.json({ error: 'Attribute not found' }, 404);
     }

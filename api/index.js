@@ -298,7 +298,7 @@ app.post('/api/seeds', async (c) => {
       '20250603153302-categories-deals.js',
       '20250603153332-initial-plans.js', // Plans can be seeded before or after users/categories, but before deals if deals depend on plans (not the case here)
       '20250603153313-initial-deals.js', // Deals depend on users and categories
-      '20250603153314-initial-listing-attributes.js', // ListingAttributes depend on listings
+      '20250603153314-initial-attributes.js', // Attributes depend on categories
     ];
   
     try {
@@ -445,7 +445,11 @@ app.get('/api/deals/:type?', async (c) => {
         const includeClause = [
             { model: models.User, as: 'seller', attributes: ['id', 'email'] }, 
             { model: models.Category, as: 'category', attributes: ['id', 'name', 'slug', 'type'] },
-            { model: models.ListingAttribute, as: 'attributes' }
+            {
+              model: models.ListingAttributeValue,
+              as: 'attributeValues',
+              include: [{ model: models.Attribute, as: 'attribute' }] // Include the attribute definition
+            }
         ];
 
         if (type) {
@@ -504,10 +508,12 @@ app.get('/api/deals/:type?', async (c) => {
 
         const formattedDeals = rows.map(deal => {
             const attributes = {};
-            if (deal.attributes) {
-                for (const attr of deal.attributes) {
-                    attributes[attr.attributeName.toLowerCase()] = attr.attributeValue;
+            if (deal.attributeValues) {
+              for (const attrValue of deal.attributeValues) {
+                if (attrValue.attribute) { // Check if attribute definition is loaded
+                  attributes[attrValue.attribute.name.toLowerCase()] = attrValue.value;
                 }
+              }
             }
 
             return {

@@ -214,26 +214,55 @@ const ListingMedia = sequelize.define('ListingMedia', {
   updatedAt: DataTypes.DATE,
 });
 
-// --- Listing Attributes Model (for dynamic, category-specific fields) ---
-// This is a key-value store for extra attributes
-const ListingAttribute = sequelize.define('ListingAttribute', {
+// --- Category Attribute Definitions ---
+// Defines the *types* of attributes a category can have (e.g., "Color", "Size")
+const Attribute = sequelize.define('Attribute', {
   id: {
     type: DataTypes.UUID,
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true,
   },
-  attributeName: { // E.g., 'Make', 'Model', 'Bedrooms', 'Service Area'
+  name: { // E.g., 'Make', 'Model', 'Bedrooms', 'Service Area'
     type: DataTypes.STRING,
     allowNull: false,
   },
-  attributeValue: {
-    type: DataTypes.STRING, // Store all values as strings; parse on application level
+  // A new `type` colomn that will hold the type of the attribute 'TEXT', 'NUMBER', 'BOOLEAN', 'DATE'
+  type: {
+    type: DataTypes.ENUM('TEXT', 'NUMBER', 'BOOLEAN', 'DATE'),
+    allowNull: false,
+    defaultValue: 'TEXT',
+  },
+  // A new colomn that will hold whether the attribute is required or not
+  isRequired: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  },
+  // categoryId (Foreign Key) will be added by association
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+}, {
+  tableName: 'Attributes'
+});
+
+// --- Listing Attribute Values ---
+// Stores the *actual values* for the attributes of a specific listing
+const ListingAttributeValue = sequelize.define('ListingAttributeValue', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: Sequelize.UUIDV4,
+    primaryKey: true,
+  },
+  value: {
+    type: DataTypes.TEXT, // Using TEXT to accommodate various value lengths
     allowNull: false,
   },
   // listingId (Foreign Key) will be added by association
-  // Timestamps
+  // attributeId (Foreign Key) will be added by association
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE,
+}, {
+  tableName: 'ListingAttributeValues'
 });
 
 // --- Message Model ---
@@ -472,9 +501,17 @@ Listing.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
 Listing.hasMany(ListingMedia, { foreignKey: 'listingId', as: 'media', onDelete: 'CASCADE' });
 ListingMedia.belongsTo(Listing, { foreignKey: 'listingId' });
 
-// Listing and ListingAttribute
-Listing.hasMany(ListingAttribute, { foreignKey: 'listingId', as: 'attributes', onDelete: 'CASCADE' });
-ListingAttribute.belongsTo(Listing, { foreignKey: 'listingId' });
+// Category and Attribute (a category has many attribute definitions)
+Category.hasMany(Attribute, { foreignKey: 'categoryId', as: 'attributes', onDelete: 'CASCADE' });
+Attribute.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
+
+// Listing and ListingAttributeValue (a listing has many attribute values)
+Listing.hasMany(ListingAttributeValue, { foreignKey: 'listingId', as: 'attributeValues', onDelete: 'CASCADE' });
+ListingAttributeValue.belongsTo(Listing, { foreignKey: 'listingId' });
+
+// Attribute and ListingAttributeValue (an attribute can have many values across different listings)
+Attribute.hasMany(ListingAttributeValue, { foreignKey: 'attributeId', as: 'values' });
+ListingAttributeValue.belongsTo(Attribute, { foreignKey: 'attributeId', as: 'attribute' });
 
 // User and Message (Sender/Receiver) & Listing (Context) & Conversation
 // User (Sender) and Conversation
@@ -547,7 +584,8 @@ module.exports = {
   Category,
   Listing,
   ListingMedia,
-  ListingAttribute,
+  Attribute,
+  ListingAttributeValue,
   Message,
   Conversation,
   Review,
