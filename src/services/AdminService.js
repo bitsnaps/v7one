@@ -90,6 +90,9 @@ getAttributes() {
     return apiClient.post('/api/admin/messages', data);
   },
 editMessage(messageId, content) {
-    return apiClient.put(`/api/admin/messages/${messageId}`, { content });
-  },
+  return apiClient.put(`/api/admin/messages/message/${messageId}`, { content });
+},
+deleteMessage(messageId) {
+  return apiClient.delete(`/api/admin/messages/message/${messageId}`);
+},
 };

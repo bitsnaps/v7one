@@ -611,8 +611,9 @@ admin.post('/messages/:id/reply', async (c) => {
     return c.json({ error: 'Failed to send message', details: error.message }, 500);
   }
 });
+
 // Edit a message
-admin.put('/messages/:messageId', async (c) => {
+admin.put('/messages/message/:messageId', async (c) => {
   const { messageId } = c.req.param();
   const { content } = await c.req.json();
 
@@ -632,6 +633,24 @@ admin.put('/messages/:messageId', async (c) => {
     return c.json(message);
   } catch (error) {
     return c.json({ error: 'Failed to update message', details: error.message }, 500);
+  }
+});
+
+// Delete a message
+admin.delete('/messages/message/:messageId', async (c) => {
+  const { messageId } = c.req.param();
+
+  try {
+    const message = await models.Message.findByPk(messageId);
+    if (!message) {
+      return c.json({ error: 'Message not found' }, 404);
+    }
+    
+    await message.destroy();
+
+    return c.json({ success: true, message: 'Message deleted successfully' });
+  } catch (error) {
+    return c.json({ error: 'Failed to delete message', details: error.message }, 500);
   }
 });
 

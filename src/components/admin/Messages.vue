@@ -105,6 +105,16 @@ const saveMessage = async (messageId) => {
    console.error('Error updating message:', error);
  }
 };
+const deleteMessage = async (messageId) => {
+if (confirm('Are you sure you want to delete this message?')) {
+  try {
+    await AdminService.deleteMessage(messageId);
+    await viewConversation(selectedConversation.value);
+  } catch (error) {
+    console.error('Error deleting message:', error);
+  }
+}
+};
 
 onMounted(() => {
   fetchConversations();
@@ -168,7 +178,7 @@ onMounted(() => {
                </div>
                <p v-else>{{ message.content }}</p>
                <BButton  v-if="!editingMessage || editingMessage.id !== message.id" variant="secondary" size="sm" @click="startEditing(message)">Edit</BButton>
-
+               <BButton variant="danger" size="sm" @click="deleteMessage(message.id)" class="ms-2">Delete</BButton>
               </div>
             </li>
           </ul>
