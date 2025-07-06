@@ -611,6 +611,29 @@ admin.post('/messages/:id/reply', async (c) => {
     return c.json({ error: 'Failed to send message', details: error.message }, 500);
   }
 });
+// Edit a message
+admin.put('/messages/:messageId', async (c) => {
+  const { messageId } = c.req.param();
+  const { content } = await c.req.json();
+
+  if (!content) {
+    return c.json({ error: 'Message content cannot be empty' }, 400);
+  }
+
+  try {
+    const message = await models.Message.findByPk(messageId);
+    if (!message) {
+      return c.json({ error: 'Message not found' }, 404);
+    }
+    
+    message.content = content;
+    await message.save();
+
+    return c.json(message);
+  } catch (error) {
+    return c.json({ error: 'Failed to update message', details: error.message }, 500);
+  }
+});
 
 // Create a new conversation
 admin.post('/messages', async (c) => {

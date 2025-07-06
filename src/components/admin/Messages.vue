@@ -8,6 +8,8 @@ const selectedConversation = ref(null);
 const replyContent = ref('');
 const users = ref([]);
 const listings = ref([]);
+const editingMessage = ref(null);
+const editedContent = ref('');
 const conversationForm = reactive({
   userOneId: '',
   userTwoId: '',
@@ -83,6 +85,26 @@ const createConversation = async () => {
     console.error('Error creating conversation:', error);
   }
 };
+const startEditing = (message) => {
+ editingMessage.value = message;
+ editedContent.value = message.content;
+};
+
+const cancelEditing = () => {
+ editingMessage.value = null;
+ editedContent.value = '';
+};
+
+const saveMessage = async (messageId) => {
+ if (!editedContent.value.trim()) return;
+ try {
+   await AdminService.editMessage(messageId, editedContent.value);
+   await viewConversation(selectedConversation.value);
+   cancelEditing();
+ } catch (error) {
+   console.error('Error updating message:', error);
+ }
+};
 
 onMounted(() => {
   fetchConversations();
@@ -139,7 +161,14 @@ onMounted(() => {
                   <strong>{{ message.sender.displayName || message.sender.email }}</strong>
                   <small>{{ message.createdAt?new Date(message.createdAt).toLocaleString():'N/A' }}</small>
                 </div>
-                <p>{{ message.content }}</p>
+                <div v-if="editingMessage && editingMessage.id === message.id">
+                 <textarea v-model="editedContent" class="form-control mb-2"></textarea>
+                 <BButton variant="primary" size="sm" @click="saveMessage(message.id)">Save</BButton>
+                 <BButton variant="secondary" size="sm" @click="cancelEditing" class="ms-2">Cancel</BButton>
+               </div>
+               <p v-else>{{ message.content }}</p>
+               <BButton  v-if="!editingMessage || editingMessage.id !== message.id" variant="secondary" size="sm" @click="startEditing(message)">Edit</BButton>
+
               </div>
             </li>
           </ul>
