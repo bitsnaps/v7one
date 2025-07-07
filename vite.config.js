@@ -6,28 +6,45 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { BootstrapVueNextResolver } from 'bootstrap-vue-next'
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    vue(),
-    Components({
-      resolvers: [ 
-        BootstrapVueNextResolver(),
-       ],
-    }),
-    AutoImport({
-      imports: [
-        'vue',
-        // 'vue-router',
-        // 'vue-i18n',
-        // 'vue/macros',
-        // '@vueuse/head',
-        // '@vueuse/core',
-      ],
-    })
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  },
+export default defineConfig(({ command }) => {
+  const config = {
+    plugins: [
+      vue(),
+      Components({
+        resolvers: [
+          BootstrapVueNextResolver(),
+        ],
+      }),
+      AutoImport({
+        imports: [
+          'vue',
+          // 'vue-router',
+          // 'vue-i18n',
+          // 'vue/macros',
+          // '@vueuse/head',
+          // '@vueuse/core',
+        ],
+      })
+    ],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url))
+      }
+    },
+  };
+
+  // Conditionally add the server proxy for development (serve command)
+  if (command === 'serve') {
+    config.server = {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+          secure: false,
+        }
+      }
+    };
+  }
+
+  return config;
 })

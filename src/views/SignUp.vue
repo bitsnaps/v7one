@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const firstName = ref('');
 const lastName = ref('');
 const usernameOrEmail = ref('');
@@ -16,7 +18,30 @@ const handleSignUp = async () => {
         errorMessage.value = 'Please fill in all fields.';
         return;
     }
-    console.log('Attempting to sign up with:', firstName.value, lastName.value, usernameOrEmail.value, password.value);
+    try {
+        const response = await fetch('/api/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                firstName: firstName.value,
+                lastName: lastName.value,
+                username: usernameOrEmail.value,
+                password: password.value,
+            }),
+        });
+        const data = await response.json();
+        if (data.success) {
+            // Redirect to sign-in page on successful signup
+            router.push('/signin');
+        } else {
+            errorMessage.value = data.message || 'An unknown error occurred.';
+        }
+    } catch (error) {
+        console.error('Signup request failed:', error);
+        errorMessage.value = 'Failed to connect to the server.';
+    }
 };
 
 const handleGoogleSignUp = () => {

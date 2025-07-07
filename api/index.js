@@ -331,10 +331,10 @@ app.post('/api/seeds', async (c) => {
 
 app.post('/api/signup', async (c) => {
     try {
-        const { username, password } = await c.req.json();
+        const { firstName, lastName, username, password } = await c.req.json();
 
-        if (!username || !password) {
-            return c.json({ success: false, message: 'Username and password are required' }, 400);
+        if (!firstName || !lastName || !username || !password) {
+            return c.json({ success: false, message: 'All fields are required' }, 400);
         }
 
         const existingUser = await models.User.findOne({ where: { email: username } });
@@ -345,6 +345,7 @@ app.post('/api/signup', async (c) => {
         const newUser = await models.User.create({
             email: username,
             passwordHash: hashPassword(password),
+            displayName: `${firstName} ${lastName}`,
             isAdmin: false,
             isVerified: false // Registered users must validate their email
         });
@@ -353,6 +354,7 @@ app.post('/api/signup', async (c) => {
     } catch (error) {
         console.error('Signup error:', error);
         return c.json({ success: false, message: 'An error occurred during signup' }, 500);
+        // return c.json({ success: false, message: error.message }, 500);
     }
 });
 
