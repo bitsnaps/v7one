@@ -168,7 +168,10 @@
     "alreadyHaveAccount": "Vous avez déjà un compte ?",
     "signInLink": "Se Connecter",
     "signUpWithGoogle": "S'inscrire avec Google",
-    "signUpWithFacebook": "S'inscrire avec Facebook"
+    "signUpWithFacebook": "S'inscrire avec Facebook",
+    "thanksForSignUp": "Merci pour s'inscrire!",
+    "verifyYourEmail": "Nous vous avons envoyé un lien de vérification à votre adresse e-mail. Veuillez cliquer dessus pour finaliser votre inscription.",
+    "backToSignIn":"Retour à la connexion"
   },
   "testimonial": {
     "title": "Ce Que Disent Nos Clients",

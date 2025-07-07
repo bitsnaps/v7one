@@ -173,7 +173,10 @@
     "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
     "signInLink": "تسجيل الدخول",
     "signUpWithGoogle": "الاشتراك باستخدام جوجل",
-    "signUpWithFacebook": "الاشتراك باستخدام فيسبوك"
+    "signUpWithFacebook": "الاشتراك باستخدام فيسبوك",
+    "thanksForSignUp": "شكرا لك على التسجيل!",
+    "verifyYourEmail": "لقد أرسلنا رابط التحقق إلى بريدك الإلكتروني. يُرجى الضغط عليه لإكمال تسجيلك.",
+    "backToSignIn":"العودة لتسجيل الدخول"
   },
   "testimonial": {
     "title": "ما يقوله عملاؤنا",

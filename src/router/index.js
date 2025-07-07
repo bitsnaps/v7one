@@ -10,6 +10,7 @@ import SignIn from '@/views/SignIn.vue';
 import CategoryView from '@/views/CategoryView.vue';
 import NotFound from '@/views/NotFound.vue';
 import DealDetail from '@/views/DealDetail.vue';
+import ValidateEmail from '@/views/ValidateEmail.vue'
 import AdminDashboard from '@/components/admin/Dashboard.vue';
 import AdminUsers from '@/components/admin/Users.vue';
 import AdminCategories from '@/components/admin/Categories.vue';
@@ -53,6 +54,11 @@ const routes = [
         path: 'signup',
         name: 'SignUp',
         component: () => import('@/views/SignUp.vue'),
+      },
+      {
+        path: 'validate-email',
+        name: 'ValidateEmail',
+        component: ValidateEmail,
       },
       {
         path: 'category/:type',

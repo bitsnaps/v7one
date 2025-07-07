@@ -33,8 +33,8 @@ const handleSignUp = async () => {
         });
         const data = await response.json();
         if (data.success) {
-            // Redirect to sign-in page on successful signup
-            router.push('/signin');
+            // Redirect to the email validation page
+            router.push('/validate-email');
         } else {
             errorMessage.value = data.message || 'An unknown error occurred.';
         }
