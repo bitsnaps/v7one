@@ -33,7 +33,11 @@ export const useAuthStore = defineStore('auth', {
           return false;
         }
       } catch (error) {
-        this.error = error.response?.data?.message || error.message || 'An unexpected error occurred during login.';
+        if (error.response?.data?.errorCode === 'EMAIL_NOT_VERIFIED') {
+          this.error = 'Please verify your email address before logging in. Check your inbox for the verification link.';
+        } else {
+          this.error = error.response?.data?.message || error.message || 'An unexpected error occurred during login.';
+        }
         return false;
       } finally {
         this.loading = false;

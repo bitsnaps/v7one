@@ -376,11 +376,18 @@ app.post('/api/login', async (c) => {
           return c.json({ success: false, message: 'Invalid username or password' }, 401);
       }
 
+      if (!user.isAdmin){
+        // Check if the user's email is verified
+        if (!user.isVerified) {
+          return c.json({ success: false, message: 'Please verify your email before logging in.', errorCode: 'EMAIL_NOT_VERIFIED' }, 403);
+        }
+      }
+
       // Generate JWT
       const token = jwt.sign({ id: user.id, email: user.email, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '1h' });
       
       console.log('User logged in:', username);
-      return c.json({ success: true, message: 'Login successful', token: token, user: { id: user.id, email: user.email, isAdmin: user.isAdmin } });
+      return c.json({ success: true, message: 'Login successful', token: token, user: { id: user.id, email: user.email, isVerified: user.isVerified, isAdmin: user.isAdmin } });
   } catch (error) {
       console.error('Login error:', error);
       return c.json({ success: false, message: 'An error occurred during login' }, 500);
