@@ -304,6 +304,68 @@ admin.delete('/attributes/:id', async (c) => {
     return c.json({ error: 'Failed to delete attribute', details: error.message }, 500);
   }
 });
+
+// Attribute Values Management
+admin.get('/attribute-values', async (c) => {
+    try {
+        const attributeValues = await models.ListingAttributeValue.findAll({
+            include: [
+                { model: models.Listing, as: 'listing' },
+                { model: models.Attribute, as: 'attribute' }
+            ]
+        });
+        return c.json(attributeValues);
+    } catch (error) {
+        return c.json({ error: 'Failed to fetch attribute values', details: error.message }, 500);
+    }
+});
+
+admin.post('/attribute-values', async (c) => {
+    const { listingId, attributeId, value } = await c.req.json();
+    try {
+        const [attributeValue, created] = await models.ListingAttributeValue.findOrCreate({
+            where: { listingId, attributeId },
+            defaults: { value }
+        });
+
+        if (!created) {
+            await attributeValue.update({ value });
+        }
+
+        return c.json(attributeValue, 201);
+    } catch (error) {
+        return c.json({ error: 'Failed to create or update attribute value', details: error.message }, 500);
+    }
+});
+
+admin.put('/attribute-values/:id', async (c) => {
+    const { id } = c.req.param();
+    const { value } = await c.req.json();
+    try {
+        const attributeValue = await models.ListingAttributeValue.findByPk(id);
+        if (!attributeValue) {
+            return c.json({ error: 'Attribute value not found' }, 404);
+        }
+        await attributeValue.update({ value });
+        return c.json(attributeValue);
+    } catch (error) {
+        return c.json({ error: 'Failed to update attribute value', details: error.message }, 500);
+    }
+});
+
+admin.delete('/attribute-values/:id', async (c) => {
+    const { id } = c.req.param();
+    try {
+        const attributeValue = await models.ListingAttributeValue.findByPk(id);
+        if (!attributeValue) {
+            return c.json({ error: 'Attribute value not found' }, 404);
+        }
+        await attributeValue.destroy();
+        return c.json({ message: 'Attribute value deleted successfully' });
+    } catch (error) {
+        return c.json({ error: 'Failed to delete attribute value', details: error.message }, 500);
+    }
+});
 // Listing Management Routes
 
 // Get all listings with filtering and pagination

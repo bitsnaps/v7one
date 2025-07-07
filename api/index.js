@@ -516,13 +516,47 @@ app.get('/api/deals/:type?', async (c) => {
             ];
         }
 
-        const { count, rows } = await models.Listing.findAndCountAll({
+        const categoryWhere = {};
+        if (type && type !== 'all') {
+            categoryWhere.type = type;
+        }
+        if (category) {
+            categoryWhere.slug = category;
+        }
+
+        if (Object.keys(categoryWhere).length > 0) {
+            const categories = await models.Category.findAll({ where: categoryWhere, attributes: ['id'] });
+            const categoryIds = categories.map(cat => cat.id);
+            if (categoryIds.length === 0) {
+                 // If no categories match, no listings will match either.
+                return c.json({
+                    success: true, data: [], total: 0, page: 1, limit: limit, totalPages: 0
+                });
+            }
+            whereClause.categoryId = { [Op.in]: categoryIds };
+        }
+        
+        const { count, rows: listingsForPage } = await models.Listing.findAndCountAll({
             where: whereClause,
-            include: includeClause,
             limit: limit,
             offset: offset,
             order: [['createdAt', 'DESC']],
-            subQuery: false
+            attributes: ['id'] // Fetch only IDs for this step
+        });
+
+        const listingIds = listingsForPage.map(l => l.id);
+
+        if (listingIds.length === 0) {
+            return c.json({
+                success: true, data: [], total: count, page, limit, totalPages: Math.ceil(count/limit)
+            });
+        }
+        
+        // Step 2: Fetch the full listing data for the IDs found
+        const rows = await models.Listing.findAll({
+            where: { id: { [Op.in]: listingIds } },
+            include: includeClause,
+            order: [['createdAt', 'DESC']],
         });
 
         const formattedDeals = rows.map(deal => {
@@ -556,7 +590,7 @@ app.get('/api/deals/:type?', async (c) => {
             total: count,
             page: page,
             limit: limit,
-            totalPages: Math.ceil(count / limit)
+            totalPages: Math.ceil(count / limit),
         });
     } catch (error) {
         console.error('Error fetching deals:', error);

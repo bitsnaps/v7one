@@ -49,6 +49,18 @@ getAttributes() {
   deleteAttribute(id) {
     return apiClient.delete(`/api/admin/attributes/${id}`);
   },
+  getAttributeValues() {
+    return apiClient.get('/api/admin/attribute-values');
+  },
+  createAttributeValue(data) {
+    return apiClient.post('/api/admin/attribute-values', data);
+  },
+  updateAttributeValue(id, data) {
+    return apiClient.put(`/api/admin/attribute-values/${id}`, data);
+  },
+  deleteAttributeValue(id) {
+    return apiClient.delete(`/api/admin/attribute-values/${id}`);
+  },
   getListings(page = 1, search = '') {
     const params = new URLSearchParams();
     if (typeof(page)=='number'){

@@ -35,6 +35,12 @@
                     </router-link>
                 </li>
 
+                <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/attribute-values' }">
+                    <router-link to="/admin/attribute-values" class="sidebar-link">
+                        <i class="align-middle fas fa-tshirt"></i> <span class="align-middle">Attribute Values</span>
+                    </router-link>
+                </li>
+
                 <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/listings' }">
                      <router-link to="/admin/listings" class="sidebar-link">
                         <i class="align-middle fas fa-list"></i> <span class="align-middle">Deals</span>

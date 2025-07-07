@@ -20,7 +20,6 @@ const attributeConfig = {
 };
 
 const relevantAttributes = computed(() => {
-    console.log(props.deal.attributes);
     if (!props.deal.attributes || Object.keys(props.deal.attributes).length === 0) {
         return [];
     }

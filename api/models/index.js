@@ -507,7 +507,7 @@ Attribute.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
 
 // Listing and ListingAttributeValue (a listing has many attribute values)
 Listing.hasMany(ListingAttributeValue, { foreignKey: 'listingId', as: 'attributeValues', onDelete: 'CASCADE' });
-ListingAttributeValue.belongsTo(Listing, { foreignKey: 'listingId' });
+ListingAttributeValue.belongsTo(Listing, { foreignKey: 'listingId', as: 'listing' });
 
 // Attribute and ListingAttributeValue (an attribute can have many values across different listings)
 Attribute.hasMany(ListingAttributeValue, { foreignKey: 'attributeId', as: 'values' });
