@@ -20,13 +20,25 @@ const attributeConfig = {
 };
 
 const relevantAttributes = computed(() => {
-    const attributesConfig = attributeConfig[props.deal.categoryType] || [];
-    if (!props.deal.attributes) return [];
-    return attributesConfig.map(attrConfig => ({
-        name: attrConfig.name,
-        value: props.deal.attributes[attrConfig.name.toLowerCase()] || 'N/A',
-        icon: attrConfig.icon || 'fa fa-tag'
-    }));
+    console.log(props.deal.attributes);
+    if (!props.deal.attributes || Object.keys(props.deal.attributes).length === 0) {
+        return [];
+    }
+
+    const iconConfigForCategory = attributeConfig[props.deal.categoryType] || [];
+
+    return Object.entries(props.deal.attributes)
+        .map(([key, value]) => {
+            // key is already lowercase from the API
+            const attrConfig = iconConfigForCategory.find(c => c.name.toLowerCase() === key);
+
+            return {
+                name: key.charAt(0).toUpperCase() + key.slice(1),
+                value: value,
+                icon: attrConfig ? attrConfig.icon : 'fa fa-tag'
+            };
+        })
+        .filter(attr => attr.value !== 'N/A');
 });
 
 </script>

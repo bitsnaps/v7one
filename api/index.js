@@ -299,6 +299,7 @@ app.post('/api/seeds', async (c) => {
       '20250603153332-initial-plans.js', // Plans can be seeded before or after users/categories, but before deals if deals depend on plans (not the case here)
       '20250603153313-initial-deals.js', // Deals depend on users and categories
       '20250603153314-initial-attributes.js', // Attributes depend on categories
+      '20250608120000-initial-listing-attribute-values.js', // Attribute values depend on listings and attributes
     ];
   
     try {
@@ -396,27 +397,41 @@ app.get('/api/deal/:id', async (c) => {
         const deal = await models.Listing.findByPk(dealId, {
             include: [
                 { model: models.User, as: 'seller', attributes: ['id', 'email'] },
-                { model: models.Category, as: 'category', attributes: ['id', 'name', 'slug'] }
+                {
+                    model: models.Category,
+                    as: 'category',
+                    attributes: ['id', 'name', 'slug'],
+                    include: [{ model: models.Attribute, as: 'attributes' }]
+                },
+                {
+                    model: models.ListingAttributeValue,
+                    as: 'attributeValues',
+                    include: [{ model: models.Attribute, as: 'attribute' }]
+                }
             ]
         });
 
         if (deal) {
-            // Transform the deal to match the old structure if necessary
+            const attributes = {};
+            if (deal.category && deal.category.attributes) {
+                deal.category.attributes.forEach(attrDef => {
+                    const savedValue = deal.attributeValues.find(val => val.attributeId === attrDef.id);
+                    attributes[attrDef.name.toLowerCase()] = savedValue ? savedValue.value : 'N/A';
+                });
+            }
+
             const formattedDeal = {
                 id: deal.id,
                 title: deal.title,
-                image: deal.imageUrl, // Assuming image_url is the field in Listing model
-                price: deal.price, 
+                image: deal.imageUrl,
+                price: deal.price,
                 status: deal.status,
-                type: deal.listType, 
+                type: deal.listType,
                 location: `${deal.locationRegion}, ${deal.locationCity}`,
-                sqft: deal.sqft ? `${deal.sqft} Sqft` : 'N/A',
-                beds: deal.beds ? `${deal.beds} Bed` : 'N/A',
-                baths: deal.baths ? `${deal.baths} Bath` : 'N/A',
                 category: deal.category ? [deal.category.name.toLowerCase()] : [],
                 categoryType: deal.category ? deal.category.type : null,
                 description: deal.description,
-                // Add other fields as necessary
+                attributes: attributes,
             };
             return c.json({ success: true, deal: formattedDeal });
         } else {
@@ -444,11 +459,16 @@ app.get('/api/deals/:type?', async (c) => {
         const whereClause = {};
         const includeClause = [
             { model: models.User, as: 'seller', attributes: ['id', 'email'] }, 
-            { model: models.Category, as: 'category', attributes: ['id', 'name', 'slug', 'type'] },
+            {
+                model: models.Category,
+                as: 'category',
+                attributes: ['id', 'name', 'slug', 'type'],
+                include: [{ model: models.Attribute, as: 'attributes' }]
+            },
             {
               model: models.ListingAttributeValue,
               as: 'attributeValues',
-              include: [{ model: models.Attribute, as: 'attribute' }] // Include the attribute definition
+              include: [{ model: models.Attribute, as: 'attribute' }]
             }
         ];
 
@@ -502,18 +522,16 @@ app.get('/api/deals/:type?', async (c) => {
             limit: limit,
             offset: offset,
             order: [['createdAt', 'DESC']],
-            distinct: true, // Important for counts when using includes with where clauses on associated models
-            subQuery: false // May be needed depending on complexity, test with and without
+            subQuery: false
         });
 
         const formattedDeals = rows.map(deal => {
             const attributes = {};
-            if (deal.attributeValues) {
-              for (const attrValue of deal.attributeValues) {
-                if (attrValue.attribute) { // Check if attribute definition is loaded
-                  attributes[attrValue.attribute.name.toLowerCase()] = attrValue.value;
-                }
-              }
+            if (deal.category && deal.category.attributes) {
+                deal.category.attributes.forEach(attrDef => {
+                    const savedValue = deal.attributeValues.find(val => val.attributeId === attrDef.id);
+                    attributes[attrDef.name.toLowerCase()] = savedValue ? savedValue.value : 'N/A';
+                });
             }
 
             return {
@@ -534,7 +552,7 @@ app.get('/api/deals/:type?', async (c) => {
 
         return c.json({
             success: true,
-            data: formattedDeals, // Changed from 'deals' to 'data' to match existing structure for /api/deals
+            data: formattedDeals,
             total: count,
             page: page,
             limit: limit,

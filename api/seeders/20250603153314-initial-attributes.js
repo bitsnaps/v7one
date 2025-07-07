@@ -11,15 +11,15 @@ module.exports = {
       return;
     }
 
-    const realEstateCategory = categories.find(c => c.slug === 'real-estate');
-    const carsCategory = categories.find(c => c.slug === 'cars');
+    const realEstateCategory = categories.find(c => c.type === 'real-estate');
+    const carsCategory = categories.find(c => c.type === 'cars');
 
     const attributes = [];
 
     if (realEstateCategory) {
       attributes.push({
         id: randomUUID(),
-        name: 'Bedrooms',
+        name: 'Beds',
         type: 'NUMBER',
         isRequired: true,
         categoryId: realEstateCategory.id,
@@ -28,7 +28,7 @@ module.exports = {
       });
       attributes.push({
         id: randomUUID(),
-        name: 'Bathrooms',
+        name: 'Baths',
         type: 'NUMBER',
         isRequired: true,
         categoryId: realEstateCategory.id,
@@ -37,7 +37,7 @@ module.exports = {
       });
       attributes.push({
         id: randomUUID(),
-        name: 'Area (sqft)',
+        name: 'Sqft',
         type: 'NUMBER',
         isRequired: false,
         categoryId: realEstateCategory.id,
