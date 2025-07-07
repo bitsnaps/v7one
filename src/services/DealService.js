@@ -12,6 +12,9 @@ export default {
   getDealById(id) {
     return apiClient.get(`/api/deal/${id}`);
   },
+  getDealMessages(id) {
+    return apiClient.get(`/api/deal/${id}/messages`);
+  },
   postDeal(dealData) {
     return apiClient.post('/api/contact', dealData); // Assuming '/api/contact' is the endpoint for posting deals based on previous context
   },

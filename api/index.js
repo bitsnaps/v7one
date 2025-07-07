@@ -443,6 +443,29 @@ app.get('/api/deal/:id', async (c) => {
     }
 });
 
+app.get('/api/deal/:id/messages', async (c) => {
+    try {
+        const dealId = c.req.param('id');
+        if (!isValidUUID(dealId)) {
+            return c.json({ success: false, message: 'Invalid query' }, 400);
+        }
+
+        const conversations = await models.Conversation.findAll({
+            where: { listingId: dealId },
+            include: [
+                { model: models.Message, as: 'messages', include: [{ model: models.User, as: 'sender' }] },
+                { model: models.User, as: 'userOne' },
+                { model: models.User, as: 'userTwo' }
+            ]
+        });
+
+        return c.json({ success: true, conversations });
+    } catch (error) {
+        console.error('Error fetching deal messages:', error);
+        return c.json({ success: false, message: 'An error occurred', error: error.message }, 500);
+    }
+});
+
 // API endpoint for all deals with optional category filter, pagination, and search
 app.get('/api/deals/:type?', async (c) => {
     try {
@@ -516,46 +539,11 @@ app.get('/api/deals/:type?', async (c) => {
             ];
         }
 
-        const categoryWhere = {};
-        if (type && type !== 'all') {
-            categoryWhere.type = type;
-        }
-        if (category) {
-            categoryWhere.slug = category;
-        }
-
-        if (Object.keys(categoryWhere).length > 0) {
-            const categories = await models.Category.findAll({ where: categoryWhere, attributes: ['id'] });
-            const categoryIds = categories.map(cat => cat.id);
-            if (categoryIds.length === 0) {
-                 // If no categories match, no listings will match either.
-                return c.json({
-                    success: true, data: [], total: 0, page: 1, limit: limit, totalPages: 0
-                });
-            }
-            whereClause.categoryId = { [Op.in]: categoryIds };
-        }
-        
-        const { count, rows: listingsForPage } = await models.Listing.findAndCountAll({
+        const { count, rows } = await models.Listing.findAndCountAll({
             where: whereClause,
+            include: includeClause,
             limit: limit,
             offset: offset,
-            order: [['createdAt', 'DESC']],
-            attributes: ['id'] // Fetch only IDs for this step
-        });
-
-        const listingIds = listingsForPage.map(l => l.id);
-
-        if (listingIds.length === 0) {
-            return c.json({
-                success: true, data: [], total: count, page, limit, totalPages: Math.ceil(count/limit)
-            });
-        }
-        
-        // Step 2: Fetch the full listing data for the IDs found
-        const rows = await models.Listing.findAll({
-            where: { id: { [Op.in]: listingIds } },
-            include: includeClause,
             order: [['createdAt', 'DESC']],
         });
 
