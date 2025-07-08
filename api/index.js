@@ -509,6 +509,61 @@ app.get('/api/deal/:id/messages', async (c) => {
         return c.json({ success: false, message: 'An error occurred', error: error.message }, 500);
     }
 });
+app.post('/api/messages', async (c) => {
+    const authHeader = c.req.header('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return c.json({ error: 'Unauthorized: Missing or invalid token' }, 401);
+    }
+
+    const token = authHeader.split(' ')[1];
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const senderId = decoded.id;
+
+        const { dealId, content, receiverId } = await c.req.json();
+
+        if (!dealId || !content || !receiverId) {
+            return c.json({ success: false, message: 'Missing required fields' }, 400);
+        }
+
+        const listing = await models.Listing.findByPk(dealId);
+        if (!listing) {
+            return c.json({ success: false, message: 'Deal not found' }, 404);
+        }
+
+        let conversation = await models.Conversation.findOne({
+            where: {
+                listingId: dealId,
+                [Op.or]: [
+                    { userOneId: senderId, userTwoId: receiverId },
+                    { userOneId: receiverId, userTwoId: senderId }
+                ]
+            }
+        });
+
+        if (!conversation) {
+            conversation = await models.Conversation.create({
+                listingId: dealId,
+                userOneId: senderId,
+                userTwoId: receiverId
+            });
+        }
+
+        const message = await models.Message.create({
+            conversationId: conversation.id,
+            senderId: senderId,
+            content: content
+        });
+
+        return c.json({ success: true, message: 'Message sent successfully', data: message });
+    } catch (error) {
+        if (error instanceof jwt.JsonWebTokenError) {
+            return c.json({ error: 'Unauthorized: Invalid token' }, 401);
+        }
+        console.error('Error sending message:', error);
+        return c.json({ success: false, message: 'An error occurred', error: error.message }, 500);
+    }
+});
 
 // API endpoint for all deals with optional category filter, pagination, and search
 app.get('/api/deals/:type?', async (c) => {

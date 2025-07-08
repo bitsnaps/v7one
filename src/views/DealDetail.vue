@@ -14,6 +14,7 @@ const deal = ref(null);
 const loading = ref(true);
 const error = ref(null);
 const messages = ref([]);
+const newMessage = ref('');
 
 const isOwner = computed(() => {
   return auth.isLoggedIn && deal.value && auth.user.id === deal.value.seller.id;
@@ -28,6 +29,23 @@ const deleteDeal = async () => {
             console.error('Failed to delete deal:', err);
             error.value = err;
         }
+    }
+};
+
+const sendMessage = async () => {
+    if (!newMessage.value.trim()) return;
+
+    try {
+        await DealService.sendMessage({
+            dealId: deal.value.id,
+            content: newMessage.value,
+            receiverId: deal.value.seller.id,
+        });
+        newMessage.value = '';
+        fetchDealDetails();
+    } catch (err) {
+        console.error('Failed to send message:', err);
+        error.value = err;
     }
 };
 
@@ -107,10 +125,13 @@ onMounted(fetchDealDetails);
                     </ul>
                   </li>
                 </ul>
+                <div v-if="auth.isLoggedIn && !isOwner" class="mt-3">
+                  <textarea v-model="newMessage" class="form-control" rows="3" placeholder="Type your message..."></textarea>
+                  <button @click="sendMessage" class="btn btn-primary mt-2">Send</button>
+                </div>
               </b-tab>
             </b-tabs>
             <div class="mt-4 d-flex justify-content-between">
-              <a class="btn btn-primary py-3 px-5" href="">{{ $t('dealDetail.contactSeller') }}</a>
               <button v-if="isOwner" class="btn btn-danger py-3 px-5" @click="deleteDeal">{{ $t('dealDetail.deleteDeal', 'Delete Deal') }}</button>
             </div>
           </div>

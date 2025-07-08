@@ -29,5 +29,8 @@ export default {
   },
   deleteDeal(id) {
     return apiClient.delete(`/api/deals/${id}`);
+  },
+  sendMessage(messageData) {
+    return apiClient.post('/api/messages', messageData);
   }
 };
