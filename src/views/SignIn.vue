@@ -20,7 +20,8 @@ const handleSignIn = async () => {
   });
 
   if (success) {
-    router.push('/admin/dashboard');
+    const redirectPath = router.currentRoute.value.query.redirect || '/admin/dashboard';
+    router.push(redirectPath);
   }
 };
 

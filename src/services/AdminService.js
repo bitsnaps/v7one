@@ -46,9 +46,13 @@ createCategory(data) {
   deleteCategory(id) {
     return apiClient.delete(`/api/admin/categories/${id}`);
   },
-getAttributes() {
-    return apiClient.get('/api/admin/attributes');
-  },
+getAttributes(categoryId = null) {
+  const params = new URLSearchParams();
+  if (categoryId) {
+    params.append('categoryId', categoryId);
+  }
+  return apiClient.get(`/api/admin/attributes?${params.toString()}`);
+},
   createAttribute(data) {
     return apiClient.post('/api/admin/attributes', data);
   },

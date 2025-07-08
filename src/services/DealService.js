@@ -23,5 +23,8 @@ export default {
   },
   signup(userData) {
     return apiClient.post('/api/signup', userData);
+  },
+  createDeal(data) {
+    return apiClient.post('/api/deals', data);
   }
 };

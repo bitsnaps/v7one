@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores/auth';
 import { createRouter, createWebHistory } from 'vue-router';
 import DefaultLayout from '@/layouts/Default.vue';
 import AdminLayout from '@/layouts/Admin.vue';
@@ -45,6 +46,7 @@ const routes = [
         path: 'post-deal',
         name: 'post-deal',
         component: PostDeal,
+        meta: { requiresAuth: true },
       },
       {
         path: 'signin',
@@ -84,6 +86,7 @@ const routes = [
   {
     path: '/admin',
     component: AdminLayout,
+    meta: { requiresAuth: true },
     children: [
       {
         path: '',
@@ -146,6 +149,20 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore();
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+  if (requiresAuth && !auth.isLoggedIn) {
+    next({
+      path: '/signin',
+      query: { redirect: to.fullPath }
+    });
+  } else {
+    next();
+  }
 });
 
 export default router;

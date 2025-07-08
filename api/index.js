@@ -626,10 +626,34 @@ app.get('/api/deals/:type?', async (c) => {
         console.error('Error fetching deals:', error);
         return c.json({ success: false, message: 'An error occurred while fetching deals', error: error.message }, 500);
     }
-});
-
-// API endpoint for deal categories
-app.get('/api/categories', async (c) => {
+  });
+  
+  app.post('/api/deals', async (c) => {
+    const authHeader = c.req.header('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return c.json({ error: 'Unauthorized: Missing or invalid token' }, 401);
+    }
+  
+    const token = authHeader.split(' ')[1];
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decoded.id;
+  
+      const dealData = await c.req.json();
+      dealData.userId = userId;
+  
+      const newDeal = await models.Listing.create(dealData);
+      return c.json({ success: true, deal: newDeal });
+    } catch (error) {
+      if (error instanceof jwt.JsonWebTokenError) {
+        return c.json({ error: 'Unauthorized: Invalid token' }, 401);
+      }
+      return c.json({ error: 'Failed to create deal', details: error.message }, 500);
+    }
+  });
+  
+  // API endpoint for deal categories
+  app.get('/api/categories', async (c) => {
     try {
         const categoriesData = await models.Category.findAll();
         return c.json({ success: true, data: categoriesData });

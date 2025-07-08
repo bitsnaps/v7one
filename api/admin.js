@@ -244,7 +244,13 @@ admin.delete('/categories/:id', async (c) => {
 // Attribute Management Routes
 admin.get('/attributes', async (c) => {
   try {
+    const { categoryId } = c.req.query();
+    const whereClause = {};
+    if (categoryId) {
+      whereClause.categoryId = categoryId;
+    }
     const attributes = await models.Attribute.findAll({
+      where: whereClause,
       include: [{
         model: models.Category,
         as: 'category',
