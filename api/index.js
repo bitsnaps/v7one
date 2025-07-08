@@ -475,6 +475,7 @@ app.get('/api/deal/:id', async (c) => {
                 categoryType: deal.category ? deal.category.type : null,
                 description: deal.description,
                 attributes: attributes,
+                seller: deal.seller,
             };
             return c.json({ success: true, deal: formattedDeal });
         } else {
