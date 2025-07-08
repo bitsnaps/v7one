@@ -25,7 +25,16 @@ const form = reactive({
   isFeatured: false,
   categoryId: null,
   userId: null,
+  imageUrl: '',
 });
+
+const handleImageUpload = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const response = await AdminService.uploadFile(file);
+  form.imageUrl = response.data.url;
+};
 
 const fetchListings = async (currentPage = 1) => {
   try {
@@ -105,6 +114,7 @@ const openModal = async (listing = null) => {
     form.isFeatured = listing.isFeatured;
     form.categoryId = listing.categoryId;
     form.userId = listing.userId;
+    form.imageUrl = listing.imageUrl;
   } else {
     resetForm();
   }
@@ -241,6 +251,12 @@ onMounted(() => {
           <div class="form-group">
             <label for="price">Price</label>
             <input type="number" class="form-control" id="price" v-model="form.price" required>
+          </div>
+          <div class="form-group">
+            <label for="imageUrl">Image URL</label>
+            <input type="text" class="form-control" id="imageUrl" v-model="form.imageUrl">
+            <input type="file" @change="handleImageUpload" class="form-control mt-2">
+            <img v-if="form.imageUrl" :src="`/public/${form.imageUrl}`" width="100" class="mt-2" />
           </div>
           <div class="form-group">
             <label for="listType">Deal Type</label>

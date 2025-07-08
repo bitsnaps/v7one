@@ -524,6 +524,15 @@ admin.post('/listing-media', async (c) => {
   const data = await c.req.json();
   try {
     const media = await models.ListingMedia.create(data);
+
+    if (media.isPrimary && media.mediaType === 'IMAGE') {
+      const deal = await models.Listing.findByPk(media.listingId);
+      if (deal) {
+        deal.imageUrl = media.mediaUrl;
+        await deal.save();
+      }
+    }
+
     return c.json(media, 201);
   } catch (error) {
     return c.json({ error: 'Failed to add media', details: error.message }, 500);
@@ -540,6 +549,15 @@ admin.put('/listing-media/:id', async (c) => {
       return c.json({ error: 'Media not found' }, 404);
     }
     await media.update(data);
+
+    if (media.isPrimary && media.mediaType === 'IMAGE') {
+        const listing = await models.Listing.findByPk(media.listingId);
+        if (listing) {
+            listing.imageUrl = media.mediaUrl;
+            await listing.save();
+        }
+    }
+
     return c.json(media);
   } catch (error) {
     return c.json({ error: 'Failed to update media', details: error.message }, 500);
