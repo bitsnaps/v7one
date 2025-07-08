@@ -186,6 +186,7 @@ onMounted(() => {
                     </td>
                     <td>
                       <button class="btn btn-sm btn-primary me-1" @click="openModal(listing)">Edit</button>
+                      <router-link :to="{ name: 'AdminMedia', params: { listingId: listing.id } }" class="btn btn-sm btn-info me-1">Media</router-link>
                       <button class="btn btn-sm btn-success me-1" @click="updateStatus(listing.id, 'ACTIVE')" :disabled="listing.status === 'ACTIVE'">Approve</button>
                       <button class="btn btn-sm btn-danger me-1" @click="updateStatus(listing.id, 'REMOVED_BY_ADMIN')" :disabled="listing.status === 'REMOVED_BY_ADMIN'">Remove</button>
                       <BDropdown text="More Actions" size="sm" variant="outline-primary">

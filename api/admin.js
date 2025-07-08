@@ -3,6 +3,8 @@ const models = require('./models');
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const { hashPassword } = require('./utils/index');
+const fs = require('fs').promises;
+const path = require('path');
 
 const admin = new Hono();
 
@@ -410,7 +412,7 @@ admin.get('/listings/:id', async (c) => {
   try {
     const listing = await models.Listing.findByPk(id, {
       include: [
-        { model: models.User, attributes: ['id', 'displayName', 'email'] },
+        { model: models.User, as: 'seller', attributes: ['id', 'displayName', 'email'] },
         { model: models.Category, as: 'category' },
       ],
     });
@@ -493,6 +495,77 @@ admin.delete('/listings/:id', async (c) => {
     return c.json({ success: true, message: 'Listing deleted successfully' });
   } catch (error) {
     return c.json({ error: 'Failed to delete listing', details: error.message }, 500);
+  }
+});
+// Listing Media Management Routes
+
+// Get all media for a specific listing
+admin.get('/listing-media/:listingId', async (c) => {
+  const { listingId } = c.req.param();
+  try {
+    const media = await models.ListingMedia.findAll({
+      where: { listingId },
+      order: [['order', 'ASC']],
+    });
+    return c.json(media);
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch listing media', details: error.message }, 500);
+  }
+});
+
+// Add new media to a listing
+admin.post('/listing-media', async (c) => {
+  const data = await c.req.json();
+  try {
+    const media = await models.ListingMedia.create(data);
+    return c.json(media, 201);
+  } catch (error) {
+    return c.json({ error: 'Failed to add media', details: error.message }, 500);
+  }
+});
+
+// Update media details
+admin.put('/listing-media/:id', async (c) => {
+  const { id } = c.req.param();
+  const data = await c.req.json();
+  try {
+    const media = await models.ListingMedia.findByPk(id);
+    if (!media) {
+      return c.json({ error: 'Media not found' }, 404);
+    }
+    await media.update(data);
+    return c.json(media);
+  } catch (error) {
+    return c.json({ error: 'Failed to update media', details: error.message }, 500);
+  }
+});
+
+
+// Delete media
+admin.delete('/listing-media/:id', async (c) => {
+  const { id } = c.req.param();
+  try {
+    const media = await models.ListingMedia.findByPk(id);
+    if (!media) {
+      return c.json({ error: 'Media not found' }, 404);
+    }
+
+    const mediaUrl = media.mediaUrl;
+    await media.destroy();
+
+    if (mediaUrl) {
+      const filePath = path.join(__dirname, '..', 'public', mediaUrl);
+      try {
+        await fs.unlink(filePath);
+      } catch (err) {
+        // Log the error but don't fail the request if the file doesn't exist
+        console.error(`Failed to delete file: ${filePath}`, err);
+      }
+    }
+
+    return c.json({ success: true, message: 'Media deleted successfully' });
+  } catch (error) {
+    return c.json({ error: 'Failed to delete media', details: error.message }, 500);
   }
 });
 

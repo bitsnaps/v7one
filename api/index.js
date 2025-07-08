@@ -394,6 +394,39 @@ app.post('/api/login', async (c) => {
   }
 });
 
+app.post('/api/upload', async (c) => {
+  try {
+    const body = await c.req.parseBody();
+    const file = body['file'];
+
+    if (!file) {
+      return c.json({ error: 'No file uploaded' }, 400);
+    }
+    const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+
+    const fileName = `${Date.now()}-${file.name}`;
+    const filePath = path.join(uploadsDir, fileName);
+
+    const fileBuffer = await file.arrayBuffer();
+    await fs.promises.writeFile(filePath, Buffer.from(fileBuffer));
+    
+    const fileUrl = `/uploads/${fileName}`;
+
+    let mediaType = 'IMAGE';
+    if (file.type.startsWith('video')) {
+      mediaType = 'VIDEO_URL';
+    }
+
+    return c.json({ success: true, url: fileUrl, type: mediaType });
+  } catch (error) {
+    console.error('File upload error:', error);
+    return c.json({ error: 'Failed to upload file', details: error.message }, 500);
+  }
+});
+
 // API endpoint for a single deal by ID
 app.route('/api/admin', admin);
 

@@ -1,6 +1,15 @@
 import { apiClient } from '../helpers/utils';
 
 export default {
+  uploadFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return apiClient.post('/api/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  },
   getDashboardStats() {
     return apiClient.get('/api/admin/dashboard/stats');
   },
@@ -61,6 +70,21 @@ getAttributes() {
   deleteAttributeValue(id) {
     return apiClient.delete(`/api/admin/attribute-values/${id}`);
   },
+getListingMedia(listingId) {
+    return apiClient.get(`/api/admin/listing-media/${listingId}`);
+  },
+
+  addListingMedia(data) {
+    return apiClient.post('/api/admin/listing-media', data);
+  },
+
+  updateListingMedia(id, data) {
+    return apiClient.put(`/api/admin/listing-media/${id}`, data);
+  },
+
+  deleteListingMedia(id) {
+    return apiClient.delete(`/api/admin/listing-media/${id}`);
+  },
   getListings(page = 1, search = '') {
     const params = new URLSearchParams();
     if (typeof(page)=='number'){
@@ -81,6 +105,9 @@ getAttributes() {
   },
   updateListing(id, data) {
     return apiClient.put(`/api/admin/listings/${id}`, data);
+  },
+  getListing(id) {
+    return apiClient.get(`/api/admin/listings/${id}`);
   },
   getConversations() {
     return apiClient.get('/api/admin/messages');

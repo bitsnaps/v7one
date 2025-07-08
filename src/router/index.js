@@ -19,6 +19,7 @@ import AdminMessages from '@/components/admin/Messages.vue';
 import AdminProfile from '@/components/admin/Profile.vue';
 import AdminAttributes from '@/components/admin/Attributes.vue';
 import AdminAttributeValues from '@/components/admin/AttributeValues.vue';
+import AdminMedia from '@/components/admin/Media.vue';
 
 const routes = [
   {
@@ -117,6 +118,11 @@ const routes = [
         path: 'listings',
         name: 'AdminListings',
         component: AdminListings,
+      },
+      {
+        path: 'listings/:listingId/media',
+        name: 'AdminMedia',
+        component: AdminMedia,
       },
       {
         path: 'messages',
