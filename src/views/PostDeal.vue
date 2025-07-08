@@ -25,6 +25,7 @@ export default {
     const currentStep = ref(1);
     const dealCreated = ref(null);
     const mediaItems = ref([]);
+    const pendingMedia = ref([]);
 
     onMounted(() => {
       loadCategories();
@@ -89,20 +90,35 @@ export default {
       const file = event.target.files[0];
       if (!file) return;
 
-      AdminService.uploadFile(file)
-        .then(response => {
-          const mediaData = {
-            listingId: dealCreated.value.id,
-            mediaUrl: response.data.url,
-            mediaType: response.data.type,
-          };
-          AdminService.addListingMedia(mediaData).then(() => {
-            loadMedia();
-          });
-        })
-        .catch(error => {
-          console.error("Error uploading file:", error);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        pendingMedia.value.push({
+          file: file,
+          url: e.target.result,
+          type: file.type.startsWith('video') ? 'VIDEO_URL' : 'IMAGE',
+          isPrimary: false,
         });
+      };
+      reader.readAsDataURL(file);
+    };
+
+    const saveMedia = (media) => {
+        AdminService.uploadFile(media.file).then(response => {
+            const mediaData = {
+                listingId: dealCreated.value.id,
+                mediaUrl: response.data.url,
+                mediaType: response.data.type,
+                isPrimary: media.isPrimary,
+            };
+            AdminService.addListingMedia(mediaData).then(() => {
+                pendingMedia.value = pendingMedia.value.filter(item => item !== media);
+                loadMedia();
+            });
+        });
+    };
+
+    const removeMedia = (media) => {
+        pendingMedia.value = pendingMedia.value.filter(item => item !== media);
     };
 
     const loadMedia = () => {
@@ -122,12 +138,36 @@ export default {
       currentStep,
       dealCreated,
       mediaItems,
+      pendingMedia,
       nextStep,
       prevStep,
       submitDeal,
       handleFileUpload,
       loadAttributes,
+      saveMedia,
+      removeMedia,
+      startOver,
     };
+
+    function startOver() {
+        Object.assign(form.value, {
+            title: '',
+            description: '',
+            price: 0,
+            categoryId: null,
+            listType: 'FOR_SALE',
+            priceType: 'FIXED',
+            condition: 'NEW',
+            locationCity: '',
+            locationRegion: '',
+        });
+        attributeValues.value = {};
+        attributes.value = [];
+        pendingMedia.value = [];
+        mediaItems.value = [];
+        dealCreated.value = null;
+        currentStep.value = 1;
+    }
   }
 };
 </script>
@@ -236,7 +276,23 @@ export default {
             <label for="mediaFile" class="form-label">Upload File</label>
             <input type="file" class="form-control" id="mediaFile" @change="handleFileUpload" />
           </div>
-          <div v-if="mediaItems.length > 0" class="media-preview">
+          <div v-if="pendingMedia.length > 0" class="media-preview">
+            <h4 class="preview-title">Pending Media:</h4>
+            <div class="row">
+                <div class="col-6 col-md-4 col-lg-3 mb-3" v-for="(media, index) in pendingMedia" :key="index">
+                    <div class="media-item">
+                        <img v-if="media.type === 'IMAGE'" :src="media.url" class="img-fluid" />
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" v-model="media.isPrimary">
+                            <label class="form-check-label">Primary</label>
+                        </div>
+                        <button class="btn btn-success btn-sm mt-2" @click="saveMedia(media)">Save</button>
+                        <button class="btn btn-danger btn-sm mt-2" @click="removeMedia(media)">Remove</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div v-if="mediaItems.length > 0" class="media-preview mt-4">
             <h4 class="preview-title">Uploaded Media:</h4>
             <div class="row">
               <div class="col-6 col-md-4 col-lg-3 mb-3" v-for="media in mediaItems" :key="media.id">
@@ -249,8 +305,8 @@ export default {
               </div>
             </div>
           </div>
-          <div class="mb-3">
-            <router-link to="/post-deal" class="btn btn-primary py-3 px-5 me-2"><i class="fa fa-plus-circle me-2"></i>{{ $t('home.postDeal', 'Post a Deal') }}</router-link>
+          <div class="d-grid mt-4">
+            <button class="btn btn-info" @click="startOver">Add Another Deal</button>
           </div>
         </div>
       </div>
