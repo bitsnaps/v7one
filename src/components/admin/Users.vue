@@ -11,6 +11,7 @@ const editingUser = reactive({
  displayName: '',
  email: '',
  isAdmin: false,
+ isVerified: false,
  isActive: false,
 });
 const newUser = reactive({
@@ -18,6 +19,7 @@ const newUser = reactive({
  email: '',
  password: '',
  isAdmin: false,
+ isVerified: true,
  isActive: true,
 });
 let userModal = null;
@@ -126,6 +128,8 @@ onMounted(() => {
                   <th>Name</th>
                   <th>Email</th>
                   <th>Role</th>
+                  <th>Verified?</th>
+                  <th>Active?</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -135,6 +139,8 @@ onMounted(() => {
                   <td>{{ user.displayName }}</td>
                   <td>{{ user.email }}</td>
                   <td>{{ user.isAdmin?'admin':(user.role || 'user') }}</td>
+                  <td>{{ user.isVerified?'Yes':'No' }}</td>
+                  <td>{{ user.isActive?'Yes':'No' }}</td>
                   <td>
                     <button class="btn btn-sm btn-primary" @click="editUser(user)">Edit</button>
                     <button class="btn btn-sm btn-danger" @click="deleteUser(user.id)">Delete</button>
@@ -180,11 +186,15 @@ onMounted(() => {
               </div>
               <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="isAdmin" v-model="editingUser.isAdmin">
-                <label class="form-check-label" for="isAdmin">Is Admin</label>
+                <label class="form-check-label" for="isAdmin">Is Admin?</label>
+              </div>
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="isVerified" v-model="editingUser.isVerified">
+                <label class="form-check-label" for="isVerified">Is Verified?</label>
               </div>
               <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="isActive" v-model="editingUser.isActive">
-                <label class="form-check-label" for="isActive">Is Active</label>
+                <label class="form-check-label" for="isActive">Is Active?</label>
               </div>
               <button type="submit" class="btn btn-primary">Save changes</button>
             </form>

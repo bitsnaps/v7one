@@ -24,6 +24,12 @@ export default {
   signup(userData) {
     return apiClient.post('/api/signup', userData);
   },
+updateProfile(profileData) {
+  return apiClient.put(`/api/admin/users/${profileData.id}`, profileData);
+},
+  requestPasswordReset(email) {
+    return apiClient.post('/api/request-password-reset', { email });
+  },
   createDeal(data) {
     return apiClient.post('/api/deals', data);
   },

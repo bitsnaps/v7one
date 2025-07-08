@@ -100,7 +100,7 @@ admin.post('/users', async (c) => {
 // Update user details
 admin.put('/users/:id', async (c) => {
   const { id } = c.req.param();
-  const { email, displayName, isAdmin, isActive } = await c.req.json();
+  const { email, displayName, isAdmin, isVerified, isActive } = await c.req.json();
 
   try {
     const user = await models.User.findByPk(id);
@@ -113,11 +113,12 @@ admin.put('/users/:id', async (c) => {
     user.displayName = displayName ?? user.displayName;
     user.isAdmin = isAdmin ?? user.isAdmin;
     user.isActive = isActive ?? user.isActive;
+    user.isVerified = isVerified ?? user.isVerified;
 
     await user.save();
 
     const { passwordHash, ...userResponse } = user.get();
-    return c.json(userResponse);
+    return c.json({ success: true, user: userResponse });
   } catch (error) {
     return c.json({ error: 'Failed to update user', details: error.message }, 500);
   }

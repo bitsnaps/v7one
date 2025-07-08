@@ -332,25 +332,25 @@ app.post('/api/seeds', async (c) => {
 
 app.post('/api/signup', async (c) => {
     try {
-        const { firstName, lastName, username, password } = await c.req.json();
+        const { email, password, displayName } = await c.req.json();
 
-        if (!firstName || !lastName || !username || !password) {
-            return c.json({ success: false, message: 'All fields are required' }, 400);
+        if (!email || !password) {
+            return c.json({ success: false, message: 'Email and password are required' }, 400);
         }
 
-        const existingUser = await models.User.findOne({ where: { email: username } });
+        const existingUser = await models.User.findOne({ where: { email } });
         if (existingUser) {
             return c.json({ success: false, message: 'User already exists' }, 409);
         }
 
         const newUser = await models.User.create({
-            email: username,
+            email,
             passwordHash: hashPassword(password),
-            displayName: `${firstName} ${lastName}`,
+            displayName: displayName || email.split('@')[0],
             isAdmin: false,
-            isVerified: false // Registered users must validate their email
+            isVerified: false
         });
-        console.log('User signed up:', username);
+        console.log('User signed up:', email);
         return c.json({ success: true, message: 'Signup successful', userId: newUser.id });
     } catch (error) {
         console.error('Signup error:', error);
@@ -361,13 +361,13 @@ app.post('/api/signup', async (c) => {
 
 app.post('/api/login', async (c) => {
   try {
-      const { username, password } = await c.req.json();
+      const { email, password } = await c.req.json();
 
-      if (!username || !password) {
-          return c.json({ success: false, message: 'Username and password are required' }, 400);
+      if (!email || !password) {
+          return c.json({ success: false, message: 'Email and password are required' }, 400);
       }
 
-      const user = await models.User.findOne({ where: { email: username } });
+      const user = await models.User.findOne({ where: { email } });
 
       if (!user) {
           return c.json({ success: false, message: 'Invalid username or password' }, 401);
@@ -387,8 +387,20 @@ app.post('/api/login', async (c) => {
       // Generate JWT
       const token = jwt.sign({ id: user.id, email: user.email, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '1h' });
       
-      console.log('User logged in:', username);
-      return c.json({ success: true, message: 'Login successful', token: token, user: { id: user.id, email: user.email, isVerified: user.isVerified, isAdmin: user.isAdmin } });
+      console.log('User logged in:', email);
+      return c.json({
+        success: true,
+        message: 'Login successful',
+        token: token,
+        user: {
+            id: user.id,
+            displayName: user.displayName,
+            email: user.email,
+            isVerified: user.isVerified,
+            isAdmin: user.isAdmin,
+            isActive: user.isActive
+        }
+    });
   } catch (error) {
       console.error('Login error:', error);
       return c.json({ success: false, message: 'An error occurred during login' }, 500);

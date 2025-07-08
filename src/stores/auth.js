@@ -47,26 +47,15 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true;
       this.error = null;
       try {
-        // const response = await axios.post(`${API_URL}/signup`, userData);
-        // Simulating API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = { 
-          data: { 
-            success: true, 
-            message: 'Signup successful' 
-          }
-        };
-
+        const response = await DealService.signup(userData);
         if (response.data.success) {
-          // Optionally log the user in directly after signup
-          // Or redirect to login page
           return true;
         } else {
           this.error = response.data.message || 'Signup failed';
           return false;
         }
       } catch (error) {
-        this.error = error.response?.data?.message || error.message || 'An unexpected error occurred during signup.';
+        this.error = error.response?.data?.message || 'An unexpected error occurred during signup.';
         return false;
       } finally {
         this.loading = false;
@@ -80,6 +69,39 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('token');
       // redirect to home page (will be done at component level)
       // router.push('/signin');
+    },
+async updateProfile(profileData) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await DealService.updateProfile(profileData);
+        if (response.data.success) {
+          this.user = { ...this.user, ...response.data.user };
+          localStorage.setItem('user', JSON.stringify(this.user));
+          return true;
+        } else {
+          this.error = response.data.message || 'Profile update failed';
+          return false;
+        }
+      } catch (error) {
+        this.error = error.response?.data?.message || 'An unexpected error occurred.';
+        return false;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async resetPassword(email) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await DealService.requestPasswordReset(email);
+        return response.data;
+      } catch (error) {
+        this.error = error.response?.data?.message || 'An error occurred while resetting the password.';
+        return { success: false, message: this.error };
+      } finally {
+        this.loading = false;
+      }
     },
     clearError() {
       this.error = null;

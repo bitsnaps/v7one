@@ -1,47 +1,37 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
+
 const router = useRouter();
-const firstName = ref('');
-const lastName = ref('');
-const usernameOrEmail = ref('');
+const authStore = useAuthStore();
+
+const displayName = ref('');
+const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 const errorMessage = ref('');
+
 const handleSignUp = async () => {
-    errorMessage.value = ''; // Clear previous error messages
-    if (password.value !== confirmPassword.value) {
-        errorMessage.value = 'Passwords do not match.';
-        return;
-    }
-    if (!firstName.value || !lastName.value || !usernameOrEmail.value || !password.value) {
-        errorMessage.value = 'Please fill in all fields.';
-        return;
-    }
-    try {
-        const response = await fetch('/api/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                firstName: firstName.value,
-                lastName: lastName.value,
-                username: usernameOrEmail.value,
-                password: password.value,
-            }),
-        });
-        const data = await response.json();
-        if (data.success) {
-            // Redirect to the email validation page
-            router.push('/validate-email');
-        } else {
-            errorMessage.value = data.message || 'An unknown error occurred.';
-        }
-    } catch (error) {
-        console.error('Signup request failed:', error);
-        errorMessage.value = 'Failed to connect to the server.';
-    }
+  errorMessage.value = '';
+  if (password.value !== confirmPassword.value) {
+    errorMessage.value = 'Passwords do not match.';
+    return;
+  }
+  
+  const userData = {
+    email: email.value,
+    password: password.value,
+    displayName: displayName.value || email.value.split('@')[0],
+  };
+
+  const success = await authStore.signup(userData);
+
+  if (success) {
+    router.push('/validate-email');
+  } else {
+    errorMessage.value = authStore.authError || 'An unknown error occurred.';
+  }
 };
 
 const handleGoogleSignUp = () => {
@@ -63,16 +53,12 @@ const handleFacebookSignUp = () => {
             <h2 class="text-center mb-4">{{ $t('signUp.title', 'Sign Up') }}</h2>
             <form @submit.prevent="handleSignUp">
                 <div class="mb-3">
-                    <label for="firstName" class="form-label">{{ $t('signUp.firstNameLabel', 'First Name') }}</label>
-                    <input type="text" class="form-control" id="firstName" v-model="firstName" required>
+                    <label for="displayName" class="form-label">{{ $t('signUp.displayNameLabel', 'Display Name') }}</label>
+                    <input type="text" class="form-control" id="displayName" v-model="displayName">
                 </div>
                 <div class="mb-3">
-                    <label for="lastName" class="form-label">{{ $t('signUp.lastNameLabel', 'Last Name') }}</label>
-                    <input type="text" class="form-control" id="lastName" v-model="lastName" required>
-                </div>
-                <div class="mb-3">
-                    <label for="usernameOrEmail" class="form-label">{{ $t('signUp.usernameOrEmailLabel', 'Username or Email') }}</label>
-                    <input type="text" class="form-control" id="usernameOrEmail" v-model="usernameOrEmail" required>
+                    <label for="email" class="form-label">{{ $t('signUp.emailLabel', 'Email') }}</label>
+                    <input type="email" class="form-control" id="email" v-model="email" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">{{ $t('signUp.passwordLabel', 'Password') }}</label>

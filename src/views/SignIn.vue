@@ -15,7 +15,7 @@ const handleSignIn = async () => {
   }
 
   const success = await authStore.login({
-    username: usernameOrEmail.value,
+    email: usernameOrEmail.value,
     password: password.value,
   });
 
@@ -44,14 +44,14 @@ const handleFacebookSignIn = () => {
       <h2 class="text-center mb-4">{{ $t('signIn.title', 'Sign In') }}</h2>
       <form @submit.prevent="handleSignIn">
         <div class="mb-3">
-          <label for="usernameOrEmail" class="form-label">{{ $t('signIn.usernameOrEmailLabel', 'Username or Email') }}</label>
+          <label for="usernameOrEmail" class="form-label">{{ $t('signIn.emailLabel', 'Email') }}</label>
           <input
             type="text"
             class="form-control"
             id="usernameOrEmail"
             v-model="usernameOrEmail"
             required
-            :placeholder="$t('signIn.usernameOrEmailPlaceholder', 'Enter your username or email')"
+            :placeholder="$t('signIn.emailPlaceholder', 'Enter your email')"
           />
         </div>
         <div class="mb-3">
