@@ -20,6 +20,10 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      type: {
+        type: Sequelize.ENUM('real-estate', 'cars', 'other'),
+        allowNull: false,
+      },
       description: {
         type: Sequelize.TEXT,
         allowNull: true,

@@ -52,6 +52,17 @@ const updateStatus = async (id, status) => {
   }
 };
 
+const deleteListing = async (id) => {
+    if (confirm('Are you sure you want to permanently delete this listing?')) {
+        try {
+            await AdminService.deleteListing(id);
+            fetchListings(pagination.value.current_page);
+        } catch (error) {
+            console.error('Error deleting deal:', error);
+        }
+    }
+};
+
 const resetForm = () => {
   form.id = null;
   form.title = '';
@@ -188,7 +199,7 @@ onMounted(() => {
                       <button class="btn btn-sm btn-primary me-1" @click="openModal(listing)">Edit</button>
                       <router-link :to="{ name: 'AdminMedia', params: { listingId: listing.id } }" class="btn btn-sm btn-info me-1">Media</router-link>
                       <button class="btn btn-sm btn-success me-1" @click="updateStatus(listing.id, 'ACTIVE')" :disabled="listing.status === 'ACTIVE'">Approve</button>
-                      <button class="btn btn-sm btn-danger me-1" @click="updateStatus(listing.id, 'REMOVED_BY_ADMIN')" :disabled="listing.status === 'REMOVED_BY_ADMIN'">Remove</button>
+                      <button class="btn btn-sm btn-danger me-1" @click="deleteListing(listing.id)">Remove</button>
                       <BDropdown text="More Actions" size="sm" variant="outline-primary">
                         <BDropdownItem @click="updateStatus(listing.id, 'PENDING')" :disabled="listing.status === 'PENDING'">Pend</BDropdownItem>
                         <BDropdownItem @click="updateStatus(listing.id, 'SOLD')" :disabled="listing.status === 'SOLD'">Mark Sold</BDropdownItem>

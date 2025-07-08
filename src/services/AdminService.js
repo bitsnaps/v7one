@@ -110,6 +110,10 @@ getListingMedia(listingId) {
   updateListing(id, data) {
     return apiClient.put(`/api/admin/listings/${id}`, data);
   },
+
+  deleteListing(id) {
+    return apiClient.delete(`/api/admin/listings/${id}`);
+  },
   getListing(id) {
     return apiClient.get(`/api/admin/listings/${id}`);
   },

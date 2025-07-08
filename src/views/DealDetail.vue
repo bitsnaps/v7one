@@ -1,16 +1,35 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, onMounted, computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import DealService from '@/services/DealService';
 import { useI18n } from 'vue-i18n';
+import { useAuthStore } from '@/stores/auth';
 import { BTabs, BTab } from 'bootstrap-vue-next';
 
 const { t } = useI18n();
 const route = useRoute();
+const router = useRouter();
+const auth = useAuthStore();
 const deal = ref(null);
 const loading = ref(true);
 const error = ref(null);
 const messages = ref([]);
+
+const isOwner = computed(() => {
+  return auth.isLoggedIn && deal.value && auth.user.id === deal.value.seller.id;
+});
+
+const deleteDeal = async () => {
+    if (confirm('Are you sure you want to delete this deal?')) {
+        try {
+            await DealService.deleteDeal(deal.value.id);
+            router.push('/');
+        } catch (err) {
+            console.error('Failed to delete deal:', err);
+            error.value = err;
+        }
+    }
+};
 
 const fetchDealDetails = async () => {
   const dealId = route.params.id;
@@ -92,6 +111,7 @@ onMounted(fetchDealDetails);
             </b-tabs>
             <div class="mt-4 d-flex justify-content-between">
               <a class="btn btn-primary py-3 px-5" href="">{{ $t('dealDetail.contactSeller') }}</a>
+              <button v-if="isOwner" class="btn btn-danger py-3 px-5" @click="deleteDeal">{{ $t('dealDetail.deleteDeal', 'Delete Deal') }}</button>
             </div>
           </div>
         </div>

@@ -469,7 +469,7 @@ admin.patch('/listings/:id/status', async (c) => {
   const { id } = c.req.param();
   const { status } = await c.req.json();
 
-  if (!['ACTIVE', 'PENDING', 'SOLD', 'EXPIRED', 'REMOVED_BY_ADMIN', 'DRAFT'].includes(status)) {
+  if (!['ACTIVE', 'PENDING', 'SOLD', 'EXPIRED', 'REMOVED_BY_USER', 'DRAFT'].includes(status)) {
     return c.json({ error: 'Invalid status value' }, 400);
   }
 

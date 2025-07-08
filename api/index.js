@@ -270,6 +270,7 @@ app.post('/api/create-admin', async (c) => {
   const hashedPassword = hashPassword(password);
   const adminUser = await models.User.create({
       email: username,
+      displayName: username.split('@')[0],
       passwordHash: hashedPassword,
       isAdmin: true,
       isVerified: true
@@ -628,6 +629,36 @@ app.get('/api/deals/:type?', async (c) => {
     }
   });
   
+  app.delete('/api/deals/:id', async (c) => {
+    const authHeader = c.req.header('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return c.json({ error: 'Unauthorized: Missing or invalid token' }, 401);
+    }
+  
+    const token = authHeader.split(' ')[1];
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decoded.id;
+      const { id } = c.req.param();
+  
+      const listing = await models.Listing.findOne({ where: { id, userId } });
+  
+      if (!listing) {
+        return c.json({ error: 'Listing not found or you do not have permission to delete it.' }, 404);
+      }
+  
+      listing.status = 'REMOVED_BY_USER';
+      await listing.save();
+  
+      return c.json({ success: true, message: 'Listing removed successfully.' });
+    } catch (error) {
+      if (error instanceof jwt.JsonWebTokenError) {
+        return c.json({ error: 'Unauthorized: Invalid token' }, 401);
+      }
+      return c.json({ error: 'Failed to remove listing', details: error.message }, 500);
+    }
+  });
+  
   app.post('/api/deals', async (c) => {
     const authHeader = c.req.header('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -641,6 +672,12 @@ app.get('/api/deals/:type?', async (c) => {
   
       const dealData = await c.req.json();
       dealData.userId = userId;
+      // 
+      const user = await models.User.findByPk(userId);
+      dealData.status = 'PENDING';
+      if (user && user.isAdmin){
+        dealData.status = 'ACTIVE';
+      }
   
       const newDeal = await models.Listing.create(dealData);
       return c.json({ success: true, deal: newDeal });
