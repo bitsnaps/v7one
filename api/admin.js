@@ -314,6 +314,36 @@ admin.delete('/attributes/:id', async (c) => {
   }
 });
 
+admin.post('/attributes/copy', async (c) => {
+  const { sourceCategoryId, destinationCategoryId } = await c.req.json();
+
+  if (!sourceCategoryId || !destinationCategoryId) {
+    return c.json({ error: 'Source and destination categories are required.' }, 400);
+  }
+
+  if (sourceCategoryId === destinationCategoryId) {
+    return c.json({ error: 'Source and destination categories cannot be the same.' }, 400);
+  }
+
+  try {
+    const sourceAttributes = await models.Attribute.findAll({
+      where: { categoryId: sourceCategoryId },
+    });
+
+    const newAttributes = sourceAttributes.map(attr => ({
+      name: attr.name,
+      type: attr.type,
+      isRequired: attr.isRequired,
+      categoryId: destinationCategoryId,
+    }));
+
+    await models.Attribute.bulkCreate(newAttributes);
+    return c.json({ success: true, message: 'Attributes copied successfully.' });
+  } catch (error) {
+    return c.json({ error: 'Failed to copy attributes', details: error.message }, 500);
+  }
+});
+
 // Attribute Values Management
 admin.get('/attribute-values', async (c) => {
     try {

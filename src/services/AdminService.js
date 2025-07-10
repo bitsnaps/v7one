@@ -62,6 +62,9 @@ getAttributes(categoryId = null) {
   deleteAttribute(id) {
     return apiClient.delete(`/api/admin/attributes/${id}`);
   },
+  copyAttributes(data) {
+    return apiClient.post('/api/admin/attributes/copy', data);
+  },
   getAttributeValues() {
     return apiClient.get('/api/admin/attribute-values');
   },

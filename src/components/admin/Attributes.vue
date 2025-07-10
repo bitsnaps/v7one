@@ -6,6 +6,13 @@ const attributes = ref([]);
 const categories = ref([]);
 const editMode = ref(false);
 const showModal = ref(false);
+const showCopyModal = ref(false);
+
+const copyData = reactive({
+  sourceCategoryId: null,
+  destinationCategoryId: null,
+});
+
 
 const form = reactive({
   id: null,
@@ -83,6 +90,34 @@ const deleteAttribute = async (id) => {
   }
 };
 
+const openCopyModal = () => {
+  resetCopyForm();
+  showCopyModal.value = true;
+};
+
+const resetCopyForm = () => {
+  copyData.sourceCategoryId = null;
+  copyData.destinationCategoryId = null;
+};
+
+const copyAttributes = async () => {
+  if (!copyData.sourceCategoryId || !copyData.destinationCategoryId) {
+    alert('Please select both source and destination categories.');
+    return;
+  }
+  if (copyData.sourceCategoryId === copyData.destinationCategoryId) {
+    alert('Source and destination categories cannot be the same.');
+    return;
+  }
+  try {
+    await AdminService.copyAttributes(copyData);
+    fetchAttributes();
+    showCopyModal.value = false;
+  } catch (error) {
+    console.error('Error copying attributes:', error);
+  }
+};
+
 onMounted(() => {
   fetchAttributes();
   fetchCategories();
@@ -99,6 +134,7 @@ onMounted(() => {
             <div class="card-header">
               <h5 class="card-title">Attributes</h5>
               <div class="card-tools">
+                <button class="btn btn-sm btn-info me-2" @click="openCopyModal()">Copy Attributes</button>
                 <button class="btn btn-sm btn-primary" @click="openModal()">Add New</button>
               </div>
             </div>
@@ -166,6 +202,29 @@ onMounted(() => {
           <div class="d-flex justify-content-end mt-3">
             <button type="button" class="btn btn-secondary me-2" @click="showModal = false">Cancel</button>
             <button type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create' }}</button>
+          </div>
+        </form>
+      </b-modal>
+
+      <b-modal v-model="showCopyModal" title="Copy Attributes" @hidden="resetCopyForm" no-footer no-close-on-backdrop>
+        <form @submit.prevent="copyAttributes">
+          <div class="form-group">
+            <label for="sourceCategory">Source Category</label>
+            <select class="form-control" id="sourceCategory" v-model="copyData.sourceCategoryId" required>
+              <option :value="null">-- Select Source Category --</option>
+              <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+            </select>
+          </div>
+          <div class="form-group mt-2">
+            <label for="destinationCategory">Destination Category</label>
+            <select class="form-control" id="destinationCategory" v-model="copyData.destinationCategoryId" required>
+              <option :value="null">-- Select Destination Category --</option>
+              <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+            </select>
+          </div>
+          <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-secondary me-2" @click="showCopyModal = false">Cancel</button>
+            <button type="submit" class="btn btn-primary">Copy</button>
           </div>
         </form>
       </b-modal>
