@@ -1,5 +1,7 @@
 const { Sequelize, DataTypes, Op } = require('sequelize');
 const config = require('../config/config');
+const fs = require('fs').promises;
+const path = require('path');
 
 const sequelize = new Sequelize(config[process.env.NODE_ENV || 'development']);
 
@@ -212,6 +214,21 @@ const ListingMedia = sequelize.define('ListingMedia', {
   // Timestamps
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE,
+}, {
+  hooks: {
+    beforeDestroy: async (media, options) => {
+      if (media.mediaType === 'IMAGE' && media.mediaUrl) {
+        const filePath = path.join(__dirname, '../../public/', media.mediaUrl);
+        try {
+          await fs.access(filePath);
+          await fs.unlink(filePath);
+          console.log(`Successfully deleted image file: ${filePath}`);
+        } catch (error) {
+          console.error(`Error deleting image file ${filePath}:`, error);
+        }
+      }
+    }
+  }
 });
 
 // --- Category Attribute Definitions ---

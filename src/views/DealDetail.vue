@@ -5,6 +5,7 @@ import DealService from '@/services/DealService';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/stores/auth';
 import { BTabs, BTab } from 'bootstrap-vue-next';
+import { formatPrice } from '@/helpers/utils';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -101,7 +102,7 @@ onMounted(fetchDealDetails);
             <b-tabs content-class="mt-3">
               <b-tab title="Details" active>
                 <p class="mb-4">{{ deal.description }}</p>
-                <p><i class="fa fa-check text-primary me-3"></i>{{ $t('dealDetail.price') }}: {{ deal.price }}</p>
+                <p><i class="fa fa-check text-primary me-3"></i>{{ $t('dealDetail.price') }}: {{ formatPrice(deal.price) }}</p>
                 <p><i class="fa fa-check text-primary me-3"></i>{{ $t('dealDetail.location') }}: {{ deal.location }}</p>
                 <p><i class="fa fa-check text-primary me-3"></i>{{ $t('dealDetail.category') }}: {{ deal.category?.name || $t('dealDetail.notAvailable') }}</p>
               </b-tab>

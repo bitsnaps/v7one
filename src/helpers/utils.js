@@ -3,6 +3,7 @@
  */
 import axios from 'axios';
 
+
 const getApiBaseUrl = () => {
   if (import.meta.env.DEV) {
     return 'http://localhost:3000';
@@ -34,4 +35,13 @@ apiClient.interceptors.request.use(
   }
 );
 
-export { getApiBaseUrl, apiClient };
+const formatPrice = (price) => {
+  const number = parseFloat(price);
+  if (isNaN(number)) {
+      return price;
+  }
+  return number.toFixed(2);
+};
+
+
+export { getApiBaseUrl, apiClient, formatPrice };

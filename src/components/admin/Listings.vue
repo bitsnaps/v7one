@@ -3,6 +3,7 @@
 import { ref, onMounted, reactive } from 'vue';
 import AdminService from '@/services/AdminService';
 import { BDropdown, BDropdownItem, BModal, BBadge } from 'bootstrap-vue-next';
+import { formatPrice } from '@/helpers/utils';
 
 const listings = ref([]);
 const pagination = ref({});
@@ -135,15 +136,49 @@ const openModal = async (listing = null) => {
 
 const saveListing = async () => {
   try {
+    let listingId;
     if (editMode.value) {
       await AdminService.updateListing(form.id, form);
+      listingId = form.id;
     } else {
-      await AdminService.createListing(form);
+      const response = await AdminService.createListing(form);
+      listingId = response.data.id;
     }
+
+    if (form.imageUrl && form.isPrimary) { // Check if a new primary image was uploaded
+      await AdminService.addListingMedia({
+        listingId,
+        mediaUrl: form.imageUrl,
+        isPrimary: true,
+      });
+    }
+
     fetchListings();
     showModal.value = false;
   } catch (error) {
-    console.error(`Error ${editMode.value ? 'updating' : 'creating'} deal:`, error);
+    console.error(`Error saving listing:`, error);
+  }
+};
+
+const deleteImage = async () => {
+  if (!form.id || !form.imageUrl) return;
+
+  if (confirm('Are you sure you want to delete this image?')) {
+    try {
+      const response = await AdminService.getListingMedia(form.id);
+      const mediaToDelete = response.data.find(media => media.mediaUrl === form.imageUrl);
+      
+      if (mediaToDelete) {
+        await AdminService.deleteListingMedia(mediaToDelete.id);
+        form.imageUrl = ''; // Clear image from form
+      } else {
+        // Fallback for older listings that might just have imageUrl on the main table
+        await AdminService.updateListing(form.id, { ...form, imageUrl: null });
+        form.imageUrl = '';
+      }
+    } catch (error) {
+      console.error('Error deleting image:', error);
+    }
   }
 };
 
@@ -195,7 +230,7 @@ onMounted(() => {
                     <td>{{ index+1 }}</td>
                     <td>{{ listing.title }}</td>
                     <td>{{ listing.category.name }}</td>
-                    <td>{{ listing.price }}</td>
+                    <td>{{ formatPrice(listing.price) }}</td>
                     <td>{{ listing.listType }}</td>
                     <td>{{ listing.locationCity }}</td>
                     <td>{{ listing.locationRegion }}</td>
@@ -257,6 +292,12 @@ onMounted(() => {
             <input type="text" class="form-control" id="imageUrl" v-model="form.imageUrl">
             <input type="file" @change="handleImageUpload" class="form-control mt-2">
             <img v-if="form.imageUrl" :src="`/public/${form.imageUrl}`" width="100" class="mt-2" />
+            <button v-if="form.imageUrl" type="button" class="btn btn-danger btn-sm d-block mt-2" @click="deleteImage">Delete Image</button>
+          </div>
+          <div class="form-group">
+            <label for="isPrimary">
+              <input type="checkbox" id="isPrimary" v-model="form.isPrimary">
+              Is Primary ?</label>
           </div>
           <div class="form-group">
             <label for="listType">Deal Type</label>
