@@ -162,7 +162,7 @@ const toggleSidebar = () => {
                     </div>
                 </li>
                 
-                <!-- Languages -->
+                <!-- Languages
                 <li class="nav-item dropdown">
 							<a class="nav-flag dropdown-toggle" href="#" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="true">
 								<img src="https://flagcdn.com/us.svg" alt="English">
@@ -181,7 +181,7 @@ const toggleSidebar = () => {
 									<span class="align-middle">Français</span>
 								</a>
 							</div>
-				</li>                
+				</li -->
 
                 <li class="nav-item dropdown">
                     <a class="nav-icon pe-md-0 dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="true">
