@@ -124,7 +124,7 @@ const Listing = sequelize.define('Listing', {
     allowNull: false,
   },
   price: {
-    type: DataTypes.DECIMAL(10, 2), // Adjust precision as needed
+    type: DataTypes.DECIMAL(20, 8), // Increased precision for large numbers
     allowNull: true, // Can be 'Contact for Price' or 'Free'
   },
   // Listing Type enum (whether the deal for: rent, sell, exchange...etc.)

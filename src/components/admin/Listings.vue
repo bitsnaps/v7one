@@ -250,7 +250,7 @@ onMounted(() => {
           </div>
           <div class="form-group">
             <label for="price">Price</label>
-            <input type="number" class="form-control" id="price" v-model="form.price" required>
+            <input type="text" inputmode="decimal" pattern="[0-9]*[.]?[0-9]*" class="form-control" id="price" v-model="form.price" required>
           </div>
           <div class="form-group">
             <label for="imageUrl">Image URL</label>
