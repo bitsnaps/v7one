@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, reactive, computed } from 'vue';
 import AdminService from '../../services/AdminService';
+import CategoryOptions from './CategoryOptions.vue';
 
 const attributes = ref([]);
 const categories = ref([]);
@@ -190,7 +191,7 @@ onMounted(() => {
             <label for="category">Category</label>
             <select class="form-control" id="category" v-model="form.categoryId" required>
               <option :value="null">-- Select Category --</option>
-              <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+              <CategoryOptions :categories="categories" />
             </select>
           </div>
           <div class="form-check mt-2">
@@ -212,14 +213,14 @@ onMounted(() => {
             <label for="sourceCategory">Source Category</label>
             <select class="form-control" id="sourceCategory" v-model="copyData.sourceCategoryId" required>
               <option :value="null">-- Select Source Category --</option>
-              <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+              <CategoryOptions :categories="categories" />
             </select>
           </div>
           <div class="form-group mt-2">
             <label for="destinationCategory">Destination Category</label>
             <select class="form-control" id="destinationCategory" v-model="copyData.destinationCategoryId" required>
               <option :value="null">-- Select Destination Category --</option>
-              <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+              <CategoryOptions :categories="categories" />
             </select>
           </div>
           <div class="d-flex justify-content-end mt-3">
