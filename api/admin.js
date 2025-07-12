@@ -350,11 +350,28 @@ admin.post('/attributes/copy', async (c) => {
 // Attribute Values Management
 admin.get('/attribute-values', async (c) => {
     try {
+        const { search, searchBy = 'value' } = c.req.query();
+        const include = [
+            { model: models.Listing, as: 'listing', required: false },
+            { model: models.Attribute, as: 'attribute', required: false }
+        ];
+        const whereClause = {};
+
+        if (search) {
+            if (searchBy === 'listing') {
+                include[0].where = { title: { [Op.iLike]: `%${search}%` } };
+                include[0].required = true;
+            } else if (searchBy === 'attribute') {
+                include[1].where = { name: { [Op.iLike]: `%${search}%` } };
+                include[1].required = true;
+            } else {
+                whereClause.value = { [Op.iLike]: `%${search}%` };
+            }
+        }
+        
         const attributeValues = await models.ListingAttributeValue.findAll({
-            include: [
-                { model: models.Listing, as: 'listing' },
-                { model: models.Attribute, as: 'attribute' }
-            ]
+            where: whereClause,
+            include: include
         });
         return c.json(attributeValues);
     } catch (error) {

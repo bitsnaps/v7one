@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, reactive, computed } from 'vue';
+import { ref, onMounted, reactive, computed, watch } from 'vue';
 import AdminService from '../../services/AdminService';
 
 const attributeValues = ref([]);
@@ -7,6 +7,10 @@ const attributes = ref([]);
 const listings = ref([]);
 const editMode = ref(false);
 const showModal = ref(false);
+
+const searchQuery = ref('');
+
+const searchBy = ref('value');
 
 const form = reactive({
   id: null,
@@ -30,7 +34,7 @@ const filteredAttributes = computed(() => {
 
 const fetchAttributeValues = async () => {
   try {
-    const response = await AdminService.getAttributeValues();
+    const response = await AdminService.getAttributeValues(searchQuery.value, searchBy.value);
     attributeValues.value = response.data;
   } catch (error) {
     console.error('Error fetching attribute values:', error);
@@ -101,6 +105,14 @@ const deleteAttributeValue = async (id) => {
   }
 };
 
+let debounceTimer;
+watch([searchQuery, searchBy], () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    fetchAttributeValues();
+  }, 300);
+});
+
 onMounted(() => {
   fetchAttributeValues();
   fetchAttributes();
@@ -122,6 +134,18 @@ onMounted(() => {
               </div>
             </div>
             <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-4">
+                  <input type="text" class="form-control" placeholder="Search..." v-model="searchQuery">
+                </div>
+                <div class="col-md-3">
+                  <select class="form-control" v-model="searchBy">
+                    <option value="value">Value</option>
+                    <option value="listing">Listing</option>
+                    <option value="attribute">Attribute</option>
+                  </select>
+                </div>
+              </div>
               <table class="table table-striped">
                 <thead>
                   <tr>

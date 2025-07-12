@@ -68,8 +68,13 @@ getAttributes(categoryId = null, search = '') {
   copyAttributes(data) {
     return apiClient.post('/api/admin/attributes/copy', data);
   },
-  getAttributeValues() {
-    return apiClient.get('/api/admin/attribute-values');
+  getAttributeValues(search = '', searchBy = 'value') {
+   const params = new URLSearchParams();
+   if (search) {
+     params.append('search', search);
+     params.append('searchBy', searchBy);
+   }
+   return apiClient.get(`/api/admin/attribute-values?${params.toString()}`);
   },
   createAttributeValue(data) {
     return apiClient.post('/api/admin/attribute-values', data);
