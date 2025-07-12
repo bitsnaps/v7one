@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, reactive, computed } from 'vue';
+import { ref, onMounted, reactive, computed, watch } from 'vue';
 import AdminService from '../../services/AdminService';
 import CategoryOptions from './CategoryOptions.vue';
 
@@ -13,7 +13,7 @@ const copyData = reactive({
   sourceCategoryId: null,
   destinationCategoryId: null,
 });
-
+const searchQuery = ref('');
 
 const form = reactive({
   id: null,
@@ -27,7 +27,7 @@ const modalTitle = computed(() => (editMode.value ? 'Edit Attribute' : 'Add Attr
 
 const fetchAttributes = async () => {
   try {
-    const response = await AdminService.getAttributes();
+    const response = await AdminService.getAttributes(null, searchQuery.value);
     attributes.value = response.data;
   } catch (error) {
     console.error('Error fetching attributes:', error);
@@ -119,6 +119,14 @@ const copyAttributes = async () => {
   }
 };
 
+let debounceTimer;
+watch(searchQuery, () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    fetchAttributes();
+  }, 300); // 300ms debounce
+});
+
 onMounted(() => {
   fetchAttributes();
   fetchCategories();
@@ -140,6 +148,11 @@ onMounted(() => {
               </div>
             </div>
             <div class="card-body">
+              <div class="row">
+                  <div class="col-md-4">
+                      <input type="text" class="form-control" placeholder="Search by name" v-model="searchQuery">
+                  </div>
+              </div>
               <table class="table table-striped">
                 <thead>
                   <tr>

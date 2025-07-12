@@ -46,10 +46,13 @@ createCategory(data) {
   deleteCategory(id) {
     return apiClient.delete(`/api/admin/categories/${id}`);
   },
-getAttributes(categoryId = null) {
+getAttributes(categoryId = null, search = '') {
   const params = new URLSearchParams();
   if (categoryId) {
     params.append('categoryId', categoryId);
+  }
+  if (search) {
+    params.append('search', search);
   }
   return apiClient.get(`/api/admin/attributes?${params.toString()}`);
 },
