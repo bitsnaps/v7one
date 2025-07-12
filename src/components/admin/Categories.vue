@@ -1,6 +1,6 @@
 
 <script setup>
-import { ref, onMounted, reactive, computed } from 'vue';
+import { ref, onMounted, reactive, computed, watch } from 'vue';
 import AdminService from '../../services/AdminService';
 import CategoryTree from './CategoryTree.vue';
 import { CATEGORY_TYPES } from '../../helpers/categoryTypes';
@@ -15,6 +15,7 @@ const form = reactive({
   slug: '',
   type: '',
   parentId: null,
+  copyAttributes: false
 });
 
 const modalTitle = computed(() => (editMode.value ? 'Edit Category' : 'Add Category'));
@@ -29,6 +30,11 @@ const flattenCategories = (categories, prefix = '') => {
   }
   return result;
 };
+
+watch(() => form.parentId, (newParentId) => {
+  if (editMode.value) return;
+  form.copyAttributes = !!newParentId;
+});
 
 const fetchCategories = async () => {
   try {
@@ -46,6 +52,7 @@ const resetForm = () => {
   form.slug = '';
   form.type = '';
   form.parentId = null;
+  form.copyAttributes = false;
   editMode.value = false;
 };
 
@@ -119,7 +126,7 @@ onMounted(() => {
         <form @submit.prevent="saveCategory">
           <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" v-model="form.name" required>
+            <input type="text" class="form-control" id="name" v-model="form.name" @change="() => { form.slug = form.name.toLocaleLowerCase()}" required>
           </div>
           <div class="form-group">
             <label for="slug">Slug</label>
@@ -137,6 +144,14 @@ onMounted(() => {
               <option :value="null">None</option>
               <option v-for="cat in flatCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
             </select>
+          </div>
+          <div class="form-group" v-if="!editMode">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="copyAttributes" v-model="form.copyAttributes" :disabled="!form.parentId">
+              <label class="form-check-label" for="copyAttributes">
+                Copy Attributes from Parent
+              </label>
+            </div>
           </div>
           <div class="d-flex justify-content-end mt-3">
             <button type="button" class="btn btn-secondary me-2" @click="showModal = false">Cancel</button>

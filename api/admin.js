@@ -1,4 +1,5 @@
 const { Hono } = require('hono');
+const { sequelize } = require('./models');
 const models = require('./models');
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
@@ -202,11 +203,33 @@ admin.get('/categories', async (c) => {
 
 // Create a new category
 admin.post('/categories', async (c) => {
-  const { name, slug, type, parentId } = await c.req.json();
+  const { name, slug, type, parentId, copyAttributes } = await c.req.json();
+  const t = await sequelize.transaction();
   try {
-    const category = await models.Category.create({ name, slug, type, parentId });
+    const category = await models.Category.create({ name, slug, type, parentId }, { transaction: t });
+
+    if (copyAttributes && parentId) {
+      const parentAttributes = await models.Attribute.findAll({
+        where: { categoryId: parentId },
+        raw: true
+      });
+
+      if (parentAttributes.length > 0) {
+        const newAttributes = parentAttributes.map(attr => ({
+          ...attr,
+          id: undefined,
+          categoryId: category.id,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }));
+        await models.Attribute.bulkCreate(newAttributes, { transaction: t });
+      }
+    }
+
+    await t.commit();
     return c.json(category, 201);
   } catch (error) {
+    await t.rollback();
     return c.json({ error: 'Failed to create category', details: error.message }, 500);
   }
 });
