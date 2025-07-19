@@ -12,6 +12,7 @@ import CategoryView from '@/views/CategoryView.vue';
 import NotFound from '@/views/NotFound.vue';
 import DealDetail from '@/views/DealDetail.vue';
 import ValidateEmail from '@/views/ValidateEmail.vue'
+import SubscriptionSuccess from '@/views/SubscriptionSuccess.vue';
 import AdminDashboard from '@/components/admin/Dashboard.vue';
 import AdminUsers from '@/components/admin/Users.vue';
 import AdminCategories from '@/components/admin/Categories.vue';
@@ -21,6 +22,7 @@ import AdminProfile from '@/components/admin/Profile.vue';
 import AdminAttributes from '@/components/admin/Attributes.vue';
 import AdminAttributeValues from '@/components/admin/AttributeValues.vue';
 import AdminMedia from '@/components/admin/Media.vue';
+import AdminNotifications from '@/components/admin/Notifications.vue';
 
 const routes = [
   {
@@ -81,6 +83,12 @@ const routes = [
         component: DealDetail,
         props: true,
       },
+      {
+       path: 'subscription-success',
+       name: 'SubscriptionSuccess',
+       component: SubscriptionSuccess,
+       meta: { requiresAuth: true },
+     },
     ],
   },
   {
@@ -136,6 +144,11 @@ const routes = [
         path: 'profile',
         name: 'AdminProfile',
         component: AdminProfile,
+      },
+      {
+        path: 'notifications',
+        name: 'AdminNotifications',
+        component: AdminNotifications,
       },
     ],
   },

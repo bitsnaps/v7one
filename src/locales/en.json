@@ -242,6 +242,16 @@
         ],
         "sponsoredAd": "Special"
       }
+    },
+    "subscription": {
+      "subscriptionSuccessfull": "Thank you for your subscription! You will be notified.",
+      "alreadySubscribed": "You already have an active subscription.",
+      "subscriptionError": "An error occurred during subscription. Please try again."
+    },
+    "subscriptionSuccess": {
+      "title": "Subscription Successful!",
+      "message": "You have successfully subscribed to the plan. You can now enjoy the new features.",
+      "homeButton": "Go to Homepage"
     }
   },
   "filters": {

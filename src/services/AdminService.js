@@ -153,4 +153,35 @@ editMessage(messageId, content) {
 deleteMessage(messageId) {
   return apiClient.delete(`/api/admin/messages/message/${messageId}`);
 },
+  getNotifications(page = 1, search = '') {
+    const params = new URLSearchParams();
+    if (typeof(page)=='number'){
+      params.append('page', page);
+    }
+    if (search) {
+      params.append('search', search);
+    }
+    return apiClient.get(`/api/admin/notifications?${params.toString()}`);
+  },
+  createNotification(data) {
+    return apiClient.post('/api/admin/notifications', data);
+  },
+  updateNotification(id, data) {
+    return apiClient.put(`/api/admin/notifications/${id}`, data);
+  },
+  deleteNotification(id) {
+    return apiClient.delete(`/api/admin/notifications/${id}`);
+  },
+  deleteNotifications(ids) {
+    return apiClient.post('/api/admin/notifications/bulk-delete', { ids });
+  },
+  markAllNotificationsAsRead() {
+    return apiClient.post('/api/admin/notifications/mark-all-as-read');
+  },
+  updateSubscriptionStatus(userId, status) {
+    return apiClient.patch(`/api/admin/users/${userId}/subscription`, { status });
+  },
+  deleteSubscription(userId) {
+    return apiClient.delete(`/api/admin/users/${userId}/subscription`);
+  },
 };

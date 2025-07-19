@@ -767,6 +767,74 @@ app.get('/api/deals/:type?', async (c) => {
         return c.json({ success: false, message: 'Error fetching categories' }, 500);
     }
 });
+// API endpoint for pricing plans
+app.get('/api/pricing-plans', async (c) => {
+  try {
+    const plans = await models.PricingPlan.findAll({
+      where: { isActive: true },
+      attributes: ['id', 'name', 'price', 'pricePercentage', 'description', 'features', 'sponsoredAdType']
+    });
+    return c.json({ success: true, data: plans });
+  } catch (error) {
+    console.error('Error fetching pricing plans:', error);
+    return c.json({ success: false, message: 'An error occurred while fetching pricing plans' }, 500);
+  }
+});
+
+// API endpoint for user to subscribe to a plan
+app.post('/api/subscribe', async (c) => {
+  const authHeader = c.req.header('Authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return c.json({ error: 'Unauthorized: Missing or invalid token' }, 401);
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+    const { planId } = await c.req.json();
+
+    if (!isValidUUID(planId)) {
+      return c.json({ success: false, message: 'Invalid plan ID' }, 400);
+    }
+
+    const plan = await models.PricingPlan.findByPk(planId);
+    if (!plan) {
+      return c.json({ success: false, message: 'Pricing plan not found' }, 404);
+    }
+
+    const existingSubscription = await models.UserSubscription.findOne({
+      where: { userId, status: 'ACTIVE' }
+    });
+
+    if (existingSubscription) {
+      return c.json({ success: false, message: 'You already have an active subscription.' }, 409);
+    }
+    
+    const subscription = await models.UserSubscription.create({
+      userId,
+      pricingPlanId: planId,
+      status: 'ACTIVE',
+    });
+
+    const admins = await models.User.findAll({ where: { isAdmin: true } });
+    for (const admin of admins) {
+      await models.Notification.create({
+        userId: admin.id,
+        type: 'NEW_SUBSCRIPTION',
+        message: `User ${decoded.email} has subscribed to the ${plan.name} plan.`,
+      });
+    }
+
+    return c.json({ success: true, message: 'Successfully subscribed to the plan', data: subscription });
+  } catch (error) {
+    if (error instanceof jwt.JsonWebTokenError) {
+      return c.json({ error: 'Unauthorized: Invalid token' }, 401);
+    }
+    console.error('Subscription error:', error);
+    return c.json({ success: false, message: 'An error occurred during subscription' }, 500);
+  }
+});
 
 app.post('/api/offers', async (c) => {
     try {

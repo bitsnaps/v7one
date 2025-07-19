@@ -38,5 +38,11 @@ updateProfile(profileData) {
   },
   sendMessage(messageData) {
     return apiClient.post('/api/messages', messageData);
+  },
+  getPricingPlans() {
+    return apiClient.get('/api/pricing-plans');
+  },
+  subscribeToPlan(planId) {
+    return apiClient.post('/api/subscribe', { planId });
   }
 };

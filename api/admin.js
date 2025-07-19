@@ -50,6 +50,18 @@ admin.get('/users', async (c) => {
       limit: parseInt(limit),
       offset: parseInt(offset),
       attributes: { exclude: ['passwordHash'] }, // Exclude password hash from the response
+      include: [
+       {
+         model: models.UserSubscription,
+         as: 'subscriptions',
+         include: [
+           {
+             model: models.PricingPlan,
+             //as: 'pricingPlan'
+           }
+         ]
+       }
+      ],
       order: [['createdAt', 'DESC']],
     });
 
@@ -163,6 +175,46 @@ admin.delete('/users/:id', async (c) => {
     return c.json({ success: true, message: 'User deleted successfully' });
   } catch (error) {
     return c.json({ error: 'Failed to delete user', details: error.message }, 500);
+  }
+});
+
+admin.patch('/users/:userId/subscription', async (c) => {
+  const { userId } = c.req.param();
+  const { status } = await c.req.json();
+
+  if (!['ACTIVE', 'CANCELLED', 'EXPIRED'].includes(status)) {
+    return c.json({ error: 'Invalid subscription status' }, 400);
+  }
+
+  try {
+    const subscription = await models.UserSubscription.findOne({ where: { userId } });
+    if (!subscription) {
+      return c.json({ error: 'Subscription not found' }, 404);
+    }
+
+    subscription.status = status;
+    await subscription.save();
+
+    return c.json({ success: true, message: `Subscription status updated to ${status}` });
+  } catch (error) {
+    return c.json({ error: 'Failed to update subscription status', details: error.message }, 500);
+  }
+});
+
+admin.delete('/users/:userId/subscription', async (c) => {
+  const { userId } = c.req.param();
+
+  try {
+    const subscription = await models.UserSubscription.findOne({ where: { userId } });
+    if (!subscription) {
+      return c.json({ error: 'Subscription not found' }, 404);
+    }
+
+    await subscription.destroy();
+
+    return c.json({ success: true, message: 'Subscription deleted successfully' });
+  } catch (error) {
+    return c.json({ error: 'Failed to delete subscription', details: error.message }, 500);
   }
 });
 
@@ -926,5 +978,122 @@ admin.post('/messages', async (c) => {
     return c.json({ error: 'Failed to create conversation', details: error.message }, 500);
   }
 });
+
+// Notification Management Routes
+admin.get('/notifications', async (c) => {
+  const { page = 1, limit = 10, isRead, search } = c.req.query();
+  const offset = (page - 1) * limit;
+
+  const whereClause = {};
+  if (isRead) whereClause.isRead = isRead === 'true';
+  if (search) {
+    whereClause.message = { [Op.iLike]: `%${search}%` };
+  }
+
+  try {
+    const { count, rows } = await models.Notification.findAndCountAll({
+      where: whereClause,
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+      include: [
+        { model: models.User, attributes: ['id', 'displayName'] }
+      ],
+      order: [['createdAt', 'DESC']],
+    });
+
+    return c.json({
+      total: count,
+      pages: Math.ceil(count / limit),
+      currentPage: parseInt(page),
+      notifications: rows,
+    });
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch notifications', details: error.message }, 500);
+  }
+});
+
+admin.post('/notifications', async (c) => {
+  const { userId, type, message } = await c.req.json();
+  try {
+    const notification = await models.Notification.create({ userId, type, message });
+    return c.json(notification, 201);
+  } catch (error) {
+    return c.json({ error: 'Failed to create notification', details: error.message }, 500);
+  }
+});
+
+admin.get('/notifications/:id', async (c) => {
+  const { id } = c.req.param();
+  try {
+    const notification = await models.Notification.findByPk(id, {
+      include: [{ model: models.User, attributes: ['id', 'displayName'] }]
+    });
+    if (!notification) {
+      return c.json({ error: 'Notification not found' }, 404);
+    }
+    return c.json(notification);
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch notification', details: error.message }, 500);
+  }
+});
+
+admin.put('/notifications/:id', async (c) => {
+  const { id } = c.req.param();
+  const { userId, type, message, isRead } = await c.req.json();
+  try {
+    const notification = await models.Notification.findByPk(id);
+    if (!notification) {
+      return c.json({ error: 'Notification not found' }, 404);
+    }
+    await notification.update({ userId, type, message, isRead });
+    return c.json(notification);
+  } catch (error) {
+    return c.json({ error: 'Failed to update notification', details: error.message }, 500);
+  }
+});
+
+admin.delete('/notifications/:id', async (c) => {
+  const { id } = c.req.param();
+  try {
+    const notification = await models.Notification.findByPk(id);
+    if (!notification) {
+      return c.json({ error: 'Notification not found' }, 404);
+    }
+    await notification.destroy();
+    return c.json({ success: true, message: 'Notification deleted successfully' });
+  } catch (error) {
+    return c.json({ error: 'Failed to delete notification', details: error.message }, 500);
+  }
+});
+
+admin.post('/notifications/bulk-delete', async (c) => {
+  const { ids } = await c.req.json();
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    return c.json({ error: 'Invalid input for bulk delete' }, 400);
+  }
+
+  try {
+    await models.Notification.destroy({
+      where: {
+        id: {
+          [Op.in]: ids
+        }
+      }
+    });
+    return c.json({ success: true, message: 'Notifications deleted successfully' });
+  } catch (error) {
+    return c.json({ error: 'Failed to delete notifications', details: error.message }, 500);
+  }
+});
+
+admin.post('/notifications/mark-all-as-read', async (c) => {
+  try {
+    await models.Notification.update({ isRead: true }, { where: { isRead: false } });
+    return c.json({ success: true, message: 'All notifications marked as read' });
+  } catch (error) {
+    return c.json({ error: 'Failed to mark notifications as read', details: error.message }, 500);
+  }
+});
+
 
 module.exports = admin;

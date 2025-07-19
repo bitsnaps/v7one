@@ -503,8 +503,38 @@ const UserSubscription = sequelize.define('UserSubscription', {
     updatedAt: DataTypes.DATE,
 });
 
+const Notification = sequelize.define('Notification', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: Sequelize.UUIDV4,
+    primaryKey: true,
+  },
+  userId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+  },
+  type: {
+    type: DataTypes.ENUM('NEW_SUBSCRIPTION', 'SUBSCRIPTION_CANCELLED', 'USER_REPORT'),
+    allowNull: false,
+  },
+  message: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  isRead: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  // Timestamps
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+});
 
 // --- Define Associations ---
+
+// User and Notification
+User.hasMany(Notification, { foreignKey: 'userId', as: 'notifications' });
+Notification.belongsTo(User, { foreignKey: 'userId' });
 
 // User and Listing
 User.hasMany(Listing, { foreignKey: 'userId', as: 'listings' });
@@ -611,6 +641,7 @@ module.exports = {
   Report,
   PricingPlan,
   UserSubscription,
+  Notification,
   syncDatabase, // Export sync function if you want to call it from elsewhere
 };
 

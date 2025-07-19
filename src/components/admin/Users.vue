@@ -93,8 +93,28 @@ const deleteUser = async (id) => {
   }
 };
 
-onMounted(() => {
-  fetchUsers();
+const updateSubscription = async (userId, status) => {
+  try {
+    await AdminService.updateSubscriptionStatus(userId, status);
+    fetchUsers(pagination.value.current_page); // Refresh the user list
+  } catch (error) {
+    console.error('Error updating subscription:', error);
+  }
+};
+
+const deleteSubscription = async (userId) => {
+  if (confirm('Are you sure you want to delete this subscription?')) {
+    try {
+      await AdminService.deleteSubscription(userId);
+      fetchUsers(pagination.value.current_page); // Refresh the user list
+    } catch (error) {
+      console.error('Error deleting subscription:', error);
+    }
+  }
+};
+ 
+ onMounted(() => {
+   fetchUsers();
   userModal = new bootstrap.Modal(document.getElementById('editUserModal'));
   createUserModal = new bootstrap.Modal(document.getElementById('createUserModal'));
 });
@@ -130,6 +150,7 @@ onMounted(() => {
                   <th>Role</th>
                   <th>Verified?</th>
                   <th>Active?</th>
+                  <th>Subscription</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -142,8 +163,30 @@ onMounted(() => {
                   <td>{{ user.isVerified?'Yes':'No' }}</td>
                   <td>{{ user.isActive?'Yes':'No' }}</td>
                   <td>
-                    <button class="btn btn-sm btn-primary" @click="editUser(user)">Edit</button>
-                    <button class="btn btn-sm btn-danger" @click="deleteUser(user.id)">Delete</button>
+                    <span v-if="user.subscriptions && user.subscriptions.length > 0">
+                      {{ user.subscriptions[0].PricingPlan.name }} ({{ user.subscriptions[0].status }})
+                    </span>
+                    <span v-else>
+                       No Subscription
+                    </span>
+                  </td>
+                  <td>
+                   <div class="btn-group">
+                     <button class="btn btn-sm btn-primary" @click="editUser(user)">Edit</button>
+                     <button class="btn btn-sm btn-danger" @click="deleteUser(user.id)">Delete</button>
+                     <div class="btn-group" v-if="user.subscriptions && user.subscriptions.length > 0">
+                       <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                         Subscription
+                       </button>
+                       <ul class="dropdown-menu">
+                         <li><a class="dropdown-item" href="#" @click.prevent="updateSubscription(user.id, 'ACTIVE')">Activate</a></li>
+                         <li><a class="dropdown-item" href="#" @click.prevent="updateSubscription(user.id, 'CANCELLED')">Cancel</a></li>
+                         <li><a class="dropdown-item" href="#" @click.prevent="updateSubscription(user.id, 'EXPIRED')">Expire</a></li>
+                         <li><hr class="dropdown-divider"></li>
+                         <li><a class="dropdown-item" href="#" @click.prevent="deleteSubscription(user.id)">Delete</a></li>
+                       </ul>
+                     </div>
+                   </div>
                   </td>
                 </tr>
               </tbody>

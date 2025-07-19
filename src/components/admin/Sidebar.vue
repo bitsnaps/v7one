@@ -57,6 +57,12 @@
                     </router-link>
                 </li>
 
+                <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/notifications' }">
+                    <router-link to="/admin/notifications" class="sidebar-link">
+                       <i class="align-middle fas fa-bell"></i> <span class="align-middle">Notifications</span>
+                   </router-link>
+               </li>
+
             </ul>
 
         </div>

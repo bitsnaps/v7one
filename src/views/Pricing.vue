@@ -1,62 +1,74 @@
 <script setup>
+import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
+import DealService from '../services/DealService';
 
 const { t } = useI18n();
+const router = useRouter();
+const authStore = useAuthStore();
 
-const pricingPlans = [
-  {
-    level: 'Basic',
-    price: 'Free',
-    features: [
-      'Upload photos',
-      'Free ad on social media platforms',
-      'Normal pricing',
-    ],
-    sponsoredAd: 'Not available',
-    bgColor: 'bg-light',
-    btnClass: 'btn-outline-primary'
-  },
-  {
-    level: 'Silver',
-    price: '20,000 DZD',
-    features: [
-      'All in Basic package plus:',
-      'Upload M additional photos',
-      'Professional video',
-      'Documentation',
-    ],
-    sponsoredAd: 'Local',
-    bgColor: 'bg-light',
-    btnClass: 'btn-primary'
-  },
-  {
-    level: 'Gold',
-    price: '30,000 DZD',
-    features: [
-      'All in Silver package plus:',
-      'Special professional video',
-      'Special documentation',
-    ],
-    sponsoredAd: 'International',
-    bgColor: 'bg-light',
-    btnClass: 'btn-warning'
-  },
-  {
-    level: 'Special',
-    price: '1%',
-    features: [
-      'All in Gold package plus:',
-      'Consulting services',
-    ],
-    sponsoredAd: 'Special',
-    bgColor: 'bg-light',
-    btnClass: 'btn-success'
-  },
-];
+const pricingPlans = ref([]);
+const message = ref('');
+
+async function subscribeToPlan(planId) {
+  if (!authStore.isLoggedIn) {
+    router.push({ name: 'SignIn', query: { redirect: router.currentRoute.value.fullPath } });
+    return;
+  }
+  try {
+    const response = await DealService.subscribeToPlan(planId);
+    if (response.data.success) {
+      router.push({ name: 'SubscriptionSuccess' });
+    }
+  } catch (error) {
+    if (error.response?.status === 409) {
+      message.value = t('pricing.alreadySubscribed');
+    } else {
+      message.value = error.response?.data?.message || t('pricing.subscriptionError');
+    }
+  }
+}
+
+onMounted(async () => {
+  try {
+    const response = await DealService.getPricingPlans();
+    if (response.data.success) {
+      pricingPlans.value = response.data.data.map(plan => ({
+        ...plan,
+        level: plan.name,
+        price: plan.price === null ? `${plan.pricePercentage}%` : plan.price === 0 ? 'Free' : `${plan.price} DZD`,
+        features: JSON.parse(JSON.stringify(plan.features)),
+        sponsoredAd: plan.sponsoredAdType,
+        bgColor: 'bg-light',
+        btnClass: getButtonClass(plan.name)
+      }));
+    }
+  } catch (error) {
+    console.error('Error fetching pricing plans:', error);
+  }
+});
+
+function getButtonClass(level) {
+  switch (level) {
+    case 'Basic':
+      return 'outline-primary';
+    case 'Silver':
+      return 'primary';
+    case 'Gold':
+      return 'warning';
+    case 'Special':
+      return 'success';
+    default:
+      return 'secondary';
+  }
+}
 </script>
 
 <template>
   <div class="container py-5">
+    <div v-if="message" class="alert alert-info">{{ message }}</div>
     <div class="text-center mb-5">
       <h1 class="display-4 fw-bold">{{ t('pricing.title') }}</h1>
       <p class="lead text-muted">{{ t('pricing.description') }}</p>
@@ -66,7 +78,7 @@ const pricingPlans = [
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
       <div class="col" v-for="(plan, index) in pricingPlans" :key="index">
         <div :class="['card', 'h-100', 'shadow-sm', plan.bgColor]">
-          <div class="card-header text-center py-3">
+          <div :class="`card-header text-center py-3 bg-${plan.btnClass}`">
             <h4 class="my-0 fw-normal">{{ t(`pricing.plans.${plan.level.toLowerCase()}.level`) }}</h4>
           </div>
           <div class="card-body d-flex flex-column">
@@ -81,7 +93,7 @@ const pricingPlans = [
               </li>
             </ul>
             <p class="text-center text-danger fw-bold">{{ t('pricing.sponsoredAd') }}: {{ t(`pricing.plans.${plan.level.toLowerCase()}.sponsoredAd`) }}</p>
-            <button type="button" :class="['w-100', 'btn', 'btn-lg', plan.btnClass]">
+            <button type="button" :class="['w-100', 'btn', 'btn-lg', `btn-${plan.btnClass}`]" @click="subscribeToPlan(plan.id)">
               {{ t('pricing.choosePlan') }}
             </button>
           </div>

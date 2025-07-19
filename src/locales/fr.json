@@ -248,6 +248,16 @@
         ],
         "sponsoredAd": "Spécial"
       }
+    },
+    "subscription": {
+      "subscriptionSuccessfull": "Merci de vous être abonné(e) ! Vous serez averti(e).",
+      "alreadySubscribed": "Vous avez déjà un abonnement actif.",
+      "subscriptionError": "Une erreur s'est produite lors de l'abonnement. Veuillez réessayer."
+    },
+    "subscriptionSuccess": {
+      "title": "Abonnement réussi !",
+      "message": "Vous vous êtes abonné avec succès au plan. Vous pouvez maintenant profiter des nouvelles fonctionnalités.",
+      "homeButton": "Aller à la page d'accueil"
     }
   },
   "dealDetail": {
