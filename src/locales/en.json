@@ -149,7 +149,7 @@
     "title": "Sign Up",
     "firstNameLabel": "First Name",
     "lastNameLabel": "Last Name",
-    "emailLabel": "Username or Email",
+    "emailLabel": "Email",
     "passwordLabel": "Password",
     "confirmPasswordLabel": "Confirm Password",
     "signUpButton": "Sign Up",

@@ -2,7 +2,7 @@
  * Add helper functions
  */
 import axios from 'axios';
-
+import { useAuthStore } from '../stores/auth';
 
 const getApiBaseUrl = () => {
   if (import.meta.env.DEV) {
@@ -34,6 +34,23 @@ apiClient.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+// Add a response interceptor to handle 401 errors
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const authStore = useAuthStore();
+    if (error.response && error.response.status === 401) {
+      authStore.logout();
+      // It's better to handle redirection in the component or router
+      // to avoid circular dependencies and keep this file focused on API logic.
+      // For instance, you could emit an event or have a global state that the UI reacts to.
+      window.location.href = '/signin';
+    }
+    return Promise.reject(error);
+  }
+);
+
 
 const formatPrice = (price) => {
   const number = parseFloat(price);

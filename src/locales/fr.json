@@ -161,7 +161,7 @@
     "title": "S'inscrire",
     "firstNameLabel": "Prénom",
     "lastNameLabel": "Nom",
-    "emailLabel": "Nom d'utilisateur ou Email",
+    "emailLabel": "Email",
     "passwordLabel": "Mot de passe",
     "confirmPasswordLabel": "Confirmer le mot de passe",
     "signUpButton": "S'inscrire",

@@ -1,6 +1,6 @@
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import DealService from '@/services/DealService';
 import AdminService from '@/services/AdminService';
@@ -29,6 +29,9 @@ export default {
 
     onMounted(() => {
       loadCategories();
+      if (auth.isLoggedIn) {
+        auth.fetchUserSubscription();
+      }
     });
 
     const loadCategories = () => {
@@ -86,10 +89,22 @@ export default {
         });
     };
 
+    const maxUploads = computed(() => {
+      if (auth.subscription) {
+        return auth.subscription.maxPhotosN + auth.subscription.additionalPhotosM;
+      }
+      return 5; // Default limit for users without a subscription
+    });
+    
     const handleFileUpload = (event) => {
       const file = event.target.files[0];
       if (!file) return;
-
+    
+      if (pendingMedia.value.length + mediaItems.value.length >= maxUploads.value) {
+        alert(`You have reached the upload limit of ${maxUploads.value} files.`);
+        return;
+      }
+    
       const reader = new FileReader();
       reader.onload = (e) => {
         pendingMedia.value.push({
@@ -139,6 +154,7 @@ export default {
       dealCreated,
       mediaItems,
       pendingMedia,
+      maxUploads,
       nextStep,
       prevStep,
       submitDeal,
@@ -273,8 +289,8 @@ export default {
           <h3 class="step-title">Step 3: Upload Media</h3>
           <p class="text-success">Your deal has been created! You can now upload media.</p>
           <div class="mb-3">
-            <label for="mediaFile" class="form-label">Upload File</label>
-            <input type="file" class="form-control" id="mediaFile" @change="handleFileUpload" />
+            <label for="mediaFile" class="form-label">Upload File (limit: {{ maxUploads }} files)</label>
+            <input type="file" class="form-control" id="mediaFile" @change="handleFileUpload" :disabled="pendingMedia.length + mediaItems.length >= maxUploads" />
           </div>
           <div v-if="pendingMedia.length > 0" class="media-preview">
             <h4 class="preview-title">Pending Media:</h4>

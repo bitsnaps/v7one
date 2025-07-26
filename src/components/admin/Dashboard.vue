@@ -2,6 +2,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import AdminService from '../../services/AdminService';
+import { useRouter } from 'vue-router';
 
 const stats = ref({
   totalUsers: 0,
@@ -12,13 +13,19 @@ const stats = ref({
 
 const recentDeals = ref([]);
 const recentUsers = ref([]);
+const authError = ref(null);
+const router = useRouter();
 
 const fetchStats = async () => {
   try {
     const response = await AdminService.getDashboardStats();
     stats.value = response.data;
   } catch (error) {
-    console.error('Error fetching dashboard stats:', error);
+    if (error.response && error.response.status === 401) {
+      authError.value = 'Your session has expired. Please log in again.';
+    } else {
+      console.error('Error fetching dashboard stats:', error);
+    }
   }
 };
 
@@ -30,7 +37,11 @@ const fetchRecentData = async () => {
     const usersResponse = await AdminService.getRecentUsers();
     recentUsers.value = usersResponse.data;
   } catch (error) {
-    console.error('Error fetching recent data:', error);
+    if (error.response && error.response.status === 401) {
+      authError.value = 'Your session has expired. Please log in again.';
+    } else {
+      console.error('Error fetching recent data:', error);
+    }
   }
 };
 
@@ -42,8 +53,13 @@ onMounted(() => {
 
 <template>
   <main class="content">
-    <div class="container-fluid p-0">
-
+    <div v-if="authError" class="container-fluid p-0">
+      <b-alert variant="danger">
+          {{ authError }}
+          <b-button variant="primary" size="lg" class="ms-3" @click="router.push('/signin')">Login</b-button>
+      </b-alert>
+    </div>
+    <div v-else class="container-fluid p-0">
       <h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
 
       <div class="row">

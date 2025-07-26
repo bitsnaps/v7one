@@ -7,6 +7,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: JSON.parse(localStorage.getItem('user')),
     token: localStorage.getItem('token'),
+    // subscription: null,
     error: null,
     loading: false,
   }),
@@ -14,6 +15,7 @@ export const useAuthStore = defineStore('auth', {
     isLoggedIn: (state) => !!state.user && !!state.token,
     authError: (state) => state.error,
     isLoading: (state) => state.loading,
+    // subscription: (state) => state.subscription,
   },
   actions: {
     async login(credentials) {
@@ -27,6 +29,7 @@ export const useAuthStore = defineStore('auth', {
           this.token = response.data.token;
           localStorage.setItem('user', JSON.stringify(response.data.user));
           localStorage.setItem('token', response.data.token);
+          // await this.fetchUserSubscription();
           return true;
         } else {
           this.error = response.data.message || 'Login failed';
@@ -64,12 +67,24 @@ export const useAuthStore = defineStore('auth', {
     async logout() {
       this.user = null;
       this.token = null;
+      // this.subscription = null;
       this.error = null;
       localStorage.removeItem('user');
       localStorage.removeItem('token');
       // redirect to home page (will be done at component level)
       // router.push('/signin');
     },
+    /*async fetchUserSubscription() {
+      if (!this.token) return;
+      try {
+        const response = await DealService.getUserSubscription();
+        if (response.data.success && response.data.data) {
+          this.subscription = response.data.data;
+        }
+      } catch (error) {
+        console.error('Failed to fetch user subscription:', error);
+      }
+    },*/
 async updateProfile(profileData) {
       this.loading = true;
       this.error = null;

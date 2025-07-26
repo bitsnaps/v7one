@@ -44,5 +44,8 @@ updateProfile(profileData) {
   },
   subscribeToPlan(planId) {
     return apiClient.post('/api/subscribe', { planId });
+  },
+  getUserSubscription() {
+    return apiClient.get('/api/user/subscription');
   }
 };

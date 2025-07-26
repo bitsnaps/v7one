@@ -99,7 +99,6 @@ const toggleSidebar = () => {
                            </a>
                        </div>
                        <div class="dropdown-menu-footer">
-                        <!-- TODO: Show list of notifications -->
                            <a href="/admin/notifications" class="text-muted">Show all notifications</a>
                        </div>
                    </div>

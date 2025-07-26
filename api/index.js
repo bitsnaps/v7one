@@ -836,6 +836,39 @@ app.post('/api/subscribe', async (c) => {
   }
 });
 
+app.get('/api/user/subscription', async (c) => {
+  const authHeader = c.req.header('Authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return c.json({ error: 'Unauthorized: Missing or invalid token' }, 401);
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    const subscription = await models.UserSubscription.findOne({
+      where: { userId, status: 'ACTIVE' },
+      include: [{
+        model: models.PricingPlan,
+        attributes: ['id', 'name', 'maxPhotosN', 'additionalPhotosM']
+      }]
+    });
+
+    if (!subscription) {
+      return c.json({ success: true, data: null, message: 'No active subscription found.' });
+    }
+
+    return c.json({ success: true, data: subscription.PricingPlan });
+  } catch (error) {
+    if (error instanceof jwt.JsonWebTokenError) {
+      return c.json({ error: 'Unauthorized: Invalid token' }, 401);
+    }
+    console.error('Error fetching user subscription:', error);
+    return c.json({ success: false, message: 'An error occurred while fetching subscription details.' }, 500);
+  }
+});
+
 app.post('/api/offers', async (c) => {
     try {
         const { type, title, description, price, username } = await c.req.json();
