@@ -826,7 +826,7 @@ admin.get('/messages', async (c) => {
       include: [
         { model: models.User, as: 'userOne', attributes: ['displayName'] },
         { model: models.User, as: 'userTwo', attributes: ['displayName'] },
-        { model: models.Listing, attributes: ['title'] },
+        { model: models.Listing, as: 'listing', attributes: ['title'] },
       ],
       order: [['lastMessageAt', 'DESC']],
     });

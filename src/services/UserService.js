@@ -38,4 +38,16 @@ export default {
       },
     });
   },
+  
+  getConversations() {
+    return apiClient.get('/api/user/conversations');
+  },
+
+  getConversationDetails(id) {
+    return apiClient.get(`/api/user/conversations/${id}`);
+  },
+
+  replyToConversation(id, content) {
+    return apiClient.post(`/api/user/conversations/${id}/reply`, { content });
+  },
 };

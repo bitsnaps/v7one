@@ -1,6 +1,6 @@
 const { Hono, verify } = require('hono');
 const { sequelize } = require('./models');
-const { User, Listing, Category, ListingAttributeValue } = require('./models');
+const { User, Listing, Category, ListingAttributeValue, Conversation, Message } = require('./models');
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const { hashPassword } = require('./utils/index');
@@ -9,27 +9,27 @@ const path = require('path');
 
 const user = new Hono();
 
-const authMiddleware = async (c, next) => {
-  const token = c.req.header('Authorization')?.replace('Bearer ', '');
-  if (!token) {
-    return c.json({ error: 'Unauthorized' }, 401);
-  }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findByPk(decoded.id);
-    if (!user) {
-      return c.json({ error: 'Unauthorized' }, 401);
+// Middleware for authenticating admin users
+user.use('/*', async (c, next) => {
+    const authHeader = c.req.header('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return c.json({ error: 'Unauthorized: Missing or invalid token' }, 401);
     }
-    c.set('user', user);
-    await next();
-  } catch (error) {
-    return c.json({ error: 'Unauthorized' }, 401);
-  }
-};
-
-user.use('/dashboard/*', authMiddleware);
-user.use('/listings', authMiddleware);
+  
+    const token = authHeader.split(' ')[1];
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findByPk(decoded.id);
+      if (!user) {
+        return c.json({ error: 'Unauthorized: User not found' }, 401);
+      }
+      c.set('user', user); // Pass user info to subsequent handlers
+      await next();
+    } catch (error) {
+      return c.json({ error: 'Unauthorized: Invalid token' }, 401);
+    }
+  });
 
 user.get('/dashboard/stats', async (c) => {
   const user = c.get('user');
@@ -223,6 +223,105 @@ user.delete('/listings/:id', async (c) => {
         await t.rollback();
         console.error('Failed to delete listing:', error);
         return c.json({ error: 'Failed to delete listing', details: error.message }, 500);
+    }
+});
+
+user.get('/conversations', async (c) => {
+    const user = c.get('user');
+    try {
+        const conversations = await Conversation.findAll({
+            where: {
+                [Op.or]: [{ userOneId: user.id }, { userTwoId: user.id }]
+            },
+            include: [
+                { model: Listing, as: 'listing', attributes: ['id', 'title'] },
+                { model: User, as: 'userOne', attributes: ['id', 'displayName', 'email'] },
+                { model: User, as: 'userTwo', attributes: ['id', 'displayName', 'email'] }
+            ],
+            order: [['updatedAt', 'DESC']]
+        });
+
+        const formattedConversations = conversations.map(convo => {
+            const participant = convo.userOneId === user.id ? convo.userTwo : convo.userOne;
+            return {
+                id: convo.id,
+                listing: convo.listing,
+                participant: {
+                    id: participant.id,
+                    displayName: participant.displayName,
+                    email: participant.email
+                },
+                lastMessageAt: convo.updatedAt
+            };
+        });
+
+        return c.json(formattedConversations);
+    } catch (error) {
+        console.error('Failed to fetch conversations:', error);
+        return c.json({ error: 'Failed to fetch conversations', details: error.message }, 500);
+    }
+});
+
+user.get('/conversations/:id', async (c) => {
+    const user = c.get('user');
+    const { id } = c.req.param();
+    try {
+        const conversation = await Conversation.findOne({
+            where: {
+                id,
+                [Op.or]: [{ userOneId: user.id }, { userTwoId: user.id }]
+            },
+            include: [
+                {
+                    model: Message,
+                    as: 'messages',
+                    include: [{ model: User, as: 'sender', attributes: ['id', 'displayName', 'email'] }]
+                }
+            ],
+            order: [[{ model: Message, as: 'messages' }, 'createdAt', 'ASC']]
+        });
+
+        if (!conversation) {
+            return c.json({ error: 'Conversation not found' }, 404);
+        }
+
+        return c.json(conversation);
+    } catch (error) {
+        console.error('Failed to fetch conversation details:', error);
+        return c.json({ error: 'Failed to fetch conversation details', details: error.message }, 500);
+    }
+});
+
+user.post('/conversations/:id/reply', async (c) => {
+    const user = c.get('user');
+    const { id } = c.req.param();
+    const { content } = await c.req.json();
+
+    try {
+        const conversation = await Conversation.findOne({
+            where: {
+                id,
+                [Op.or]: [{ userOneId: user.id }, { userTwoId: user.id }]
+            }
+        });
+
+        if (!conversation) {
+            return c.json({ error: 'Conversation not found' }, 404);
+        }
+
+        const message = await Message.create({
+            conversationId: id,
+            senderId: user.id,
+            content
+        });
+        
+        // Touch conversation to update `updatedAt`
+        await conversation.save();
+
+        return c.json(message, 201);
+    } catch (error) {
+        console.error('Failed to send reply:', error);
+        return c.json({ error: 'Failed to send reply', details: error.message }, 500);
     }
 });
 

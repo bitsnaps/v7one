@@ -26,6 +26,7 @@ import AdminMedia from '@/components/admin/Media.vue';
 import AdminNotifications from '@/components/admin/Notifications.vue';
 import UserDashboard from '@/components/user/UserDashboard.vue';
 import UserListings from '@/components/user/Listings.vue';
+import UserMessages from '@/components/user/Messages.vue';
 
 const routes = [
   {
@@ -173,6 +174,11 @@ const routes = [
         path: 'listings',
         name: 'UserListings',
         component: UserListings,
+      },
+      {
+        path: 'messages',
+        name: 'UserMessages',
+        component: UserMessages,
       },
     ],
   },

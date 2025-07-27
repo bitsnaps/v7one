@@ -569,7 +569,7 @@ Conversation.belongsTo(User, { foreignKey: 'userTwoId', as: 'userTwo' }); // e.g
 
 // Listing and Conversation
 Listing.hasMany(Conversation, { foreignKey: 'listingId', as: 'conversations' });
-Conversation.belongsTo(Listing, { foreignKey: 'listingId' });
+Conversation.belongsTo(Listing, { foreignKey: 'listingId', as: 'listing' });
 
 // Message and Conversation, Message and Sender
 Message.belongsTo(Conversation, { foreignKey: 'conversationId', onDelete: 'CASCADE' });
