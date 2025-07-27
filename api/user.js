@@ -1,6 +1,6 @@
 const { Hono, verify } = require('hono');
 const { sequelize } = require('./models');
-const { User, Listing, Category, ListingAttributeValue, Conversation, Message } = require('./models');
+const { User, Listing, Category, ListingAttributeValue, Conversation, Message, Notification } = require('./models');
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const { hashPassword } = require('./utils/index');
@@ -322,6 +322,63 @@ user.post('/conversations/:id/reply', async (c) => {
     } catch (error) {
         console.error('Failed to send reply:', error);
         return c.json({ error: 'Failed to send reply', details: error.message }, 500);
+    }
+});
+
+user.get('/notifications', async (c) => {
+    const user = c.get('user');
+    try {
+        const notifications = await Notification.findAll({
+            where: { userId: user.id },
+            order: [['createdAt', 'DESC']]
+        });
+        return c.json(notifications);
+    } catch (error) {
+        console.error('Failed to fetch notifications:', error);
+        return c.json({ error: 'Failed to fetch notifications', details: error.message }, 500);
+    }
+});
+
+user.post('/notifications/:id/mark-read', async (c) => {
+    const user = c.get('user');
+    const { id } = c.req.param();
+    try {
+        const notification = await Notification.findOne({
+            where: { id, userId: user.id }
+        });
+
+        if (!notification) {
+            return c.json({ error: 'Notification not found' }, 404);
+        }
+
+        notification.isRead = true;
+        await notification.save();
+
+        return c.json(notification);
+    } catch (error) {
+        console.error('Failed to mark notification as read:', error);
+        return c.json({ error: 'Failed to mark notification as read', details: error.message }, 500);
+    }
+});
+
+user.delete('/notifications/:id', async (c) => {
+    const user = c.get('user');
+    const { id } = c.req.param();
+    try {
+        const notification = await Notification.findOne({
+            where: { id, userId: user.id }
+        });
+
+        if (!notification) {
+            return c.json({ error: 'Notification not found' }, 404);
+        }
+
+        await notification.destroy();
+
+        return c.json({ message: 'Notification deleted successfully' });
+    } catch (error) {
+        console.error('Failed to delete notification:', error);
+        return c.json({ error: 'Failed to delete notification', details: error.message }, 500);
     }
 });
 

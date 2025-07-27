@@ -50,4 +50,16 @@ export default {
   replyToConversation(id, content) {
     return apiClient.post(`/api/user/conversations/${id}/reply`, { content });
   },
+
+  getNotifications() {
+    return apiClient.get('/api/user/notifications');
+  },
+
+  markNotificationAsRead(id) {
+    return apiClient.post(`/api/user/notifications/${id}/mark-read`);
+  },
+
+  deleteNotification(id) {
+    return apiClient.delete(`/api/user/notifications/${id}`);
+  },
 };

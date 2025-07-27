@@ -20,8 +20,8 @@ const fetchMessages = async () => {
 
 const fetchNotifications = async () => {
   try {
-    //const response = await UserService.getNotifications();
-    //notifications.value = response.data.notifications;
+    const response = await UserService.getNotifications();
+    notifications.value = response.data || [];
   } catch (error) {
     console.error('Error fetching notifications:', error);
   }
@@ -86,7 +86,7 @@ const toggleSidebar = () => {
                            </a>
                        </div>
                        <div class="dropdown-menu-footer">
-                           <a href="/user/notifications" class="text-muted">Show all notifications</a>
+                           <router-link to="/user/notifications" class="text-muted">Show all notifications</router-link>
                        </div>
                    </div>
                </li>
