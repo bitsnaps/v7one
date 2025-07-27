@@ -1,0 +1,304 @@
+<script setup>
+import { ref, onMounted, reactive, computed } from 'vue';
+import UserService from '@/services/UserService';
+import { BDropdown, BDropdownItem, BModal, BBadge } from 'bootstrap-vue-next';
+import { formatPrice } from '@/helpers/utils';
+
+const listings = ref([]);
+const pagination = ref({});
+const searchQuery = ref('');
+const showModal = ref(false);
+const editMode = ref(false);
+const categories = ref([]);
+const flatCategories = ref([]);
+const form = reactive({
+  id: null,
+  title: '',
+  description: '',
+  price: 0,
+  listType: 'FOR_SALE',
+  priceType: 'FIXED',
+  condition: 'NEW',
+  locationCity: '',
+  locationRegion: '',
+  isFeatured: false,
+  categoryId: null,
+  imageUrl: '',
+});
+
+const listTypeTranslations = {
+  'FOR_SALE': 'For Sale',
+  'FOR_RENT': 'For Rent',
+  'FOR_EXCHANGE': 'For Exchange',
+  'SERVICE': 'Service',
+  'COMMUNITY': 'Community'
+};
+
+const priceTypeTranslations = {
+  'FIXED': 'Fixed',
+  'NEGOTIABLE': 'Negotiable',
+  'CONTACT_FOR_PRICE': 'Contact for Price',
+  'FREE': 'Free'
+};
+
+const conditionTranslations = {
+  'NEW': 'New',
+  'USED_LIKE_NEW': 'Used (Like New)',
+  'USED_GOOD': 'Used (Good)',
+  'USED_FAIR': 'Used (Fair)',
+  'REFURBISHED': 'Refurbished',
+  'FOR_PARTS': 'For Parts'
+};
+
+const handleImageUpload = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const response = await UserService.uploadFile(file);
+  form.imageUrl = response.data.url;
+};
+
+const fetchListings = async (currentPage = 1) => {
+  try {
+    const response = await UserService.getListings(currentPage, searchQuery.value);
+    listings.value = response.data.listings;
+    pagination.value = {
+      current_page: response.data.currentPage,
+      last_page: response.data.pages,
+      prev_page_url: response.data.currentPage > 1 ? `?page=${response.data.currentPage - 1}` : null,
+      next_page_url: response.data.currentPage < response.data.pages ? `?page=${response.data.currentPage + 1}` : null,
+      path: '/api/user/listings',
+    };
+  } catch (error) {
+    console.error('Error fetching deals:', error);
+  }
+};
+
+const deleteListing = async (id) => {
+    if (confirm('Are you sure you want to permanently delete this listing?')) {
+        try {
+            await UserService.deleteListing(id);
+            fetchListings(pagination.value.current_page);
+        } catch (error) {
+            console.error('Error deleting deal:', error);
+        }
+    }
+};
+
+const resetForm = () => {
+  form.id = null;
+  form.title = '';
+  form.description = '';
+  form.price = 0;
+  form.listType = 'FOR_SALE';
+  form.priceType = 'FIXED';
+  form.condition = 'NEW';
+  form.locationCity = '';
+  form.locationRegion = '';
+  form.isFeatured = false;
+  form.categoryId = null;
+  editMode.value = false;
+};
+
+const flattenCategories = (categories, prefix = '') => {
+  let result = [];
+  for (const category of categories) {
+    result.push({ id: category.id, name: `${prefix}${category.name}` });
+    if (category.children) {
+      result = result.concat(flattenCategories(category.children, `${prefix}-`));
+    }
+  }
+  return result;
+};
+
+const openModal = async (listing = null) => {
+  if (listing) {
+    editMode.value = true;
+    form.id = listing.id;
+    form.title = listing.title;
+    form.description = listing.description;
+    form.price = listing.price;
+    form.listType = listing.listType;
+    form.priceType = listing.priceType;
+    form.condition = listing.condition;
+    form.locationCity = listing.locationCity;
+    form.locationRegion = listing.locationRegion;
+    form.isFeatured = listing.isFeatured;
+    form.categoryId = listing.categoryId;
+    form.imageUrl = listing.imageUrl;
+  } else {
+    resetForm();
+  }
+
+  try {
+    const catResponse = await UserService.getCategories();
+    categories.value = catResponse.data;
+    flatCategories.value = flattenCategories(catResponse.data);
+    showModal.value = true;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+  }
+};
+
+const saveListing = async () => {
+  try {
+    if (editMode.value) {
+      await UserService.updateListing(form.id, form);
+    } else {
+      await UserService.createListing(form);
+    }
+
+    fetchListings();
+    showModal.value = false;
+  } catch (error) {
+    console.error(`Error saving listing:`, error);
+  }
+};
+
+onMounted(() => {
+  fetchListings();
+});
+</script>
+
+<template>
+  <main class="content">
+    <div class="container-fluid p-0">
+
+      <h1 class="h3 mb-3">My Deals</h1>
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">My Deals</h5>
+              <div class="card-tools d-flex">
+                <BButton variant="primary" size="sm" class="me-2" @click="openModal()">Add New</BButton>
+                <div class="input-group input-group-sm" style="width: 250px;">
+                  <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="searchQuery" @keyup.enter="fetchListings">
+                  <div class="input-group-append">
+                    <form @submit.prevent="fetchListings">
+                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                  </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body table-responsive p-0">
+              <table class="table table-hover text-nowrap">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Type</th>
+                    <th>City</th>
+                    <th>Region</th>
+                    <th>Status</th>
+                    <th>Featured</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(listing, index) in listings" :key="listing.id">
+                    <td>{{ index+1 }}</td>
+                    <td>{{ listing.title }}</td>
+                    <td>{{ listing.category.name }}</td>
+                    <td>{{ formatPrice(listing.price) }}</td>
+                    <td>{{ listTypeTranslations[listing.listType] }}</td>
+                    <td>{{ listing.locationCity }}</td>
+                    <td>{{ listing.locationRegion }}</td>
+                    <td>{{ listing.status }}</td>
+                    <td>
+                      <BBadge :variant="listing.isFeatured ? 'success' : 'danger'">
+                        {{ listing.isFeatured ? 'Yes' : 'No' }}
+                      </BBadge>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-primary me-1" @click="openModal(listing)">Edit</button>
+                      <button class="btn btn-sm btn-danger me-1" @click="deleteListing(listing.id)">Remove</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card-footer clearfix">
+              <ul class="pagination pagination-sm m-0 float-right">
+                <li class="page-item" :class="{ disabled: !pagination.prev_page_url }">
+                  <a class="page-link" href="#" @click.prevent="fetchListings(pagination.prev_page_url)">«</a>
+                </li>
+                <li class="page-item" v-for="n in pagination.last_page" :key="n" :class="{ active: n === pagination.current_page }">
+                  <a class="page-link" href="#" @click.prevent="fetchListings(pagination.path + '?page=' + n)">{{ n }}</a>
+                </li>
+                <li class="page-item" :class="{ disabled: !pagination.next_page_url }">
+                  <a class="page-link" href="#" @click.prevent="fetchListings(pagination.next_page_url)">»</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <b-modal v-model="showModal" :title="editMode ? 'Edit Deal' : 'Create New Deal'" @hidden="resetForm" no-footer no-close-on-backdrop>
+        <form @submit.prevent="saveListing">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" v-model="form.title" required>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" v-model="form.description" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input type="text" inputmode="decimal" pattern="[0-9]*[.]?[0-9]*" class="form-control" id="price" v-model="form.price" required>
+          </div>
+          <div class="form-group">
+            <label for="imageUrl">Image URL</label>
+            <input type="text" class="form-control" id="imageUrl" v-model="form.imageUrl">
+            <input type="file" @change="handleImageUpload" class="form-control mt-2">
+            <img v-if="form.imageUrl" :src="`/public/${form.imageUrl}`" width="100" class="mt-2" />
+          </div>
+          <div class="form-group">
+            <label for="listType">Deal Type</label>
+            <select class="form-control" id="listType" v-model="form.listType" required>
+              <option v-for="(label, value) in listTypeTranslations" :key="value" :value="value">{{ label }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="priceType">Price Type</label>
+            <select class="form-control" id="priceType" v-model="form.priceType">
+              <option v-for="(label, value) in priceTypeTranslations" :key="value" :value="value">{{ label }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="condition">Condition</label>
+            <select class="form-control" id="condition" v-model="form.condition">
+              <option v-for="(label, value) in conditionTranslations" :key="value" :value="value">{{ label }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="locationCity">City</label>
+            <input type="text" class="form-control" id="locationCity" v-model="form.locationCity">
+          </div>
+          <div class="form-group">
+            <label for="locationRegion">Region</label>
+            <input type="text" class="form-control" id="locationRegion" v-model="form.locationRegion">
+          </div>
+          <div class="form-group">
+            <label for="categoryId">Category</label>
+            <select class="form-control" id="categoryId" v-model="form.categoryId" required>
+              <option v-for="cat in flatCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+            </select>
+          </div>
+          <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-secondary me-2" @click="showModal = false">Cancel</button>
+            <button type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create' }}</button>
+          </div>
+        </form>
+      </b-modal>
+    </div>
+  </main>
+</template>
+
+<style scoped>
+</style>

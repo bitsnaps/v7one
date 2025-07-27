@@ -2,6 +2,7 @@ import { useAuthStore } from '@/stores/auth';
 import { createRouter, createWebHistory } from 'vue-router';
 import DefaultLayout from '@/layouts/Default.vue';
 import AdminLayout from '@/layouts/Admin.vue';
+import UserLayout from '@/layouts/User.vue';
 import Home from '@/views/Home.vue';
 import About from '@/views/About.vue';
 import Contact from '@/views/Contact.vue';
@@ -13,7 +14,7 @@ import NotFound from '@/views/NotFound.vue';
 import DealDetail from '@/views/DealDetail.vue';
 import ValidateEmail from '@/views/ValidateEmail.vue'
 import SubscriptionSuccess from '@/views/SubscriptionSuccess.vue';
-import AdminDashboard from '@/components/admin/Dashboard.vue';
+import AdminDashboard from '@/components/admin/AdminDashboard.vue';
 import AdminUsers from '@/components/admin/Users.vue';
 import AdminCategories from '@/components/admin/Categories.vue';
 import AdminListings from '@/components/admin/Listings.vue';
@@ -23,6 +24,8 @@ import AdminAttributes from '@/components/admin/Attributes.vue';
 import AdminAttributeValues from '@/components/admin/AttributeValues.vue';
 import AdminMedia from '@/components/admin/Media.vue';
 import AdminNotifications from '@/components/admin/Notifications.vue';
+import UserDashboard from '@/components/user/UserDashboard.vue';
+import UserListings from '@/components/user/Listings.vue';
 
 const routes = [
   {
@@ -149,6 +152,27 @@ const routes = [
         path: 'notifications',
         name: 'AdminNotifications',
         component: AdminNotifications,
+      },
+    ],
+  },
+  {
+    path: '/user',
+    component: UserLayout,
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '',
+        redirect: '/user/dashboard',
+      },
+      {
+        path: 'dashboard',
+        name: 'UserDashboard',
+        component: UserDashboard,
+      },
+      {
+        path: 'listings',
+        name: 'UserListings',
+        component: UserListings,
       },
     ],
   },

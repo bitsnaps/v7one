@@ -3,25 +3,28 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 
-const usernameOrEmail = ref('');
+const email = ref('');
 const password = ref('');
 const authStore = useAuthStore();
 const router = useRouter();
 
 const handleSignIn = async () => {
-  if (!usernameOrEmail.value || !password.value) {
+  if (!email.value || !password.value) {
     authStore.error = 'Please enter both username/email and password.';
     return;
   }
 
   const success = await authStore.login({
-    email: usernameOrEmail.value,
+    email: email.value,
     password: password.value,
   });
 
   if (success) {
-    const redirectPath = router.currentRoute.value.query.redirect || '/admin/dashboard';
-    router.push(redirectPath);
+    if (authStore.user && authStore.user.isAdmin) {
+      router.push(router.currentRoute.value.query.redirect || '/admin/dashboard');
+    } else {
+      router.push(router.currentRoute.value.query.redirect || '/user/dashboard');
+    }
   }
 };
 
@@ -44,12 +47,12 @@ const handleFacebookSignIn = () => {
       <h2 class="text-center mb-4">{{ $t('signIn.title', 'Sign In') }}</h2>
       <form @submit.prevent="handleSignIn">
         <div class="mb-3">
-          <label for="usernameOrEmail" class="form-label">{{ $t('signIn.emailLabel', 'Email') }}</label>
+          <label for="email" class="form-label">{{ $t('signIn.emailLabel', 'Email') }}</label>
           <input
             type="text"
             class="form-control"
-            id="usernameOrEmail"
-            v-model="usernameOrEmail"
+            id="email"
+            v-model="email"
             required
             :placeholder="$t('signIn.emailPlaceholder', 'Enter your email')"
           />

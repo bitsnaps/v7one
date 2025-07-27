@@ -45,7 +45,7 @@ apiClient.interceptors.response.use(
       // It's better to handle redirection in the component or router
       // to avoid circular dependencies and keep this file focused on API logic.
       // For instance, you could emit an event or have a global state that the UI reacts to.
-      window.location.href = '/signin';
+      // window.location.href = '/signin';
     }
     return Promise.reject(error);
   }

@@ -4,6 +4,7 @@ const { serveStatic } = require('@hono/node-server/serve-static');
 const { cors } = require('hono/cors');
 const { rateLimiter } = require('./honoRateLimiter');
 const admin = require('./admin');
+const user = require('./user');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -442,6 +443,7 @@ app.post('/api/upload', async (c) => {
 
 // API endpoint for a single deal by ID
 app.route('/api/admin', admin);
+app.route('/api/user', user);
 
 app.get('/api/deal/:id', async (c) => {
     try {

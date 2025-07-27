@@ -38,6 +38,8 @@ const currentFlag = computed(() => {
 });
 
 const isLoggedIn = computed(() => authStore.isLoggedIn );
+
+
 </script>
 
 <template>
@@ -88,7 +90,10 @@ const isLoggedIn = computed(() => authStore.isLoggedIn );
           </BNavItemDropdown>
 
         </div>
-        <router-link v-if="isLoggedIn" to="/admin/dashboard" class="btn btn-success px-3 d-none d-lg-flex mb-2">{{ $t('app.dashboard', 'Dashboard') }}</router-link>
+        <template v-if="isLoggedIn">
+          <router-link v-if="authStore.user.isAdmin" to="admin/dashboard" class="btn btn-success px-3 d-none d-lg-flex mb-2">{{ $t('app.dashboard', 'Dashboard') }}</router-link>
+          <router-link v-else to="user/dashboard" class="btn btn-success px-3 d-none d-lg-flex mb-2">{{ $t('app.dashboard', 'Dashboard') }}</router-link>
+        </template>
         <router-link v-else to="/post-deal" class="btn btn-primary px-3 d-lg-flex mb-2">{{ $t('app.post-deal', 'Post a Deal') }}</router-link>
       </BCollapse>
 
