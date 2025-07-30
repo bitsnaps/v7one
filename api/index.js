@@ -310,10 +310,10 @@ app.post('/api/seeds', async (c) => {
         if (fs.existsSync(seederPath)) {
           const seeder = require(seederPath);
           if (seeder && typeof seeder.up === 'function') {
-            console.log(`Running seeder: ${seederFile}`);
+            // console.log(`Running seeder: ${seederFile}`);
             await seeder.up(queryInterface, Sequelize);
             results.push({ seeder: seederFile, status: 'success' });
-            console.log(`Successfully ran seeder: ${seederFile}`);
+            // console.log(`Successfully ran seeder: ${seederFile}`);
           } else {
             results.push({ seeder: seederFile, status: 'failed', error: 'Invalid seeder structure (missing up function)' });
             console.error(`Invalid seeder structure for ${seederFile}`);
@@ -351,7 +351,7 @@ app.post('/api/signup', async (c) => {
             isAdmin: false,
             isVerified: false
         });
-        console.log('User signed up:', email);
+        // console.log('User signed up:', email);
         return c.json({ success: true, message: 'Signup successful', userId: newUser.id });
     } catch (error) {
         console.error('Signup error:', error);
@@ -388,7 +388,7 @@ app.post('/api/login', async (c) => {
       // Generate JWT
       const token = jwt.sign({ id: user.id, email: user.email, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '1h' });
       
-      console.log('User logged in:', email);
+      // console.log('User logged in:', email);
       return c.json({
         success: true,
         message: 'Login successful',
@@ -905,7 +905,7 @@ app.post('/api/offers', async (c) => {
         };
 
         offers.push(newOffer);
-        console.log('New offer created:', newOffer);
+        // console.log('New offer created:', newOffer);
         return c.json({ success: true, message: 'Offer submitted successfully. It will be reviewed by an admin.', offer: newOffer });
 
     } catch (error) {
@@ -924,11 +924,11 @@ app.post('/contact', async (c) => {
         // Parse the form data from the request
         // const formData = await c.req.json(); // use this when data encoded as JSON object
         const formData = await c.req.parseBody(); // when data encoded as form-data
-        console.log(formData);
+        // console.log(formData);
         
         // Extract form fields
         const { name, email, tel, company, message, form_timestamp, csrf_token, timestamp } = formData;
-        console.log(name, email, message, form_timestamp);
+        // console.log(name, email, message, form_timestamp);
         
         // 1. Check for honeypot (timestamp)
         if (timestamp) {
@@ -1009,5 +1009,5 @@ app.post('/contact', async (c) => {
 });
 
 serve(app, (info) => {
-  console.log(`Listening on http://localhost:${info.port}`) // Listening on http://localhost:3000
+  // console.log(`Listening on http://localhost:${info.port}`) // Listening on http://localhost:3000
 })
