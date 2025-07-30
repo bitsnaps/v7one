@@ -74,4 +74,8 @@ export default {
   deleteNotification(id) {
     return apiClient.delete(`/api/user/notifications/${id}`);
   },
+
+  getSubscription() {
+    return apiClient.get('/api/user/subscription');
+  },
 };

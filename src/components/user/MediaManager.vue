@@ -11,6 +11,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  maxPhotos: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const emit = defineEmits(['update:media']);
@@ -24,6 +28,11 @@ watch(() => props.media, (newMedia) => {
 const handleFileUpload = async (event) => {
   const files = event.target.files;
   if (!files.length) return;
+
+  if (props.maxPhotos > 0 && (localMedia.value.length + files.length) > props.maxPhotos) {
+    alert(`You can only upload a maximum of ${props.maxPhotos} photos.`);
+    return;
+  }
 
   const uploadPromises = Array.from(files).map(file => {
     return UserService.uploadFile(file).then(response => {
@@ -66,7 +75,10 @@ const setPrimary = (index) => {
   <div class="media-manager">
     <div class="mb-3">
       <label for="media-upload" class="form-label">Upload Media</label>
-      <input type="file" id="media-upload" class="form-control" multiple @change="handleFileUpload">
+      <input type="file" id="media-upload" class="form-control" multiple @change="handleFileUpload" :disabled="maxPhotos > 0 && localMedia.length >= maxPhotos">
+      <div v-if="maxPhotos > 0" class="form-text">
+        You can upload up to {{ maxPhotos }} photos. ({{ maxPhotos - localMedia.length }} remaining)
+      </div>
     </div>
 
     <div v-if="localMedia.length" class="row">
@@ -78,7 +90,8 @@ const setPrimary = (index) => {
           </div>
           <div class="card-body">
             <button class="btn btn-sm btn-danger me-2" @click="removeMedia(index)">Remove</button>
-            <button class="btn btn-sm" :class="media.isPrimary ? 'btn-success' : 'btn-outline-secondary'" @click="setPrimary(index)">
+            <button class="btn btn-sm" :class="media.isPrimary ? 'btn-success' : 'btn-secondary'" @click="setPrimary(index)">
+              <i class="fas fa-star me-1"></i>
               {{ media.isPrimary ? 'Primary' : 'Set Primary' }}
             </button>
           </div>

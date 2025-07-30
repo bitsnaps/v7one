@@ -1,6 +1,6 @@
 const { Hono, verify } = require('hono');
 const { sequelize } = require('./models');
-const { User, Listing, Category, ListingAttributeValue, ListingMedia, Conversation, Message, Notification } = require('./models');
+const { User, Listing, Category, ListingAttributeValue, ListingMedia, Conversation, Message, Notification, UserSubscription, PricingPlan } = require('./models');
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const { hashPassword } = require('./utils/index');
@@ -433,6 +433,20 @@ user.delete('/notifications/:id', async (c) => {
     } catch (error) {
         console.error('Failed to delete notification:', error);
         return c.json({ error: 'Failed to delete notification', details: error.message }, 500);
+    }
+});
+
+user.get('/subscription', async (c) => {
+    const user = c.get('user');
+    try {
+        const subscription = await UserSubscription.findOne({
+            where: { userId: user.id, status: 'ACTIVE' },
+            include: [{ model: PricingPlan }]
+        });
+        return c.json(subscription);
+    } catch (error) {
+        console.error('Failed to fetch subscription:', error);
+        return c.json({ error: 'Failed to fetch subscription', details: error.message }, 500);
     }
 });
 
