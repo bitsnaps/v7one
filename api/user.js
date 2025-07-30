@@ -1,6 +1,6 @@
 const { Hono, verify } = require('hono');
 const { sequelize } = require('./models');
-const { User, Listing, Category, ListingAttributeValue, Conversation, Message, Notification } = require('./models');
+const { User, Listing, Category, ListingAttributeValue, ListingMedia, Conversation, Message, Notification } = require('./models');
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const { hashPassword } = require('./utils/index');
@@ -120,6 +120,16 @@ user.get('/listings', async (c) => {
     });
 });
 
+user.get('/listings/:id', async (c) => {
+    const { id } = c.req.param();
+    const user = c.get('user');
+    const listing = await Listing.findOne({ where: { id, userId: user.id }, include: ['category'] });
+    if (!listing) {
+        return c.json({ error: 'Listing not found' }, 404);
+    }
+    return c.json(listing);
+});
+
 user.post('/listings', async (c) => {
     const user = c.get('user');
     const body = await c.req.json();
@@ -225,6 +235,50 @@ user.delete('/listings/:id', async (c) => {
         return c.json({ error: 'Failed to delete listing', details: error.message }, 500);
     }
 });
+
+// Media management for a listing
+user.get('/listings/:id/media', async (c) => {
+    const { id } = c.req.param();
+    const media = await ListingMedia.findAll({
+        where: { listingId: id },
+        order: [['order', 'ASC']]
+    });
+    return c.json(media);
+});
+
+user.post('/listings/:id/media', async (c) => {
+    const user = c.get('user');
+    const { id } = c.req.param();
+    const body = await c.req.json();
+
+    const listing = await Listing.findOne({ where: { id, userId: user.id } });
+    if (!listing) {
+        return c.json({ error: 'Listing not found' }, 404);
+    }
+
+    const t = await sequelize.transaction();
+    try {
+        // Clear existing media
+        await ListingMedia.destroy({ where: { listingId: id }, transaction: t });
+
+        if (body.media && Array.isArray(body.media)) {
+            const mediaToCreate = body.media.map((media, index) => ({
+                ...media,
+                listingId: id,
+                order: index
+            }));
+            await ListingMedia.bulkCreate(mediaToCreate, { transaction: t });
+        }
+
+        await t.commit();
+        return c.json({ success: true, message: 'Media updated successfully' });
+    } catch (error) {
+        await t.rollback();
+        console.error('Failed to update media:', error);
+        return c.json({ error: 'Failed to update media', details: error.message }, 500);
+    }
+});
+
 
 user.get('/conversations', async (c) => {
     const user = c.get('user');

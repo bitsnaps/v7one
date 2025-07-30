@@ -25,9 +25,10 @@ import AdminAttributeValues from '@/components/admin/AttributeValues.vue';
 import AdminMedia from '@/components/admin/Media.vue';
 import AdminNotifications from '@/components/admin/Notifications.vue';
 import UserDashboard from '@/components/user/UserDashboard.vue';
-import UserListings from '@/components/user/Listings.vue';
-import UserMessages from '@/components/user/Messages.vue';
-import UserNotifications from '@/components/user/Notifications.vue';
+import UserListings from '@/components/user/UserListings.vue';
+import UserMessages from '@/components/user/UserMessages.vue';
+import UserNotifications from '@/components/user/UserNotifications.vue';
+import UserListingMedia from '@/components/user/UserListingMedia.vue';
 
 const routes = [
   {
@@ -175,6 +176,11 @@ const routes = [
         path: 'listings',
         name: 'UserListings',
         component: UserListings,
+      },
+      {
+        path: 'listings/:listingId/media',
+        name: 'UserListingMedia',
+        component: UserListingMedia,
       },
       {
         path: 'messages',

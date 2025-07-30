@@ -2,7 +2,7 @@
   <div class="wrapper">
     <UserSidebar />
     <div class="main">
-      <Header />
+      <UserHeader />
       <router-view />
     </div>
   </div>
@@ -10,7 +10,7 @@
 
 <script setup>
 import UserSidebar from '@/components/user/UserSidebar.vue';
-import Header from '@/components/user/Header.vue';
+import UserHeader from '@/components/user/UserHeader.vue';
 </script>
 
 <style>

@@ -13,6 +13,18 @@ export default {
     return apiClient.get(`/api/user/listings?page=${page}&search=${search}`);
   },
 
+  getListing(id) {
+    return apiClient.get(`/api/user/listings/${id}`);
+  },
+
+  getListingMedia(listingId) {
+    return apiClient.get(`/api/user/listings/${listingId}/media`);
+  },
+
+  updateListingMedia(listingId, media) {
+    return apiClient.post(`/api/user/listings/${listingId}/media`, { media });
+  },
+
   createListing(data) {
     return apiClient.post('/api/user/listings', data);
   },
@@ -32,7 +44,7 @@ export default {
   uploadFile(file) {
     const formData = new FormData();
     formData.append('file', file);
-    return apiClient.post('/upload', formData, {
+    return apiClient.post('/api/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

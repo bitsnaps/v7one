@@ -215,6 +215,7 @@ onMounted(() => {
                     </td>
                     <td>
                       <button class="btn btn-sm btn-primary me-1" @click="openModal(listing)">Edit</button>
+                      <router-link :to="`/user/listings/${listing.id}/media`" class="btn btn-sm btn-info me-1">Media</router-link>
                       <button class="btn btn-sm btn-danger me-1" @click="deleteListing(listing.id)">Remove</button>
                     </td>
                   </tr>
