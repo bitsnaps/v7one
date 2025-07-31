@@ -18,6 +18,10 @@ export const useAuthStore = defineStore('auth', {
     // subscription: (state) => state.subscription,
   },
   actions: {
+    setUser(userData) {
+      this.user = userData;
+      localStorage.setItem('user', JSON.stringify(userData));
+    },
     async login(credentials) {
       this.loading = true;
       this.error = null;
@@ -85,19 +89,15 @@ export const useAuthStore = defineStore('auth', {
         console.error('Failed to fetch user subscription:', error);
       }
     },*/
-async updateProfile(profileData) {
+    async updateProfile(profileData) {
       this.loading = true;
       this.error = null;
       try {
-        const response = await DealService.updateProfile(profileData);
-        if (response.data.success) {
-          this.user = { ...this.user, ...response.data.user };
-          localStorage.setItem('user', JSON.stringify(this.user));
-          return true;
-        } else {
-          this.error = response.data.message || 'Profile update failed';
-          return false;
-        }
+        // The component now uses UserService directly.
+        // This action can be simplified or removed if not used elsewhere.
+        const response = await UserService.updateProfile(profileData);
+        this.setUser(response.data);
+        return true;
       } catch (error) {
         this.error = error.response?.data?.message || 'An unexpected error occurred.';
         return false;

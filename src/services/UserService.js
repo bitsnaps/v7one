@@ -1,6 +1,28 @@
 import { apiClient } from '../helpers/utils';
 
 export default {
+  getProfile() {
+    return apiClient.get('/api/user/profile');
+  },
+
+  updateProfile(data) {
+    return apiClient.put('/api/user/profile', data);
+  },
+
+  uploadAvatar(file) {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    return apiClient.post('/api/user/profile/avatar', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+
+  deleteAvatar() {
+    return apiClient.delete('/api/user/profile/avatar');
+  },
+
   getDashboardStats() {
     return apiClient.get('/api/user/dashboard/stats');
   },

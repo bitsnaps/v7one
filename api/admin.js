@@ -798,7 +798,7 @@ admin.get('/dashboard/recent-messages', async (c) => {
       limit: 5,
       order: [['createdAt', 'DESC']],
       include: [
-        { model: models.User, as: 'sender', attributes: ['displayName'] },
+        { model: models.User, as: 'sender', attributes: ['displayName', 'profilePictureUrl'] },
       ],
     });
 
@@ -806,7 +806,7 @@ admin.get('/dashboard/recent-messages', async (c) => {
       id: message.id,
       content: message.content,
       sender: message.sender ? message.sender.displayName : 'N/A',
-      avatar: '/adminkit/img/avatars/avatar.jpg',
+      avatar: message.sender.profilePictureUrl || '/img/user.svg',
       time: message.createdAt,
     }));
 

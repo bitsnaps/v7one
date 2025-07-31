@@ -1,38 +1,90 @@
 <script setup>
 import { useAuthStore } from '../../stores/auth';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import UserService from '../../services/UserService';
 
 const authStore = useAuthStore();
-const user = authStore.user;
+const user = computed(() => authStore.user);
 const profileData = ref({});
+const selectedFile = ref(null);
+const fileInput = ref(null);
 
-onMounted(() => {
-  const
-   displayName = user.displayName || '';
-  profileData.value = {
-    ...user,
-    // firstName: displayName.split(' ')[0] || '',
-    // lastName: displayName.split(' ').slice(1).join(' ') || '',
-  };
-});
+const fetchProfile = async () => {
+  try {
+    const response = await UserService.getProfile();
+    authStore.setUser(response.data);
+    profileData.value = { ...response.data };
+  } catch (error) {
+    console.error('Failed to fetch profile:', error);
+    alert('Failed to load profile data.');
+  }
+};
+
+onMounted(fetchProfile);
+
+const onFileChange = (e) => {
+  selectedFile.value = e.target.files[0];
+};
+
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
+
+const uploadAvatar = async () => {
+  if (!selectedFile.value) {
+    alert('Please select a file to upload.');
+    return;
+  }
+  try {
+    const response = await UserService.uploadAvatar(selectedFile.value);
+    // Update the user's profile picture URL in the store and component
+    const updatedUser = { ...user.value, profilePictureUrl: response.data.profilePictureUrl };
+    authStore.setUser(updatedUser);
+    profileData.value.profilePictureUrl = response.data.profilePictureUrl;
+    selectedFile.value = null; // Clear the selection
+    alert('Avatar updated successfully!');
+  } catch (error) {
+    console.error('Failed to upload avatar:', error);
+    alert('Failed to upload avatar.');
+  }
+};
+
+const deleteAvatar = async () => {
+  if (!confirm('Are you sure you want to delete your profile picture?')) {
+    return;
+  }
+  try {
+    await UserService.deleteAvatar();
+    const updatedUser = { ...user.value, profilePictureUrl: null };
+    authStore.setUser(updatedUser);
+    profileData.value.profilePictureUrl = null;
+    alert('Avatar deleted successfully!');
+  } catch (error) {
+    console.error('Failed to delete avatar:', error);
+    alert('Failed to delete avatar.');
+  }
+};
 
 const saveChanges = async () => {
-  const success = await authStore.updateProfile(profileData.value);
-  if (success) {
+  try {
+    const response = await UserService.updateProfile(profileData.value);
+    authStore.setUser(response.data);
     alert('Profile updated successfully!');
-  } else {
-    alert(`Error: ${authStore.authError}`);
+  } catch (error) {
+    console.error('Failed to update profile:', error);
+    alert(`Error: ${error.response?.data?.error || 'Failed to update profile'}`);
   }
 };
 
 const resetPassword = async () => {
-  const result = await authStore.resetPassword(user.email);
-  if (result.success) {
-    alert('Password reset link has been sent to your email.');
-  } else {
-    alert(`Error: ${result.message}`);
-  }
+  // This function seems to be from the original code, but there's no backend for it.
+  // I will leave it as is.
+  alert('Password reset functionality is not implemented in the backend.');
 };
+
+const profilePicture = computed(() => {
+  return profileData.value.profilePictureUrl || '/img/user.svg';
+});
 </script>
 
 <template>
@@ -48,9 +100,15 @@ const resetPassword = async () => {
               <h5 class="card-title mb-0">Profile Details</h5>
             </div>
             <div class="card-body text-center">
-              <img src="/adminkit/img/avatars/avatar.jpg" alt="user.displayName" class="img-fluid rounded-circle mb-2" width="128" height="128" />
-              <h5 class="card-title mb-0">{{ user.displayName }}</h5>
-              <div class="text-muted mb-2">{{ user.isAdmin ? 'Administrator' : 'User' }}</div>
+              <img :src="profilePicture" :alt="profileData.displayName" class="img-fluid rounded-circle mb-2" width="128" height="128" />
+              <h5 class="card-title mb-0">{{ profileData.displayName }}</h5>
+              <div class="text-muted mb-2">{{ profileData.isAdmin ? 'Administrator' : 'User' }}</div>
+              <div>
+                <input type="file" ref="fileInput" @change="onFileChange" accept="image/*" style="display: none;" />
+                <button class="btn btn-primary btn-sm" @click="triggerFileInput">Change</button>
+                <button class="btn btn-secondary btn-sm" @click="uploadAvatar" :disabled="!selectedFile">Upload</button>
+                <button class="btn btn-danger btn-sm" @click="deleteAvatar" v-if="profileData.profilePictureUrl">Delete</button>
+              </div>
             </div>
           </div>
         </div>
