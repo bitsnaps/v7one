@@ -43,7 +43,7 @@ let transporter;
 if (process.env.NODE_ENV !== 'production'){
     createTestAccount().then(t => {
         transporter = t;
-        console.log('Email test account created');
+        //console.log('Email test account created');
     });
 } else {
 // PROD: Configure email transporter
@@ -76,8 +76,8 @@ app.use('/*', serveStatic({ root: './static' }));
 app.use(
     rateLimiter({
       // Increase limit on dev mode
-    windowMs: process.env.NODE_ENV === 'production' ? 15 * 60 * 1000 : 60 * 1000, // 15 minutes on prod, 1 minute on dev
-    limit: 100, // Limit each IP to 100 requests per `windowMs` (here, per 15 minutes on prod, 1 minute on dev).
+    windowMs: process.env.NODE_ENV === 'production' ? 15 * 60 * 1000 : 600 * 1000, // 15 minutes on prod, 10 minute on dev
+    limit: 100, // Limit each IP to 100 requests per `windowMs` (here, per 15 minutes on prod, 10 minute on dev).
     // standardHeaders: "draft-6", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
     keyGenerator: (c) => c.req.header('x-forwarded-for') || c.req.ip || 'unknown',
     message: 'Too many requests from this IP, please try again after a minute'
@@ -128,7 +128,9 @@ app.post('/api/drop-tables', async (c) => {
     await models.sequelize.authenticate();
 
     // Drop all tables if they exist
-    await models.sequelize.drop({});
+    await models.sequelize.drop({
+      cascade: true
+    });
 
     // Check each model's table existence before attempting to drop
     // const modelNames = Object.keys(models).filter(name => models[name].tableName && name !== 'sequelize' && name !== 'Sequelize');
