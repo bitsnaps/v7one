@@ -80,14 +80,14 @@ const handleFacebookSignIn = () => {
         <span>{{ $t('signIn.or', 'OR') }}</span>
       </div>
 
-      <div class="d-grid gap-2">
+      <!-- <div class="d-grid gap-2">
         <button @click="handleGoogleSignIn" class="btn btn-danger w-100">
           <i class="fa-brands fa-google me-2"></i> {{ $t('signIn.signInWithGoogle', 'Sign In with Google') }}
         </button>
         <button @click="handleFacebookSignIn" class="btn btn-primary w-100" style="background-color: #3b5998; border-color: #3b5998;">
           <i class="fa-brands fa-facebook me-2"></i> {{ $t('signIn.signInWithFacebook', 'Sign In with Facebook') }}
         </button>
-      </div>
+      </div> -->
 
       <p class="mt-3 text-center">
         {{ $t('signIn.noAccount', "Don't have an account?") }} <router-link to="/signup">{{ $t('signIn.signUpLink', 'Sign Up') }}</router-link>
