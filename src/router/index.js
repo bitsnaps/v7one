@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/stores/auth';
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router';
 import DefaultLayout from '@/layouts/Default.vue';
 import AdminLayout from '@/layouts/Admin.vue';
 import UserLayout from '@/layouts/User.vue';
@@ -202,7 +202,8 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  // history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(), // an attempt to fix the "404 Not Found" in Vue3 SPA which adds the "#" at the end of the route
   routes,
 });
 
