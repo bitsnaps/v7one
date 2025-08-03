@@ -198,7 +198,8 @@ onMounted(() => {
             <div class="card-header">
               <h5 class="card-title">Deals</h5>
               <div class="card-tools d-flex">
-                <BButton variant="primary" size="sm" class="me-2" @click="openModal()">Add New</BButton>
+                <!-- <BButton variant="primary" size="sm" class="me-2" @click="openModal()">Add New</BButton> -->
+                <router-link to="/post-deal" class="btn btn-primary btn-sm me-2">{{ $t('app.post-deal', 'Post a Deal') }}</router-link>
                 <div class="input-group input-group-sm" style="width: 250px;">
                   <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="searchQuery" @keyup.enter="fetchListings">
                   <div class="input-group-append">
