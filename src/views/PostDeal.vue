@@ -29,8 +29,12 @@ export default {
 
     onMounted(() => {
       loadCategories();
-      if (auth.isLoggedIn) {
-        auth.fetchUserSubscription();
+      if (auth && auth.isLoggedIn) {
+        try {
+          auth.fetchUserSubscription();
+        } catch (e){
+          // fail gracefullly
+        }
       }
     });
 
