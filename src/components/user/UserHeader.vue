@@ -130,9 +130,15 @@ const toggleSidebar = () => {
                         <img :src="user?.profilePictureUrl || '/img/user.svg'" class="avatar img-fluid rounded" :alt="user?.displayName || 'user'">
                     </a>
                     <div class="dropdown-menu dropdown-menu-end" data-bs-popper="static">
-                        <router-link class="dropdown-item" to="/user/profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user align-middle me-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Profile</router-link>
+                        <router-link class="dropdown-item" to="/user/profile">
+                            <i class="align-middle far fa-user me-2"></i>
+                             Profile
+                        </router-link>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" @click.prevent="logout">{{ $t('app.logout', 'Logout') }} </a>
+                        <a class="dropdown-item" href="#" @click.prevent="logout">
+                            <i class="align-middle fas fa-arrow-right-from-bracket me-2"></i>
+                            {{ $t('app.logout', 'Logout') }}
+                        </a>
                     </div>
 				</li>              
             </ul>

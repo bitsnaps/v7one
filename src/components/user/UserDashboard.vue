@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import UserService from '../../services/UserService';
+import UserService from '@/services/UserService';
 import { useRouter } from 'vue-router';
 
 const stats = ref({

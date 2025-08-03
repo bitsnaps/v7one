@@ -2,8 +2,8 @@
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/auth';
-import DealService from '../services/DealService';
+import { useAuthStore } from '@/stores/auth';
+import DealService from '@/services/DealService';
 
 const { t } = useI18n();
 const router = useRouter();

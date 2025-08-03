@@ -1,7 +1,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import AdminService from '../../services/AdminService';
+import AdminService from '@/services/AdminService';
 import { useRouter } from 'vue-router';
 
 const stats = ref({

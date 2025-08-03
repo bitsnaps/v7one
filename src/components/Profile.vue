@@ -141,11 +141,11 @@ const profilePicture = computed(() => {
                  <div class="row">
                   <div class="mb-3 col-md-6">
                     <label class="form-label" for="inputRole">Role</label>
-                    <input type="text" class="form-control" id="inputRole" :value="user.isAdmin ? 'Administrator' : 'User'" disabled>
+                    <input type="text" class="form-control" id="inputRole" :value="user?.isAdmin ? 'Administrator' : 'User'" disabled>
                   </div>
                   <div class="mb-3 col-md-6">
                     <label class="form-label" for="inputStatus">Status</label>
-                    <input type="text" class="form-control" id="inputStatus" :value="user.isActive ? 'Active' : 'Inactive'" disabled>
+                    <input type="text" class="form-control" id="inputStatus" :value="user?.isActive ? 'Active' : 'Inactive'" disabled>
                   </div>
                 </div>
                 <div class="d-flex justify-content-between">

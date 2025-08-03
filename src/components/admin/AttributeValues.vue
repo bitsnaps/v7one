@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, reactive, computed, watch } from 'vue';
-import AdminService from '../../services/AdminService';
+import AdminService from '@/services/AdminService';
 
 const attributeValues = ref([]);
 const attributes = ref([]);

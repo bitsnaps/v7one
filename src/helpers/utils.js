@@ -2,7 +2,7 @@
  * Add helper functions
  */
 import axios from 'axios';
-import { useAuthStore } from '../stores/auth';
+import { useAuthStore } from '@/stores/auth';
 
 const getApiBaseUrl = () => {
   if (import.meta.env.DEV) {

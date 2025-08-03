@@ -1,9 +1,9 @@
 
 <script setup>
 import { ref, onMounted, reactive, computed, watch } from 'vue';
-import AdminService from '../../services/AdminService';
+import AdminService from '@/services/AdminService';
 import CategoryTree from './CategoryTree.vue';
-import { CATEGORY_TYPES } from '../../helpers/categoryTypes';
+import { CATEGORY_TYPES } from '@/helpers/categoryTypes';
 
 const categories = ref([]);
 const flatCategories = ref([]);

@@ -19,7 +19,7 @@ import AdminUsers from '@/components/admin/Users.vue';
 import AdminCategories from '@/components/admin/Categories.vue';
 import AdminListings from '@/components/admin/Listings.vue';
 import AdminMessages from '@/components/admin/Messages.vue';
-import AdminProfile from '@/components/admin/Profile.vue';
+import Profile from '@/components/Profile.vue';
 import AdminAttributes from '@/components/admin/Attributes.vue';
 import AdminAttributeValues from '@/components/admin/AttributeValues.vue';
 import AdminMedia from '@/components/admin/Media.vue';
@@ -149,7 +149,7 @@ const routes = [
       {
         path: 'profile',
         name: 'AdminProfile',
-        component: AdminProfile,
+        component: Profile,
       },
       {
         path: 'notifications',
@@ -191,6 +191,11 @@ const routes = [
         path: 'notifications',
         name: 'UserNotifications',
         component: UserNotifications,
+      },
+      {
+        path: 'profile',
+        name: 'UserProfile',
+        component: Profile,
       },
     ],
   },
