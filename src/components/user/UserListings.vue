@@ -2,7 +2,7 @@
 import { ref, onMounted, reactive, computed } from 'vue';
 import UserService from '@/services/UserService';
 import { BDropdown, BDropdownItem, BModal, BBadge } from 'bootstrap-vue-next';
-import { formatPrice } from '@/helpers/utils';
+import { formatPrice, listTypeTranslations, priceTypeTranslations, conditionTranslations } from '@/helpers/utils';
 
 const listings = ref([]);
 const pagination = ref({});
@@ -25,30 +25,6 @@ const form = reactive({
   categoryId: null,
   imageUrl: '',
 });
-
-const listTypeTranslations = {
-  'FOR_SALE': 'For Sale',
-  'FOR_RENT': 'For Rent',
-  'FOR_EXCHANGE': 'For Exchange',
-  'SERVICE': 'Service',
-  'COMMUNITY': 'Community'
-};
-
-const priceTypeTranslations = {
-  'FIXED': 'Fixed',
-  'NEGOTIABLE': 'Negotiable',
-  'CONTACT_FOR_PRICE': 'Contact for Price',
-  'FREE': 'Free'
-};
-
-const conditionTranslations = {
-  'NEW': 'New',
-  'USED_LIKE_NEW': 'Used (Like New)',
-  'USED_GOOD': 'Used (Good)',
-  'USED_FAIR': 'Used (Fair)',
-  'REFURBISHED': 'Refurbished',
-  'FOR_PARTS': 'For Parts'
-};
 
 const handleImageUpload = async (event) => {
   const file = event.target.files[0];

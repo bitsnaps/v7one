@@ -59,4 +59,28 @@ const formatPrice = (price) => {
 };
 
 
-export { getApiBaseUrl, apiClient, formatPrice };
+export { getApiBaseUrl, apiClient, formatPrice, listTypeTranslations, priceTypeTranslations, conditionTranslations };
+
+const listTypeTranslations = {
+  'FOR_SALE': 'For Sale',
+  'FOR_RENT': 'For Rent',
+  'FOR_EXCHANGE': 'For Exchange',
+  'SERVICE': 'Service',
+  'COMMUNITY': 'Community'
+};
+
+const priceTypeTranslations = {
+  'FIXED': 'Fixed',
+  'NEGOTIABLE': 'Negotiable',
+  'CONTACT_FOR_PRICE': 'Contact for Price',
+  'FREE': 'Free'
+};
+
+const conditionTranslations = {
+  'NEW': 'New',
+  'USED_LIKE_NEW': 'Used (Like New)',
+  'USED_GOOD': 'Used (Good)',
+  'USED_FAIR': 'Used (Fair)',
+  'REFURBISHED': 'Refurbished',
+  'FOR_PARTS': 'For Parts'
+};

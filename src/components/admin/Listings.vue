@@ -3,7 +3,7 @@
 import { ref, onMounted, reactive } from 'vue';
 import AdminService from '@/services/AdminService';
 import { BDropdown, BDropdownItem, BModal, BBadge } from 'bootstrap-vue-next';
-import { formatPrice } from '@/helpers/utils';
+import { formatPrice, listTypeTranslations, priceTypeTranslations, conditionTranslations } from '@/helpers/utils';
 
 const listings = ref([]);
 const pagination = ref({});
@@ -232,7 +232,7 @@ onMounted(() => {
                     <td>{{ listing.title }}</td>
                     <td>{{ listing.category.name }}</td>
                     <td>{{ formatPrice(listing.price) }}</td>
-                    <td>{{ listing.listType }}</td>
+                    <td>{{ listTypeTranslations[listing.listType] }}</td>
                     <td>{{ listing.locationCity }}</td>
                     <td>{{ listing.locationRegion }}</td>
                     <td>{{ listing.status }}</td>
@@ -303,31 +303,19 @@ onMounted(() => {
           <div class="form-group">
             <label for="listType">Deal Type</label>
             <select class="form-control" id="listType" v-model="form.listType" required>
-              <option>FOR_SALE</option>
-              <option>FOR_RENT</option>
-              <option>FOR_EXCHANGE</option>
-              <option>SERVICE</option>
-              <option>COMMUNITY</option>
+              <option v-for="(label, value) in listTypeTranslations" :key="value" :value="value">{{ label }}</option>
             </select>
           </div>
           <div class="form-group">
             <label for="priceType">Price Type</label>
             <select class="form-control" id="priceType" v-model="form.priceType">
-              <option>FIXED</option>
-              <option>NEGOTIABLE</option>
-              <option>CONTACT_FOR_PRICE</option>
-              <option>FREE</option>
+              <option v-for="(label, value) in priceTypeTranslations" :key="value" :value="value">{{ label }}</option>
             </select>
           </div>
           <div class="form-group">
             <label for="condition">Condition</label>
             <select class="form-control" id="condition" v-model="form.condition">
-              <option>NEW</option>
-              <option>USED_LIKE_NEW</option>
-              <option>USED_GOOD</option>
-              <option>USED_FAIR</option>
-              <option>REFURBISHED</option>
-              <option>FOR_PARTS</option>
+              <option v-for="(label, value) in conditionTranslations" :key="value" :value="value">{{ label }}</option>
             </select>
           </div>
           <div class="form-group">

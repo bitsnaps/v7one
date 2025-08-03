@@ -20,16 +20,8 @@
 
 </template>
 
-<script>
+<script setup>
 import { useI18n } from 'vue-i18n';
 
-export default {
-    name: 'NotFound',
-    setup() {
-        const { t } = useI18n();
-        return {
-            $t: t
-        };
-    }
-}
+const { t } = useI18n();
 </script>

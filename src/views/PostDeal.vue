@@ -1,195 +1,171 @@
 
-<script>
+<script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import DealService from '@/services/DealService';
 import AdminService from '@/services/AdminService';
+import { listTypeTranslations, priceTypeTranslations, conditionTranslations } from '@/helpers/utils';
 
-export default {
-  setup() {
-    const auth = useAuthStore();
-    const categories = ref([]);
-    const attributes = ref([]);
-    const attributeValues = ref({});
-    const form = ref({
-      title: '',
-      description: '',
-      price: 0,
-      categoryId: null,
-      listType: 'FOR_SALE',
-      priceType: 'FIXED',
-      condition: 'NEW',
-      locationCity: '',
-      locationRegion: '',
-    });
-    const currentStep = ref(1);
-    const dealCreated = ref(null);
-    const mediaItems = ref([]);
-    const pendingMedia = ref([]);
+const auth = useAuthStore();
+const categories = ref([]);
+const attributes = ref([]);
+const attributeValues = ref({});
+const form = ref({
+  title: '',
+  description: '',
+  price: 0,
+  categoryId: null,
+  listType: 'FOR_SALE',
+  priceType: 'FIXED',
+  condition: 'NEW',
+  locationCity: '',
+  locationRegion: '',
+});
+const currentStep = ref(1);
+const dealCreated = ref(null);
+const mediaItems = ref([]);
+const pendingMedia = ref([]);
 
-    onMounted(() => {
-      loadCategories();
-      if (auth && auth.isLoggedIn) {
-        try {
-          auth.fetchUserSubscription();
-        } catch (e){
-          // fail gracefullly
-        }
-      }
-    });
-
-    const loadCategories = () => {
-      DealService.getCategories()
-        .then(response => {
-          categories.value = response.data.data;
-        })
-        .catch(error => {
-          console.error("Error fetching categories:", error);
-        });
-    };
-    
-    const loadAttributes = () => {
-        if (!form.value.categoryId) return;
-        AdminService.getAttributes(form.value.categoryId)
-        .then(response => {
-            attributes.value = response.data;
-        })
-        .catch(error => {
-            console.error("Error fetching attributes:", error);
-        });
-    };
-
-    const nextStep = () => {
-      currentStep.value++;
-    };
-    
-    const prevStep = () => {
-      currentStep.value--;
-    };
-
-    const submitDeal = () => {
-      const dealData = {
-        ...form.value,
-        attributes: attributeValues.value,
-      };
-      DealService.createDeal(dealData)
-        .then(response => {
-          dealCreated.value = response.data.deal;
-          currentStep.value = 3;
-          // Now save attribute values
-          for (const attributeId in attributeValues.value) {
-              const value = attributeValues.value[attributeId];
-              if (value) {
-                AdminService.createAttributeValue({
-                    listingId: dealCreated.value.id,
-                    attributeId: attributeId,
-                    value: value,
-                });
-              }
-          }
-        })
-        .catch(error => {
-          console.error("Error creating deal:", error);
-        });
-    };
-
-    const maxUploads = computed(() => {
-      if (auth.subscription) {
-        return auth.subscription.maxPhotosN + auth.subscription.additionalPhotosM;
-      }
-      return 5; // Default limit for users without a subscription
-    });
-    
-    const handleFileUpload = (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
-    
-      if (pendingMedia.value.length + mediaItems.value.length >= maxUploads.value) {
-        alert(`You have reached the upload limit of ${maxUploads.value} files.`);
-        return;
-      }
-    
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        pendingMedia.value.push({
-          file: file,
-          url: e.target.result,
-          type: file.type.startsWith('video') ? 'VIDEO_URL' : 'IMAGE',
-          isPrimary: false,
-        });
-      };
-      reader.readAsDataURL(file);
-    };
-
-    const saveMedia = (media) => {
-        AdminService.uploadFile(media.file).then(response => {
-            const mediaData = {
-                listingId: dealCreated.value.id,
-                mediaUrl: response.data.url,
-                mediaType: response.data.type,
-                isPrimary: media.isPrimary,
-            };
-            AdminService.addListingMedia(mediaData).then(() => {
-                pendingMedia.value = pendingMedia.value.filter(item => item !== media);
-                loadMedia();
-            });
-        });
-    };
-
-    const removeMedia = (media) => {
-        pendingMedia.value = pendingMedia.value.filter(item => item !== media);
-    };
-
-    const loadMedia = () => {
-      if (dealCreated.value) {
-        AdminService.getListingMedia(dealCreated.value.id).then(response => {
-          mediaItems.value = response.data;
-        });
-      }
-    };
-
-    return {
-      auth,
-      form,
-      categories,
-      attributes,
-      attributeValues,
-      currentStep,
-      dealCreated,
-      mediaItems,
-      pendingMedia,
-      maxUploads,
-      nextStep,
-      prevStep,
-      submitDeal,
-      handleFileUpload,
-      loadAttributes,
-      saveMedia,
-      removeMedia,
-      startOver,
-    };
-
-    function startOver() {
-        Object.assign(form.value, {
-            title: '',
-            description: '',
-            price: 0,
-            categoryId: null,
-            listType: 'FOR_SALE',
-            priceType: 'FIXED',
-            condition: 'NEW',
-            locationCity: '',
-            locationRegion: '',
-        });
-        attributeValues.value = {};
-        attributes.value = [];
-        pendingMedia.value = [];
-        mediaItems.value = [];
-        dealCreated.value = null;
-        currentStep.value = 1;
+onMounted(() => {
+  loadCategories();
+  if (auth && auth.isLoggedIn) {
+    try {
+      auth.fetchUserSubscription();
+    } catch (e){
+      // fail gracefullly
     }
   }
+});
+
+const loadCategories = () => {
+  DealService.getCategories()
+    .then(response => {
+      categories.value = response.data.data;
+    })
+    .catch(error => {
+      console.error("Error fetching categories:", error);
+    });
 };
+
+const loadAttributes = () => {
+    if (!form.value.categoryId) return;
+    AdminService.getAttributes(form.value.categoryId)
+    .then(response => {
+        attributes.value = response.data;
+    })
+    .catch(error => {
+        console.error("Error fetching attributes:", error);
+    });
+};
+
+const nextStep = () => {
+  currentStep.value++;
+};
+
+const prevStep = () => {
+  currentStep.value--;
+};
+
+const submitDeal = () => {
+  const dealData = {
+    ...form.value,
+    attributes: attributeValues.value,
+  };
+  DealService.createDeal(dealData)
+    .then(response => {
+      dealCreated.value = response.data.deal;
+      currentStep.value = 3;
+      // Now save attribute values
+      for (const attributeId in attributeValues.value) {
+          const value = attributeValues.value[attributeId];
+          if (value) {
+            AdminService.createAttributeValue({
+                listingId: dealCreated.value.id,
+                attributeId: attributeId,
+                value: value,
+            });
+          }
+      }
+    })
+    .catch(error => {
+      console.error("Error creating deal:", error);
+    });
+};
+
+const maxUploads = computed(() => {
+  if (auth.subscription) {
+    return auth.subscription.maxPhotosN + auth.subscription.additionalPhotosM;
+  }
+  return 5; // Default limit for users without a subscription
+});
+
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (pendingMedia.value.length + mediaItems.value.length >= maxUploads.value) {
+    alert(`You have reached the upload limit of ${maxUploads.value} files.`);
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    pendingMedia.value.push({
+      file: file,
+      url: e.target.result,
+      type: file.type.startsWith('video') ? 'VIDEO_URL' : 'IMAGE',
+      isPrimary: false,
+    });
+  };
+  reader.readAsDataURL(file);
+};
+
+const saveMedia = (media) => {
+    AdminService.uploadFile(media.file).then(response => {
+        const mediaData = {
+            listingId: dealCreated.value.id,
+            mediaUrl: response.data.url,
+            mediaType: response.data.type,
+            isPrimary: media.isPrimary,
+        };
+        AdminService.addListingMedia(mediaData).then(() => {
+            pendingMedia.value = pendingMedia.value.filter(item => item !== media);
+            loadMedia();
+        });
+    });
+};
+
+const removeMedia = (media) => {
+    pendingMedia.value = pendingMedia.value.filter(item => item !== media);
+};
+
+const loadMedia = () => {
+  if (dealCreated.value) {
+    AdminService.getListingMedia(dealCreated.value.id).then(response => {
+      mediaItems.value = response.data;
+    });
+  }
+};
+
+function startOver() {
+    Object.assign(form.value, {
+        title: '',
+        description: '',
+        price: 0,
+        categoryId: null,
+        listType: 'FOR_SALE',
+        priceType: 'FIXED',
+        condition: 'NEW',
+        locationCity: '',
+        locationRegion: '',
+    });
+    attributeValues.value = {};
+    attributes.value = [];
+    pendingMedia.value = [];
+    mediaItems.value = [];
+    dealCreated.value = null;
+    currentStep.value = 1;
+}
 </script>
 
 <template>
@@ -231,31 +207,19 @@ export default {
               <div class="col-md-6 mb-3">
                 <label for="listType" class="form-label">Listing Type</label>
                 <select class="form-select" id="listType" v-model="form.listType">
-                  <option>FOR_SALE</option>
-                  <option>FOR_RENT</option>
-                  <option>FOR_EXCHANGE</option>
-                  <option>SERVICE</option>
-                  <option>COMMUNITY</option>
+                  <option v-for="(label, value) in listTypeTranslations" :key="value" :value="value">{{ label }}</option>
                 </select>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="priceType" class="form-label">Price Type</label>
                 <select class="form-select" id="priceType" v-model="form.priceType">
-                  <option>FIXED</option>
-                  <option>NEGOTIABLE</option>
-                  <option>CONTACT_FOR_PRICE</option>
-                  <option>FREE</option>
+                  <option v-for="(label, value) in priceTypeTranslations" :key="value" :value="value">{{ label }}</option>
                 </select>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="condition" class="form-label">Condition</label>
                 <select class="form-select" id="condition" v-model="form.condition">
-                  <option>NEW</option>
-                  <option>USED_LIKE_NEW</option>
-                  <option>USED_GOOD</option>
-                  <option>USED_FAIR</option>
-                  <option>REFURBISHED</option>
-                  <option>FOR_PARTS</option>
+                  <option v-for="(label, value) in conditionTranslations" :key="value" :value="value">{{ label }}</option>
                 </select>
               </div>
               <div class="col-md-6 mb-3">
