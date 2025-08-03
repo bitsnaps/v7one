@@ -5,10 +5,8 @@ import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
 
 const getApiBaseUrl = () => {
-  if (import.meta.env.DEV) {
-    return 'http://localhost:3000';
-  }
-  // In production, use same origin or configured URL
+  // Use the environment variable for the API base URL in all environments.
+  // Fallback to the current origin if the variable is not set.
   return import.meta.env.VITE_API_BASE_URL || window.location.origin;
 };
 

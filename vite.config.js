@@ -33,18 +33,6 @@ export default defineConfig(({ command }) => {
     },
   };
 
-  // Conditionally add the server proxy for development (serve command)
-  if (command === 'serve') {
-    config.server = {
-      proxy: {
-        '/api': {
-          target: 'http://localhost:3000',
-          changeOrigin: true,
-          secure: false,
-        }
-      }
-    };
-  }
 
   return config;
 })
