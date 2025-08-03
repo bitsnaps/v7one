@@ -11,53 +11,53 @@
                 <li class="sidebar-header">
                     Pages
                 </li>
-                <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/dashboard' }">
+                <li class="sidebar-item">
                     <router-link to="/admin/dashboard" class="sidebar-link">
                         <i class="align-middle fas fa-sliders-h"></i> <span class="align-middle">Dashboard</span>
                     </router-link>
                 </li>
 
-                <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/users' }">
+                <li class="sidebar-item">
                      <router-link to="/admin/users" class="sidebar-link">
                         <i class="align-middle fas fa-users"></i> <span class="align-middle">Users</span>
                     </router-link>
                 </li>
 
-                 <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/categories' }">
+                 <li class="sidebar-item">
                      <router-link to="/admin/categories" class="sidebar-link">
                         <i class="align-middle fas fa-th-large"></i> <span class="align-middle">Categories</span>
                     </router-link>
                 </li>
 
-                 <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/attributes' }">
+                 <li class="sidebar-item">
                      <router-link to="/admin/attributes" class="sidebar-link">
                         <i class="align-middle fas fa-th-large"></i> <span class="align-middle">Attributes</span>
                     </router-link>
                 </li>
 
-                <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/attribute-values' }">
+                <li class="sidebar-item">
                     <router-link to="/admin/attribute-values" class="sidebar-link">
                         <i class="align-middle fas fa-tshirt"></i> <span class="align-middle">Attribute Values</span>
                     </router-link>
                 </li>
 
-                <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/listings' }">
+                <li class="sidebar-item">
                      <router-link to="/admin/listings" class="sidebar-link">
                         <i class="align-middle fas fa-list"></i> <span class="align-middle">Deals</span>
                     </router-link>
                 </li>
-                <li class="sidebar-item" :class="{ 'active': $route.path.startsWith('/admin/listings/') }">
+                <li class="sidebar-item">
                     <router-link :to="`/admin/listings/${$route.params.listingId}/media`" class="sidebar-link" v-if="$route.params.listingId">
                         <i class="align-middle fas fa-photo-video"></i> <span class="align-middle">Media</span>
                     </router-link>
                 </li>
-                 <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/messages' }">
+                 <li class="sidebar-item">
                      <router-link to="/admin/messages" class="sidebar-link">
                         <i class="align-middle fas fa-comment-alt"></i> <span class="align-middle">Messages</span>
                     </router-link>
                 </li>
 
-                <li class="sidebar-item" :class="{ 'active': $route.path === '/admin/notifications' }">
+                <li class="sidebar-item">
                     <router-link to="/admin/notifications" class="sidebar-link">
                        <i class="align-middle fas fa-bell"></i> <span class="align-middle">Notifications</span>
                    </router-link>
@@ -73,4 +73,12 @@
 </script>
 
 <style scoped>
+.sidebar-item > .router-link-active {
+  background: #f8f9fa;
+  color: #212529;
+}
+.sidebar-item > .router-link-active i,
+.sidebar-item > .router-link-active span {
+    color: #212529;
+}
 </style>

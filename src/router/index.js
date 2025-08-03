@@ -203,7 +203,7 @@ const routes = [
 
 const router = createRouter({
   // history: createWebHistory(import.meta.env.BASE_URL),
-  history: createWebHashHistory(), // an attempt to fix the "404 Not Found" in Vue3 SPA which adds the "#" at the end of the route
+  history: createWebHashHistory(import.meta.env.BASE_URL), // an attempt to fix the "404 Not Found" in Vue3 SPA which adds the "#" at the end of the route
   routes,
 });
 

@@ -11,25 +11,25 @@
                 <li class="sidebar-header">
                     Pages
                 </li>
-                <li class="sidebar-item" :class="{ 'active': $route.path === '/user/dashboard' }">
+                <li class="sidebar-item">
                     <router-link to="/user/dashboard" class="sidebar-link">
                         <i class="align-middle fas fa-sliders-h"></i> <span class="align-middle">Dashboard</span>
                     </router-link>
                 </li>
 
-                <li class="sidebar-item" :class="{ 'active': $route.path === '/user/listings' }">
+                <li class="sidebar-item">
                      <router-link to="/user/listings" class="sidebar-link">
                         <i class="align-middle fas fa-list"></i> <span class="align-middle">Deals</span>
                     </router-link>
                 </li>
 
-                 <li class="sidebar-item" :class="{ 'active': $route.path === '/user/messages' }">
+                 <li class="sidebar-item">
                      <router-link to="/user/messages" class="sidebar-link">
                         <i class="align-middle fas fa-comment-alt"></i> <span class="align-middle">Messages</span>
                     </router-link>
                 </li>
 
-                <li class="sidebar-item" :class="{ 'active': $route.path === '/user/notifications' }">
+                <li class="sidebar-item">
                     <router-link to="/user/notifications" class="sidebar-link">
                        <i class="align-middle fas fa-bell"></i> <span class="align-middle">Notifications</span>
                    </router-link>
@@ -45,4 +45,12 @@
 </script>
 
 <style scoped>
+.sidebar-item > .router-link-active {
+  background: #f8f9fa;
+  color: #212529;
+}
+.sidebar-item > .router-link-active i,
+.sidebar-item > .router-link-active span {
+    color: #212529;
+}
 </style>
