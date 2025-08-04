@@ -40,3 +40,8 @@ docs/
 # uploads
 /public/uploads/*
 /dist/uploads/*
+
+# var env
+.env
+.env.production
+.env.*

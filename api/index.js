@@ -70,7 +70,8 @@ app.use('/*', cors({
 }));
 
 // Anything comes from static folder will be served from "/"
-app.use('/*', serveStatic({ root: './static' }));
+// Serve static files from the 'public' directory
+app.use('/*', serveStatic({ root: './public' }));
 
 // Apply the rate limiting middleware to all requests.
 app.use(
@@ -418,7 +419,7 @@ app.post('/api/upload', async (c) => {
     if (!file) {
       return c.json({ error: 'No file uploaded' }, 400);
     }
-    const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
+    const uploadsDir = process.env.UPLOADS_DIR;
     if (!fs.existsSync(uploadsDir)) {
       fs.mkdirSync(uploadsDir, { recursive: true });
     }
@@ -429,7 +430,8 @@ app.post('/api/upload', async (c) => {
     const fileBuffer = await file.arrayBuffer();
     await fs.promises.writeFile(filePath, Buffer.from(fileBuffer));
     
-    const fileUrl = `/uploads/${fileName}`;
+    const baseUrl = process.env.UPLOADS_URL_PATH || 'uploads';
+    const fileUrl = `${process.env.UPLOADS_URL_PATH}/${fileName}`;
 
     let mediaType = 'IMAGE';
     if (file.type.startsWith('video')) {

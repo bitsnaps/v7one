@@ -706,7 +706,10 @@ admin.delete('/listing-media/:id', async (c) => {
     await media.destroy();
 
     if (mediaUrl) {
-      const filePath = path.join(__dirname, '..', 'public', mediaUrl);
+      const uploadsDir = process.env.UPLOADS_DIR;
+      const fileName = path.basename(mediaUrl);
+      const filePath = path.join(uploadsDir, fileName);
+
       try {
         await fs.unlink(filePath);
       } catch (err) {
