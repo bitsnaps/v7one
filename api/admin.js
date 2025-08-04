@@ -692,7 +692,6 @@ admin.put('/listing-media/:id', async (c) => {
   }
 });
 
-
 // Delete media
 admin.delete('/listing-media/:id', async (c) => {
   const { id } = c.req.param();
@@ -706,15 +705,26 @@ admin.delete('/listing-media/:id', async (c) => {
     await media.destroy();
 
     if (mediaUrl) {
+      // UPLOADS_DIR is a short path to the uploads directory
       const uploadsDir = process.env.UPLOADS_DIR;
+      // mediaUrl is the URL path, so we need the base name:
       const fileName = path.basename(mediaUrl);
       const filePath = path.join(uploadsDir, fileName);
 
       try {
-        await fs.unlink(filePath);
+        // Check if file exists before attempting to delete
+        if (fs.existsSync(filePath)) {
+          fs.unlink(filePath, (err) => {
+              if (err){
+                  return c.json({ success: false, message: `Error when deleting the file: ${filePath}` });
+              }
+          });
+        } else {
+          return c.json({ success: false, message: `File not found for deletion: ${filePath}` });
+        }
       } catch (err) {
-        // Log the error but don't fail the request if the file doesn't exist
-        console.error(`Failed to delete file: ${filePath}`, err);
+        return c.json({ success: false, message: `Failed to delete file: ${filePath}, Error: ${JSON.stringify(err)}` });
+        
       }
     }
 

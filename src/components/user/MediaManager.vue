@@ -84,7 +84,7 @@ const setPrimary = (index) => {
     <div v-if="localMedia.length" class="row">
       <div v-for="(media, index) in localMedia" :key="index" class="col-md-3 mb-3">
         <div class="card">
-          <img v-if="media.mediaType === 'IMAGE'" :src="`/public/${media.mediaUrl}`" class="card-img-top" alt="Media preview">
+          <img v-if="media.mediaType === 'IMAGE'" :src="`${media.mediaUrl}`" class="card-img-top" alt="Media preview">
           <div v-else class="card-img-top d-flex align-items-center justify-content-center bg-light" style="height: 150px;">
             <span>Video</span>
           </div>

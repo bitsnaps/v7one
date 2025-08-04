@@ -9,7 +9,8 @@ const path = require('path');
 const user = new Hono();
 
 // Ensure the upload directory exists
-const avatarUploadDir = path.join(__dirname, '../../public/uploads/avatars');
+const avatarUploadDir = path.join(__dirname, `${process.env.UPLOADS_DIR}/avatars`);
+
 fs.mkdir(avatarUploadDir, { recursive: true }).catch(err => console.error('Failed to create avatar directory:', err));
 
 

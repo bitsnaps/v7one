@@ -292,7 +292,7 @@ onMounted(() => {
             <label for="imageUrl">Image URL</label>
             <input type="text" class="form-control" id="imageUrl" v-model="form.imageUrl">
             <input type="file" @change="handleImageUpload" class="form-control mt-2">
-            <img v-if="form.imageUrl" :src="`/public/${form.imageUrl}`" width="100" class="mt-2" />
+            <img v-if="form.imageUrl" :src="`${form.imageUrl}`" width="100" class="mt-2" />
             <button v-if="form.imageUrl" type="button" class="btn btn-danger btn-sm d-block mt-2" @click="deleteImage">Delete Image</button>
           </div>
           <div class="form-group">

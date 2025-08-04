@@ -411,6 +411,7 @@ app.post('/api/login', async (c) => {
   }
 });
 
+
 app.post('/api/upload', async (c) => {
   try {
     const body = await c.req.parseBody();
@@ -430,8 +431,8 @@ app.post('/api/upload', async (c) => {
     const fileBuffer = await file.arrayBuffer();
     await fs.promises.writeFile(filePath, Buffer.from(fileBuffer));
     
-    const baseUrl = process.env.UPLOADS_URL_PATH || 'uploads';
-    const fileUrl = path.join(process.env.UPLOADS_URL_PATH, 'uploads', fileName);
+    //const baseUrl = process.env.UPLOADS_URL_PATH || 'uploads';
+    const fileUrl = path.join(process.env.UPLOADS_URL_PATH || '/public/uploads', fileName);
 
     let mediaType = 'IMAGE';
     if (file.type.startsWith('video')) {

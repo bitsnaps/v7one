@@ -281,7 +281,7 @@ function startOver() {
             <div class="row">
               <div class="col-6 col-md-4 col-lg-3 mb-3" v-for="media in mediaItems" :key="media.id">
                 <div class="media-item">
-                  <img v-if="media.mediaType === 'IMAGE'" :src="`/public/${media.mediaUrl}`" class="img-fluid" />
+                  <img v-if="media.mediaType === 'IMAGE'" :src="`${media.mediaUrl}`" class="img-fluid" />
                   <div v-else class="video-placeholder">
                     <span>{{ media.mediaUrl }}</span>
                   </div>
