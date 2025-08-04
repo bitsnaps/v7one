@@ -71,7 +71,7 @@ app.use('/*', cors({
 
 // Anything comes from static folder will be served from "/"
 // Serve static files from the 'public' directory
-app.use('/*', serveStatic({ root: './public' }));
+app.use('/*', serveStatic({ root: './' }));
 
 // Apply the rate limiting middleware to all requests.
 app.use(
@@ -431,7 +431,7 @@ app.post('/api/upload', async (c) => {
     await fs.promises.writeFile(filePath, Buffer.from(fileBuffer));
     
     const baseUrl = process.env.UPLOADS_URL_PATH || 'uploads';
-    const fileUrl = `${process.env.UPLOADS_URL_PATH}/${fileName}`;
+    const fileUrl = path.join(process.env.UPLOADS_URL_PATH, 'uploads', fileName);
 
     let mediaType = 'IMAGE';
     if (file.type.startsWith('video')) {
