@@ -43,5 +43,5 @@ docs/
 
 # var env
 .env
-.env.production
 .env.*
+.env.production

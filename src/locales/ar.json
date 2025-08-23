@@ -194,7 +194,8 @@
     "category": "الفئة",
     "notAvailable": "غير متوفر",
     "contactSeller": "اتصل بالبائع",
-    "dealNotFound": "الصفقة غير موجودة."
+    "dealNotFound": "الصفقة غير موجودة.",
+    "send": "أرسل"
   },
   "common": {
     "loading": "جار التحميل...",

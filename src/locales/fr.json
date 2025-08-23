@@ -267,7 +267,8 @@
     "category": "Catégorie",
     "notAvailable": "N/A",
     "contactSeller": "Contacter le vendeur",
-    "dealNotFound": "Offre introuvable."
+    "dealNotFound": "Offre introuvable.",
+    "send": "Envoyer"
   },
   "filters": {
       "searchLabel": "Rechercher par Nom",

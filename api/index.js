@@ -62,7 +62,7 @@ const app = new Hono();
 
 // Add CORS middleware (for Dev)
 app.use('/*', cors({
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://v7one.com'],
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:4173', 'http://127.0.0.1:4173', 'http://127.0.0.1:8080', 'https://v7one.com'],
   allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
   // This means the browser will expose these headers when it makes requests to your API
@@ -469,6 +469,11 @@ app.get('/api/deal/:id', async (c) => {
                     model: models.ListingAttributeValue,
                     as: 'attributeValues',
                     include: [{ model: models.Attribute, as: 'attribute' }]
+                },
+                {
+                    model: models.ListingMedia,
+                    as: 'media',
+                    attributes: ['id', 'mediaUrl', 'mediaType', 'isPrimary', 'order']
                 }
             ]
         });
@@ -495,6 +500,12 @@ app.get('/api/deal/:id', async (c) => {
                 description: deal.description,
                 attributes: attributes,
                 seller: deal.seller,
+                media: Array.isArray(deal.media)
+                  ? deal.media
+                      .slice()
+                      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+                      .map(m => ({ id: m.id, url: m.mediaUrl, type: m.mediaType, isPrimary: m.isPrimary, order: m.order }))
+                  : []
             };
             return c.json({ success: true, deal: formattedDeal });
         } else {
@@ -599,7 +610,7 @@ app.get('/api/deals/:type?', async (c) => {
 
         const whereClause = {};
         const includeClause = [
-            { model: models.User, as: 'seller', attributes: ['id', 'email'] }, 
+            { model: models.User, as: 'seller', attributes: ['id', 'email'] },
             {
                 model: models.Category,
                 as: 'category',
@@ -610,6 +621,11 @@ app.get('/api/deals/:type?', async (c) => {
               model: models.ListingAttributeValue,
               as: 'attributeValues',
               include: [{ model: models.Attribute, as: 'attribute' }]
+            },
+            {
+              model: models.ListingMedia,
+              as: 'media',
+              attributes: ['id', 'mediaUrl', 'mediaType', 'isPrimary', 'order']
             }
         ];
 
@@ -686,7 +702,13 @@ app.get('/api/deals/:type?', async (c) => {
                 category: deal.category ? [deal.category.name.toLowerCase()] : [],
                 categoryType: deal.category ? deal.category.type: null,
                 description: deal.description,
-                attributes: attributes
+                attributes: attributes,
+                media: Array.isArray(deal.media)
+                  ? deal.media
+                      .slice()
+                      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+                      .map(m => ({ id: m.id, url: m.mediaUrl, type: m.mediaType, isPrimary: m.isPrimary, order: m.order }))
+                  : []
             };
         });
 

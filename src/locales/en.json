@@ -174,7 +174,8 @@
     "category": "Category",
     "notAvailable": "N/A",
     "contactSeller": "Contact Seller",
-    "dealNotFound": "Deal not found"
+    "dealNotFound": "Deal not found",
+    "send": "Send"
   },
   "common": {
     "loading": "Loading...",

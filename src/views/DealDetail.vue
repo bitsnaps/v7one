@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import DealService from '@/services/DealService';
 import { useI18n } from 'vue-i18n';
@@ -75,6 +75,20 @@ const fetchDealDetails = async () => {
   }
 };
 
+// Media carousel state for detail view
+const mediaList = computed(() => {
+  const m = deal.value && Array.isArray(deal.value.media) ? deal.value.media.slice() : [];
+  if (m.length) return m.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  return deal.value?.image ? [{ id: 'fallback', url: deal.value.image, type: 'IMAGE', isPrimary: true, order: 0 }] : [];
+});
+const currentIndex = ref(0);
+watch(() => deal.value?.id, () => { currentIndex.value = 0; });
+const hasMultiple = computed(() => mediaList.value.length > 1);
+const currentMedia = computed(() => mediaList.value.length ? mediaList.value[currentIndex.value % mediaList.value.length] : null);
+const next = () => { if (mediaList.value.length) currentIndex.value = (currentIndex.value + 1) % mediaList.value.length; };
+const prev = () => { if (mediaList.value.length) currentIndex.value = (currentIndex.value - 1 + mediaList.value.length) % mediaList.value.length; };
+const goTo = (i) => { if (i >= 0 && i < mediaList.value.length) currentIndex.value = i; };
+
 onMounted(fetchDealDetails);
 
 </script>
@@ -93,8 +107,24 @@ onMounted(fetchDealDetails);
       <div v-else-if="deal">
         <div class="row g-5 align-items-center">
           <div class="col-lg-6">
-            <div class="about-img position-relative overflow-hidden p-5 pe-0">
-              <img class="img-fluid w-100" :src="deal.image || '/img/deal.svg'" :alt="deal.title">
+            <div class="about-img position-relative overflow-hidden p-5 pe-0 detail-carousel-container">
+                <template v-if="currentMedia">
+                    <img v-if="currentMedia.type === 'IMAGE'" class="img-fluid w-100 detail-media" :src="currentMedia.url" :alt="deal.title">
+                    <div v-else class="position-relative">
+                        <video class="img-fluid w-100 detail-media" :src="currentMedia.url" preload="metadata" playsinline controls></video>
+                    </div>
+                </template>
+                <img v-else class="img-fluid w-100 detail-media" :src="deal.image || '/img/deal.svg'" :alt="deal.title">
+
+                <button v-if="hasMultiple" class="detail-carousel-control prev" @click.stop.prevent="prev" aria-label="Previous">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <button v-if="hasMultiple" class="detail-carousel-control next" @click.stop.prevent="next" aria-label="Next">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+                <div v-if="hasMultiple" class="detail-carousel-dots">
+                    <span v-for="(m, i) in mediaList" :key="m.id + '_' + i" :class="['dot', { active: i === currentIndex }]" @click.stop.prevent="goTo(i)"></span>
+                </div>
             </div>
           </div>
           <div class="col-lg-6">
@@ -128,7 +158,7 @@ onMounted(fetchDealDetails);
                 </ul>
                 <div v-if="auth.isLoggedIn && !isOwner" class="mt-3">
                   <textarea v-model="newMessage" class="form-control" rows="3" placeholder="Type your message..."></textarea>
-                  <button @click="sendMessage" class="btn btn-primary mt-2">Send</button>
+                  <button @click="sendMessage" class="btn btn-primary mt-2">{{ $t('dealDetail.send', 'Send') }}</button>
                 </div>
               </b-tab>
             </b-tabs>
@@ -155,4 +185,13 @@ onMounted(fetchDealDetails);
 
 <style scoped>
 /* Add any component-specific styles here */
+.detail-carousel-container { position: relative; }
+.detail-media { width: 100%; height: 380px; object-fit: cover; display: block; border-radius: 6px; }
+.detail-carousel-control { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.45); border: 0; color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 99; }
+.detail-carousel-control.prev { left: 12px; }
+.detail-carousel-control.next { right: 12px; }
+.detail-carousel-dots { position: absolute; left: 50%; transform: translateX(-50%); bottom: 12px; display: flex; gap: 8px; }
+.detail-carousel-dots .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.6); cursor: pointer; }
+.detail-carousel-dots .dot.active { background: #ffffff; }
+.play-icon-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255,255,255,0.9); font-size: 48px; pointer-events: none; }
 </style>
