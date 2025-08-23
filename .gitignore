@@ -36,6 +36,7 @@ docs/
 **/__pycache__/
 
 .kilocode/*
+.augment/*
 
 # uploads
 /public/uploads/*
@@ -45,3 +46,4 @@ docs/
 .env
 .env.*
 .env.production
+
