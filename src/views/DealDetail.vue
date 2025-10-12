@@ -133,8 +133,8 @@ onMounted(fetchDealDetails);
               <b-tab title="Details" active>
                 <p class="mb-4">{{ deal.description }}</p>
                 <p><i class="fa fa-check text-primary me-3"></i>{{ $t('dealDetail.price') }}: {{ formatPrice(deal.price) }}</p>
-                <p><i class="fa fa-check text-primary me-3"></i>{{ $t('dealDetail.location') }}: {{ deal.location }}</p>
-                <p><i class="fa fa-check text-primary me-3"></i>{{ $t('dealDetail.category') }}: {{ deal.category?.name || $t('dealDetail.notAvailable') }}</p>
+                <p><i class="fa fa-check text-success me-3"></i>{{ $t('dealDetail.location') }}: {{ deal.location }}</p>
+                <p><i class="fa fa-check text-info me-3"></i>{{ $t('dealDetail.category') }}: {{ (typeof(deal.category)=='object' && deal.category.length?deal.category[0]:deal.category) || $t('dealDetail.notAvailable') }}</p>
               </b-tab>
               <b-tab title="Attributes">
                 <ul class="list-group">
