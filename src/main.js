@@ -42,7 +42,7 @@ const i18n = createI18n({
     fallbackLocale: 'en', // Keep 'en' as a general fallback
     // availableLocales: supportedLocales, // Make sure vue-i18n knows about available locales
     messages: { en, fr, ar },
-    // legacy: false,
+    legacy: false,
     // globalInjection: true
   })
 
