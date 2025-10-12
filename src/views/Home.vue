@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { BCarousel, BCarouselSlide, BInputGroup, BFormInput } from 'bootstrap-vue-next';
 import DealsCategories from '../components/DealsCategories.vue';
 import DealsListing from '../components/DealsListing.vue';
+import DealCard from '../components/DealCard.vue';
 import DealService from '@/services/DealService'; // Import DealService
 import Teams from '../components/Teams.vue';
 import Testimonial from '../components/Testimonial.vue';
@@ -143,7 +144,7 @@ const resetSearch = () => {
                     <h2 class="mb-4 text-center">{{ $t('home.searchResultsTitle', 'Search Results') }}</h2>
                     <div class="row g-4">
                         <div v-for="deal in searchResults" :key="deal.id" class="col-lg-4 col-md-6">
-                            <CardDeal :deal="deal" />
+                            <DealCard :deal="deal" />
                         </div>
                     </div>
                 </div>
