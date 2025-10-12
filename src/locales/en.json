@@ -1,5 +1,15 @@
 {
   "app": {
+    "home": "Home",
+    "about": "About",
+    "deals": "Deals",
+    "real-estate": "Real Estate",
+    "cars": "Cars",
+    "other-deals": "Other deals",
+    "contact": "Contact",
+    "pricing": "Pricing",
+    "signin": "Signin",
+    "post-deal": "Post Deal",
     "hero-find-the": "Find The ",
     "hero-perfect-deal": "Perfect Deal ",
     "hero-for-you": "For You"
