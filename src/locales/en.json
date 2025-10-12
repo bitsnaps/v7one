@@ -58,6 +58,7 @@
       "otherDeals": "Other Deals"
     },
     "categories": {
+      "house": "House",
       "apartment": "Apartment",
       "villa": "Villa",
       "home": "Home",
@@ -96,29 +97,12 @@
       "suv": "Suv",
       "truck": "Truck"
     },
-    "noDealsFound": "No deals found for this category."
+    "noDealsFound": "No deals found for this category.",
+    "browseMoreDeals": "Browse more..."
   },
   "teams": {
     "title": "Meet Our Deal Specialists",
-    "description": "Our dedicated team at V7 works tirelessly to find and secure the best deals across various sectors for you. Discover the experts making it happen.",
-    "members": {
-      "1": {
-        "name": "Alice Wonderland",
-        "designation": "Chief Deal Strategist"
-      },
-      "2": {
-        "name": "Bob The Builder",
-        "designation": "Lead Negotiation Expert"
-      },
-      "3": {
-        "name": "Charlie Brown",
-        "designation": "Market Research Analyst"
-      },
-      "4": {
-        "name": "Diana Prince",
-        "designation": "Client Relations Manager"
-      }
-    }
+    "description": "Our dedicated team at V7 works tirelessly to find and secure the best deals across various sectors for you. Discover the experts making it happen."
   },
   "about": {
     "title": "About V7 Deals",

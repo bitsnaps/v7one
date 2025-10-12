@@ -12,8 +12,8 @@ const fetchTeamMembers = async () => {
   teamMembers.value = [
     {
       id: 1,
-      name: 'Alice Wonderland',
-      designation: 'Chief Deal Strategist',
+      name: 'Moussa A.',
+      designation: 'General Manager',
       image: '/img/user.svg', // Placeholder, ideally unique images
       socials: [
         { icon: 'fab fa-facebook-f', link: '#' },
@@ -21,39 +21,50 @@ const fetchTeamMembers = async () => {
         { icon: 'fab fa-instagram', link: '#' },
       ],
     },
-    {
-      id: 2,
-      name: 'Bob The Builder',
-      designation: 'Lead Negotiation Expert',
-      image: '/img/user.svg', // Placeholder
-      socials: [
-        { icon: 'fab fa-facebook-f', link: '#' },
-        { icon: 'fab fa-twitter', link: '#' },
-        { icon: 'fab fa-instagram', link: '#' },
-      ],
-    },
-    {
-      id: 3,
-      name: 'Charlie Brown',
-      designation: 'Market Research Analyst',
-      image: '/img/user.svg', // Placeholder
-      socials: [
-        { icon: 'fab fa-facebook-f', link: '#' },
-        { icon: 'fab fa-twitter', link: '#' },
-        { icon: 'fab fa-instagram', link: '#' },
-      ],
-    },
-    {
-      id: 4,
-      name: 'Diana Prince',
-      designation: 'Client Relations Manager',
-      image: '/img/user.svg', // Placeholder
-      socials: [
-        { icon: 'fab fa-facebook-f', link: '#' },
-        { icon: 'fab fa-twitter', link: '#' },
-        { icon: 'fab fa-instagram', link: '#' },
-      ],
-    },
+    // {
+    //   id: 1,
+    //   name: 'Alice Wonderland',
+    //   designation: 'Chief Deal Strategist',
+    //   image: '/img/user.svg', // Placeholder, ideally unique images
+    //   socials: [
+    //     { icon: 'fab fa-facebook-f', link: '#' },
+    //     { icon: 'fab fa-twitter', link: '#' },
+    //     { icon: 'fab fa-instagram', link: '#' },
+    //   ],
+    // },
+    // {
+    //   id: 2,
+    //   name: 'Bob The Builder',
+    //   designation: 'Lead Negotiation Expert',
+    //   image: '/img/user.svg', // Placeholder
+    //   socials: [
+    //     { icon: 'fab fa-facebook-f', link: '#' },
+    //     { icon: 'fab fa-twitter', link: '#' },
+    //     { icon: 'fab fa-instagram', link: '#' },
+    //   ],
+    // },
+    // {
+    //   id: 3,
+    //   name: 'Charlie Brown',
+    //   designation: 'Market Research Analyst',
+    //   image: '/img/user.svg', // Placeholder
+    //   socials: [
+    //     { icon: 'fab fa-facebook-f', link: '#' },
+    //     { icon: 'fab fa-twitter', link: '#' },
+    //     { icon: 'fab fa-instagram', link: '#' },
+    //   ],
+    // },
+    // {
+    //   id: 4,
+    //   name: 'Diana Prince',
+    //   designation: 'Client Relations Manager',
+    //   image: '/img/user.svg', // Placeholder
+    //   socials: [
+    //     { icon: 'fab fa-facebook-f', link: '#' },
+    //     { icon: 'fab fa-twitter', link: '#' },
+    //     { icon: 'fab fa-instagram', link: '#' },
+    //   ],
+    // },
   ];
 };
 
@@ -78,8 +89,8 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div class="text-center p-4 mt-3">
-                                <h5 class="fw-bold mb-0">{{ $t('teams.members.' + member.id + '.name', member.name) }}</h5>
-                                <small>{{ $t('teams.members.' + member.id + '.designation', member.designation) }}</small>
+                                <h5 class="fw-bold mb-0">{{ member.name }}</h5>
+                                <small>{{ member.designation }}</small>
                             </div>
                         </div>
                     </div>

@@ -59,9 +59,10 @@
       "otherDeals": "Autres Offres"
     },
     "categories": {
+      "house": "Maison",
       "apartment": "Appartement",
       "villa": "Villa",
-      "home": "Maison",
+      "home": "Foyer",
       "office": "Bureau",
       "building": "Immeuble",
       "townhouse": "Maison de ville",
@@ -79,7 +80,7 @@
   },
   "deals": {
     "title": "Liste des offres",
-    "browseMoreDeals": "Parcourir plus d'offres",
+    "browseMoreDeals": "Parcourir plus...",
     "description": "Explorez notre gamme variée d'offres. Que vous recherchiez une maison, une villa, un appartement ou un espace commercial, nous avons ce qu'il vous faut.",
     "featured": "À la une",
     "forsale": "À vendre",
@@ -102,25 +103,7 @@
   },
   "teams": {
     "title": "Rencontrez nos spécialistes des offres",
-    "description": "Notre équipe dévouée chez V7 travaille sans relâche pour trouver et sécuriser les meilleures offres dans divers secteurs pour vous. Découvrez les experts qui rendent cela possible.",
-    "members": {
-      "1": {
-        "name": "Alice Wonderland",
-        "designation": "Stratège en chef des offres"
-      },
-      "2": {
-        "name": "Bob Le Bricoleur",
-        "designation": "Expert principal en négociation"
-      },
-      "3": {
-        "name": "Charlie Brown",
-        "designation": "Analyste de recherche de marché"
-      },
-      "4": {
-        "name": "Diana Prince",
-        "designation": "Responsable des relations clients"
-      }
-    }
+    "description": "Notre équipe dévouée chez V7 travaille sans relâche pour trouver et sécuriser les meilleures offres dans divers secteurs pour vous. Découvrez les experts qui rendent cela possible."
   },
   "about": {
     "title": "À Propos de V7 Deals",

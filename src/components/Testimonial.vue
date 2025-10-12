@@ -5,34 +5,45 @@ import { BCarousel, BCarouselSlide } from 'bootstrap-vue-next';
 
 const testimonials = ref([]);
 const slide = ref(0);
+const isLoading = ref(false);
 
 const { t } = useI18n();
 
 const fetchTestimonials = async () => {
+  isLoading.value = true;
   // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise(resolve => setTimeout(resolve, 500)).finally(() => {
+    isLoading.value = false;
+  });
   testimonials.value = [
-    {
-      id: 1,
-      text: 'V7 helped me find the perfect apartment in downtown. The process was smooth and their agents were very professional!',
-      clientName: 'Sarah L.',
-      profession: 'Software Engineer',
-      image: '/img/user.svg', // Placeholder image path
-    },
-    {
-      id: 2,
-      text: 'I sold my car through V7 within a week! They handled everything, and I got a great price. Highly recommended!',
-      clientName: 'John B.',
-      profession: 'Marketing Manager',
-      image: '/img/user.svg', // Placeholder image path
-    },
-    {
-      id: 3,
-      text: 'Finding a reliable contractor for my home renovation was a challenge until I used V7. Their platform connected me with top-notch professionals.',
-      clientName: 'Maria G.',
-      profession: 'Architect',
-      image: '/img/user.svg', // Placeholder image path
-    },
+    // {
+    //   id: 1,
+    //   text: 'v7One helped me find client for an apartment I own. The process was smooth and their manager were very helpful!',
+    //   clientName: 'Ibrahim H.',
+    //   profession: 'Software Architect',
+    //   image: '/img/user.svg', // Placeholder image path
+    // },
+    // {
+    //   id: 1,
+    //   text: 'V7 helped me find the perfect apartment in downtown. The process was smooth and their agents were very professional!',
+    //   clientName: 'Sarah L.',
+    //   profession: 'Software Engineer',
+    //   image: '/img/user.svg', // Placeholder image path
+    // },
+    // {
+    //   id: 2,
+    //   text: 'I sold my car through V7 within a week! They handled everything, and I got a great price. Highly recommended!',
+    //   clientName: 'John B.',
+    //   profession: 'Marketing Manager',
+    //   image: '/img/user.svg', // Placeholder image path
+    // },
+    // {
+    //   id: 3,
+    //   text: 'Finding a reliable contractor for my home renovation was a challenge until I used V7. Their platform connected me with top-notch professionals.',
+    //   clientName: 'Maria G.',
+    //   profession: 'Architect',
+    //   image: '/img/user.svg', // Placeholder image path
+    // },
   ];
 };
 
@@ -43,7 +54,7 @@ onMounted(() => {
 </script>
 <template>
         <div class="container-xxl py-5">
-            <div class="container">
+            <div class="container" v-if="testimonials.length">
                 <div class="text-center mx-auto mb-5" style="max-width: 600px;">
                     <h1 class="mb-3">{{ $t('testimonial.title', 'What Our Users Say!') }}</h1>
                     <p>{{ $t('testimonial.description', 'Discover how V7 is making a difference in finding properties, vehicles, and services. Real stories from our satisfied users.') }}</p>
@@ -56,26 +67,25 @@ onMounted(() => {
                     indicators
                     ride="carousel"
                     class="testimonial-carousel"
-                    v-if="testimonials.length > 0"
                 >
                     <BCarouselSlide v-for="testimonial in testimonials" :key="testimonial.id">
                         <div class="testimonial-item bg-light rounded p-3">
                             <div class="bg-white border rounded p-4">
-                                <p>{{ $t('testimonial.testimonials.' + testimonial.id + '.text', testimonial.text) }}</p>
+                                <p>{{ testimonial.text }}</p>
                                 <div class="d-flex align-items-center">
                                     <img class="img-fluid flex-shrink-0 rounded" :src="testimonial.image" :alt="testimonial.clientName" style="width: 45px; height: 45px; object-fit: cover;">
                                     <div class="ps-3">
-                                        <h6 class="fw-bold mb-1">{{ $t('testimonial.testimonials.' + testimonial.id + '.clientName', testimonial.clientName) }}</h6>
-                                        <small>{{ $t('testimonial.testimonials.' + testimonial.id + '.profession', testimonial.profession) }}</small>
+                                        <h6 class="fw-bold mb-1">{{ testimonial.clientName }}</h6>
+                                        <small>{{ testimonial.profession }}</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </BCarouselSlide>
                 </BCarousel>
-                <div v-else class="text-center">
-                    <p>{{ $t('testimonial.loading', 'Loading testimonials...') }}</p>
-                </div>
+            </div>
+            <div v-else class="text-center">
+              <p v-if="isLoading">{{ $t('common.loading', 'Loading...') }}</p>
             </div>
         </div>
 </template>
