@@ -288,5 +288,22 @@
     "cookies": "Cookies",
     "help": "Aide",
     "faqs": "FAQ"
+  },
+  "cookies": {
+    "title": "Politique des Cookies",
+    "description": "Nous utilisons des cookies pour améliorer votre expérience sur V7 Deals. Les cookies nous aident à mémoriser vos préférences et à offrir une navigation plus fluide."
+  },
+  "help": {
+    "title": "Centre d'Aide",
+    "description": "Besoin d'aide ? Trouvez des conseils rapides sur la navigation des offres, la publication des annonces et la prise de contact avec les vendeurs."
+  },
+  "faqs": {
+    "title": "Foire Aux Questions",
+    "q1": "Comment publier une offre ?",
+    "a1": "Allez à 'Post Deal' depuis la barre de navigation, remplissez les détails et soumettez.",
+    "q2": "Ai-je besoin d'un compte ?",
+    "a2": "Oui, vous devez vous connecter pour publier des offres ou envoyer des messages aux vendeurs.",
+    "q3": "Comment contacter le support ?",
+    "a3": "Utilisez le formulaire de la page Contact ou contactez nous par email."
   }
 }

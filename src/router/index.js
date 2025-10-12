@@ -95,6 +95,21 @@ const routes = [
        component: SubscriptionSuccess,
        meta: { requiresAuth: true },
      },
+      {
+        path: 'cookies',
+        name: 'Cookies',
+        component: () => import('@/views/Cookies.vue'),
+      },
+      {
+        path: 'help',
+        name: 'Help',
+        component: () => import('@/views/Help.vue'),
+      },
+      {
+        path: 'faqs',
+        name: 'Faqs',
+        component: () => import('@/views/Faq.vue'),
+      },
     ],
   },
   {

@@ -284,5 +284,22 @@
     "cookies": "Cookies",
     "help": "Help",
     "faqs": "FAQs"
+  },
+  "cookies": {
+    "title": "Cookies Policy",
+    "description": "We use cookies to improve your experience on V7 Deals. Cookies help us remember your preferences and provide a smoother browsing experience."
+  },
+  "help": {
+    "title": "Help Center",
+    "description": "Need help? Find quick guidance on browsing deals, posting listings, and contacting sellers."
+  },
+  "faqs": {
+    "title": "Frequently Asked Questions",
+    "q1": "How do I post a deal?",
+    "a1": "Go to 'Post Deal' from the navbar, fill in details, and submit.",
+    "q2": "Do I need an account?",
+    "a2": "Yes, you need to sign in to post deals or message sellers.",
+    "q3": "How can I contact support?",
+    "a3": "Use the Contact page form or contact us via email."
   }
 }

@@ -47,9 +47,9 @@ const { t } = useI18n();
             <div class="col-md-6 text-center text-md-end">
               <div class="footer-menu">
                 <router-link to="/">{{ $t('footer.home') }}</router-link>
-                <a href="">{{ $t('footer.cookies') }}</a>
-                <a href="">{{ $t('footer.help') }}</a> |
-                <a href="">{{ $t('footer.faqs') }}</a>
+                <router-link to="/cookies">{{ $t('footer.cookies') }}</router-link>
+                <router-link to="/help">{{ $t('footer.help') }}</router-link> |
+                <router-link to="/faqs">{{ $t('footer.faqs') }}</router-link>
               </div>
             </div>
           </div>
