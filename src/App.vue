@@ -1,7 +1,6 @@
 <script setup>
 import Navbar from './components/Navbar.vue';
 import './assets/css/main.css'; // Import global styles
-import Footer from './components/Footer.vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { computed, ref, onMounted, onUnmounted, watchEffect } from 'vue';
@@ -48,9 +47,6 @@ onUnmounted(() => {
 
         <router-view />
 
-        <!-- Footer Start -->
-        <Footer />
-        <!-- Footer End -->
 
         <!-- Back to Top -->
         <a v-if="showBackToTop" @click.prevent="scrollToTop" href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-arrow-up"></i></a>

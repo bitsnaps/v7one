@@ -35,8 +35,10 @@ docs/
 **/*.pyw
 **/__pycache__/
 
+# IA & Agents
 .kilocode/*
 .augment/*
+AGENTS.md
 
 # uploads
 /public/uploads/*
